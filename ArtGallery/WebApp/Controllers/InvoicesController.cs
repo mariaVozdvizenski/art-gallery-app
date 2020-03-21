@@ -22,12 +22,11 @@ namespace WebApp.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Invoices.Include(i => i.InvoiceStatusCode).Include(i => i.Order);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Invoices.ToListAsync());
         }
 
         // GET: Invoices/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -35,8 +34,6 @@ namespace WebApp.Controllers
             }
 
             var invoice = await _context.Invoices
-                .Include(i => i.InvoiceStatusCode)
-                .Include(i => i.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (invoice == null)
             {
@@ -49,8 +46,6 @@ namespace WebApp.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Id");
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
             return View();
         }
 
@@ -59,21 +54,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InvoiceNumber,InvoiceDate,InvoiceDetails,OrderId,InvoiceStatusCodeId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Invoice invoice)
+        public async Task<IActionResult> Create([Bind("InvoiceNumber,InvoiceDate,InvoiceDetails,OrderId,InvoiceStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Invoice invoice)
         {
             if (ModelState.IsValid)
             {
+                invoice.Id = Guid.NewGuid();
                 _context.Add(invoice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Id", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
         // GET: Invoices/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -85,8 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Id", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -95,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("InvoiceNumber,InvoiceDate,InvoiceDetails,OrderId,InvoiceStatusCodeId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Invoice invoice)
+        public async Task<IActionResult> Edit(Guid id, [Bind("InvoiceNumber,InvoiceDate,InvoiceDetails,OrderId,InvoiceStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Invoice invoice)
         {
             if (id != invoice.Id)
             {
@@ -122,13 +114,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Id", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
         // GET: Invoices/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -136,8 +126,6 @@ namespace WebApp.Controllers
             }
 
             var invoice = await _context.Invoices
-                .Include(i => i.InvoiceStatusCode)
-                .Include(i => i.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (invoice == null)
             {
@@ -150,7 +138,7 @@ namespace WebApp.Controllers
         // POST: Invoices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var invoice = await _context.Invoices.FindAsync(id);
             _context.Invoices.Remove(invoice);
@@ -158,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(string id)
+        private bool InvoiceExists(Guid id)
         {
             return _context.Invoices.Any(e => e.Id == id);
         }

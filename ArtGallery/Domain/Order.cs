@@ -8,7 +8,7 @@ using Domain.Identity;
 
 namespace Domain
 {
-    public class Order: DomainEntityMetadata
+    public class Order: DomainEntity
     {
         public DateTime OrderDate { get; set; }
         

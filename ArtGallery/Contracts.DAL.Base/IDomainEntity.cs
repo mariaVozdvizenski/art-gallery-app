@@ -2,8 +2,12 @@
 
 namespace Contracts.DAL.Base
 {
-    public interface IDomainEntity
+    public interface IDomainEntity: IDomainEntity<Guid>
     {
-         string Id { get; set; }
+    }
+    
+    public interface IDomainEntity<TKey> : IDomainBaseEntity<TKey>, IDomainMetadata
+    where TKey : struct, IComparable
+    {
     }
 }

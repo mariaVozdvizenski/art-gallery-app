@@ -22,12 +22,11 @@ namespace WebApp.Controllers
         // GET: Paintings
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Paintings.Include(p => p.Artist);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Paintings.ToListAsync());
         }
 
         // GET: Paintings/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -35,7 +34,6 @@ namespace WebApp.Controllers
             }
 
             var painting = await _context.Paintings
-                .Include(p => p.Artist)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (painting == null)
             {
@@ -48,7 +46,6 @@ namespace WebApp.Controllers
         // GET: Paintings/Create
         public IActionResult Create()
         {
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id");
             return View();
         }
 
@@ -57,20 +54,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description,Price,Title,Size,ArtistId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Painting painting)
+        public async Task<IActionResult> Create([Bind("Description,Price,Title,Size,ArtistId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Painting painting)
         {
             if (ModelState.IsValid)
             {
+                painting.Id = Guid.NewGuid();
                 _context.Add(painting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", painting.ArtistId);
             return View(painting);
         }
 
         // GET: Paintings/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -82,7 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", painting.ArtistId);
             return View(painting);
         }
 
@@ -91,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Description,Price,Title,Size,ArtistId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Painting painting)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Description,Price,Title,Size,ArtistId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Painting painting)
         {
             if (id != painting.Id)
             {
@@ -118,12 +114,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", painting.ArtistId);
             return View(painting);
         }
 
         // GET: Paintings/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -131,7 +126,6 @@ namespace WebApp.Controllers
             }
 
             var painting = await _context.Paintings
-                .Include(p => p.Artist)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (painting == null)
             {
@@ -144,7 +138,7 @@ namespace WebApp.Controllers
         // POST: Paintings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var painting = await _context.Paintings.FindAsync(id);
             _context.Paintings.Remove(painting);
@@ -152,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PaintingExists(string id)
+        private bool PaintingExists(Guid id)
         {
             return _context.Paintings.Any(e => e.Id == id);
         }

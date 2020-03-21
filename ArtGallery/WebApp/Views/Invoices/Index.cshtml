@@ -22,10 +22,10 @@
                 @Html.DisplayNameFor(model => model.InvoiceDetails)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Order)
+                @Html.DisplayNameFor(model => model.OrderId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InvoiceStatusCode)
+                @Html.DisplayNameFor(model => model.InvoiceStatusCodeId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedBy)
@@ -34,10 +34,10 @@
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedBy)
+                @Html.DisplayNameFor(model => model.ChangedBy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedAt)
+                @Html.DisplayNameFor(model => model.ChangedAt)
             </th>
             <th></th>
         </tr>
@@ -55,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.InvoiceDetails)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Order.Id)
+                @Html.DisplayFor(modelItem => item.OrderId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.InvoiceStatusCode.Id)
+                @Html.DisplayFor(modelItem => item.InvoiceStatusCodeId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)
@@ -67,10 +67,10 @@
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeletedBy)
+                @Html.DisplayFor(modelItem => item.ChangedBy)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeletedAt)
+                @Html.DisplayFor(modelItem => item.ChangedAt)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

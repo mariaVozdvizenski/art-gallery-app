@@ -4,7 +4,7 @@ using Domain.Identity;
 
 namespace Domain
 {
-    public class UserPaymentMethod: DomainEntityMetadata
+    public class UserPaymentMethod: DomainEntity
     {
         [MaxLength(36)] 
         public string AppUserId { get; set; } = default!;

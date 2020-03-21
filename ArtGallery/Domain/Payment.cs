@@ -4,7 +4,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Payment: DomainEntityMetadata
+    public class Payment: DomainEntity
     {
         [MaxLength(36)] 
         public string InvoiceId { get; set; } = default!;

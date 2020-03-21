@@ -12,11 +12,11 @@ namespace DAL.App.EF.Migrations
                 name: "Artists",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     Bio = table.Column<string>(maxLength: 4096, nullable: false),
                     PlaceOfBirth = table.Column<string>(maxLength: 128, nullable: false),
@@ -71,11 +71,11 @@ namespace DAL.App.EF.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -87,11 +87,11 @@ namespace DAL.App.EF.Migrations
                 name: "InvoiceStatusCodes",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     InvoiceStatusDescr = table.Column<string>(maxLength: 128, nullable: false),
                     Code = table.Column<string>(maxLength: 128, nullable: false)
                 },
@@ -104,11 +104,11 @@ namespace DAL.App.EF.Migrations
                 name: "OrderStatusCodes",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     OrderStatusDescription = table.Column<string>(maxLength: 128, nullable: false),
                     Code = table.Column<string>(maxLength: 128, nullable: false)
                 },
@@ -121,11 +121,11 @@ namespace DAL.App.EF.Migrations
                 name: "PaymentMethods",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     PaymentMethodDescription = table.Column<string>(maxLength: 128, nullable: false),
                     PaymentMethodCode = table.Column<string>(maxLength: 36, nullable: false)
                 },
@@ -138,26 +138,27 @@ namespace DAL.App.EF.Migrations
                 name: "Paintings",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 4096, nullable: false),
                     Price = table.Column<decimal>(nullable: false),
                     Title = table.Column<string>(maxLength: 36, nullable: false),
                     Size = table.Column<string>(maxLength: 16, nullable: false),
-                    ArtistId = table.Column<string>(maxLength: 36, nullable: false)
+                    ArtistId = table.Column<string>(maxLength: 36, nullable: false),
+                    ArtistId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Paintings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Paintings_Artists_ArtistId",
-                        column: x => x.ArtistId,
+                        name: "FK_Paintings_Artists_ArtistId1",
+                        column: x => x.ArtistId1,
                         principalTable: "Artists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -270,11 +271,11 @@ namespace DAL.App.EF.Migrations
                 name: "Baskets",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     AppUserId = table.Column<string>(maxLength: 36, nullable: false)
                 },
@@ -293,15 +294,16 @@ namespace DAL.App.EF.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     OrderDetails = table.Column<string>(maxLength: 4096, nullable: true),
                     AppUserId = table.Column<string>(maxLength: 36, nullable: false),
-                    OrderStatusCodeId = table.Column<string>(maxLength: 36, nullable: false)
+                    OrderStatusCodeId = table.Column<string>(maxLength: 36, nullable: false),
+                    OrderStatusCodeId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -313,24 +315,25 @@ namespace DAL.App.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_OrderStatusCodes_OrderStatusCodeId",
-                        column: x => x.OrderStatusCodeId,
+                        name: "FK_Orders_OrderStatusCodes_OrderStatusCodeId1",
+                        column: x => x.OrderStatusCodeId1,
                         principalTable: "OrderStatusCodes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserPaymentMethods",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     AppUserId = table.Column<string>(maxLength: 36, nullable: false),
-                    PaymentMethodId = table.Column<string>(maxLength: 36, nullable: false)
+                    PaymentMethodId = table.Column<string>(maxLength: 36, nullable: false),
+                    PaymentMethodId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -342,25 +345,26 @@ namespace DAL.App.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserPaymentMethods_PaymentMethods_PaymentMethodId",
-                        column: x => x.PaymentMethodId,
+                        name: "FK_UserPaymentMethods_PaymentMethods_PaymentMethodId1",
+                        column: x => x.PaymentMethodId1,
                         principalTable: "PaymentMethods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     Body = table.Column<string>(maxLength: 4096, nullable: false),
                     AppUserId = table.Column<string>(maxLength: 36, nullable: false),
-                    PaintingId = table.Column<string>(maxLength: 36, nullable: false)
+                    PaintingId = table.Column<string>(maxLength: 36, nullable: false),
+                    PaintingId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -372,144 +376,153 @@ namespace DAL.App.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Paintings_PaintingId",
-                        column: x => x.PaintingId,
+                        name: "FK_Comments_Paintings_PaintingId1",
+                        column: x => x.PaintingId1,
                         principalTable: "Paintings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PaintingCategories",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     PaintingId = table.Column<string>(maxLength: 36, nullable: false),
-                    CategoryId = table.Column<string>(maxLength: 36, nullable: false)
+                    PaintingId1 = table.Column<Guid>(nullable: true),
+                    CategoryId = table.Column<string>(maxLength: 36, nullable: false),
+                    CategoryId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PaintingCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaintingCategories_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_PaintingCategories_Categories_CategoryId1",
+                        column: x => x.CategoryId1,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PaintingCategories_Paintings_PaintingId",
-                        column: x => x.PaintingId,
+                        name: "FK_PaintingCategories_Paintings_PaintingId1",
+                        column: x => x.PaintingId1,
                         principalTable: "Paintings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BasketItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     BasketId = table.Column<string>(maxLength: 36, nullable: false),
-                    PaintingId = table.Column<string>(maxLength: 36, nullable: false)
+                    BasketId1 = table.Column<Guid>(nullable: true),
+                    PaintingId = table.Column<string>(maxLength: 36, nullable: false),
+                    PaintingId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BasketItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BasketItems_Baskets_BasketId",
-                        column: x => x.BasketId,
+                        name: "FK_BasketItems_Baskets_BasketId1",
+                        column: x => x.BasketId1,
                         principalTable: "Baskets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BasketItems_Paintings_PaintingId",
-                        column: x => x.PaintingId,
+                        name: "FK_BasketItems_Paintings_PaintingId1",
+                        column: x => x.PaintingId1,
                         principalTable: "Paintings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Invoices",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     InvoiceNumber = table.Column<int>(nullable: false),
                     InvoiceDate = table.Column<DateTime>(nullable: false),
                     InvoiceDetails = table.Column<string>(maxLength: 128, nullable: false),
                     OrderId = table.Column<string>(maxLength: 36, nullable: false),
-                    InvoiceStatusCodeId = table.Column<string>(maxLength: 36, nullable: false)
+                    OrderId1 = table.Column<Guid>(nullable: true),
+                    InvoiceStatusCodeId = table.Column<string>(maxLength: 36, nullable: false),
+                    InvoiceStatusCodeId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_InvoiceStatusCodes_InvoiceStatusCodeId",
-                        column: x => x.InvoiceStatusCodeId,
+                        name: "FK_Invoices_InvoiceStatusCodes_InvoiceStatusCodeId1",
+                        column: x => x.InvoiceStatusCodeId1,
                         principalTable: "InvoiceStatusCodes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Invoices_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Invoices_Orders_OrderId1",
+                        column: x => x.OrderId1,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     PaintingId = table.Column<string>(nullable: false),
-                    OrderId = table.Column<string>(maxLength: 36, nullable: false)
+                    PaintingId1 = table.Column<Guid>(nullable: true),
+                    OrderId = table.Column<string>(maxLength: 36, nullable: false),
+                    OrderId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_OrderItems_Orders_OrderId1",
+                        column: x => x.OrderId1,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Paintings_PaintingId",
-                        column: x => x.PaintingId,
+                        name: "FK_OrderItems_Paintings_PaintingId1",
+                        column: x => x.PaintingId1,
                         principalTable: "Paintings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
+                    InvoiceId1 = table.Column<Guid>(nullable: true),
                     PaymentDate = table.Column<DateTime>(nullable: false),
                     PaymentAmount = table.Column<decimal>(nullable: false)
                 },
@@ -517,70 +530,74 @@ namespace DAL.App.EF.Migrations
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Invoices_InvoiceId",
-                        column: x => x.InvoiceId,
+                        name: "FK_Payments_Invoices_InvoiceId1",
+                        column: x => x.InvoiceId1,
                         principalTable: "Invoices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Shipments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     OrderId = table.Column<string>(maxLength: 36, nullable: false),
+                    OrderId1 = table.Column<Guid>(nullable: true),
                     InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
+                    InvoiceId1 = table.Column<Guid>(nullable: true),
                     ShipmentDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shipments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipments_Invoices_InvoiceId",
-                        column: x => x.InvoiceId,
+                        name: "FK_Shipments_Invoices_InvoiceId1",
+                        column: x => x.InvoiceId1,
                         principalTable: "Invoices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Shipments_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Shipments_Orders_OrderId1",
+                        column: x => x.OrderId1,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ShipmentItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DeletedBy = table.Column<string>(nullable: true),
-                    DeletedAt = table.Column<DateTime>(nullable: true),
+                    ChangedBy = table.Column<string>(nullable: true),
+                    ChangedAt = table.Column<DateTime>(nullable: false),
                     OrderItemId = table.Column<string>(maxLength: 36, nullable: false),
-                    ShipmentId = table.Column<string>(maxLength: 36, nullable: false)
+                    OrderItemId1 = table.Column<Guid>(nullable: true),
+                    ShipmentId = table.Column<string>(maxLength: 36, nullable: false),
+                    ShipmentId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ShipmentItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShipmentItems_OrderItems_OrderItemId",
-                        column: x => x.OrderItemId,
+                        name: "FK_ShipmentItems_OrderItems_OrderItemId1",
+                        column: x => x.OrderItemId1,
                         principalTable: "OrderItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ShipmentItems_Shipments_ShipmentId",
-                        column: x => x.ShipmentId,
+                        name: "FK_ShipmentItems_Shipments_ShipmentId1",
+                        column: x => x.ShipmentId1,
                         principalTable: "Shipments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -621,14 +638,14 @@ namespace DAL.App.EF.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketItems_BasketId",
+                name: "IX_BasketItems_BasketId1",
                 table: "BasketItems",
-                column: "BasketId");
+                column: "BasketId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketItems_PaintingId",
+                name: "IX_BasketItems_PaintingId1",
                 table: "BasketItems",
-                column: "PaintingId");
+                column: "PaintingId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Baskets_AppUserId",
@@ -641,29 +658,29 @@ namespace DAL.App.EF.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_PaintingId",
+                name: "IX_Comments_PaintingId1",
                 table: "Comments",
-                column: "PaintingId");
+                column: "PaintingId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_InvoiceStatusCodeId",
+                name: "IX_Invoices_InvoiceStatusCodeId1",
                 table: "Invoices",
-                column: "InvoiceStatusCodeId");
+                column: "InvoiceStatusCodeId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_OrderId",
+                name: "IX_Invoices_OrderId1",
                 table: "Invoices",
-                column: "OrderId");
+                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderId",
+                name: "IX_OrderItems_OrderId1",
                 table: "OrderItems",
-                column: "OrderId");
+                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_PaintingId",
+                name: "IX_OrderItems_PaintingId1",
                 table: "OrderItems",
-                column: "PaintingId");
+                column: "PaintingId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_AppUserId",
@@ -671,49 +688,49 @@ namespace DAL.App.EF.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderStatusCodeId",
+                name: "IX_Orders_OrderStatusCodeId1",
                 table: "Orders",
-                column: "OrderStatusCodeId");
+                column: "OrderStatusCodeId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaintingCategories_CategoryId",
+                name: "IX_PaintingCategories_CategoryId1",
                 table: "PaintingCategories",
-                column: "CategoryId");
+                column: "CategoryId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaintingCategories_PaintingId",
+                name: "IX_PaintingCategories_PaintingId1",
                 table: "PaintingCategories",
-                column: "PaintingId");
+                column: "PaintingId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paintings_ArtistId",
+                name: "IX_Paintings_ArtistId1",
                 table: "Paintings",
-                column: "ArtistId");
+                column: "ArtistId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_InvoiceId",
+                name: "IX_Payments_InvoiceId1",
                 table: "Payments",
-                column: "InvoiceId");
+                column: "InvoiceId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShipmentItems_OrderItemId",
+                name: "IX_ShipmentItems_OrderItemId1",
                 table: "ShipmentItems",
-                column: "OrderItemId");
+                column: "OrderItemId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShipmentItems_ShipmentId",
+                name: "IX_ShipmentItems_ShipmentId1",
                 table: "ShipmentItems",
-                column: "ShipmentId");
+                column: "ShipmentId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipments_InvoiceId",
+                name: "IX_Shipments_InvoiceId1",
                 table: "Shipments",
-                column: "InvoiceId");
+                column: "InvoiceId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipments_OrderId",
+                name: "IX_Shipments_OrderId1",
                 table: "Shipments",
-                column: "OrderId");
+                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPaymentMethods_AppUserId",
@@ -721,9 +738,9 @@ namespace DAL.App.EF.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPaymentMethods_PaymentMethodId",
+                name: "IX_UserPaymentMethods_PaymentMethodId1",
                 table: "UserPaymentMethods",
-                column: "PaymentMethodId");
+                column: "PaymentMethodId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

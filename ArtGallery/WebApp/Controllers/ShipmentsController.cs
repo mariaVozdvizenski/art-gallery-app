@@ -22,12 +22,11 @@ namespace WebApp.Controllers
         // GET: Shipments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Shipments.Include(s => s.Invoice).Include(s => s.Order);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Shipments.ToListAsync());
         }
 
         // GET: Shipments/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -35,8 +34,6 @@ namespace WebApp.Controllers
             }
 
             var shipment = await _context.Shipments
-                .Include(s => s.Invoice)
-                .Include(s => s.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipment == null)
             {
@@ -49,8 +46,6 @@ namespace WebApp.Controllers
         // GET: Shipments/Create
         public IActionResult Create()
         {
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id");
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
             return View();
         }
 
@@ -59,21 +54,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,InvoiceId,ShipmentDate,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Shipment shipment)
+        public async Task<IActionResult> Create([Bind("OrderId,InvoiceId,ShipmentDate,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Shipment shipment)
         {
             if (ModelState.IsValid)
             {
+                shipment.Id = Guid.NewGuid();
                 _context.Add(shipment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
         // GET: Shipments/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -85,8 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -95,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("OrderId,InvoiceId,ShipmentDate,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Shipment shipment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("OrderId,InvoiceId,ShipmentDate,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Shipment shipment)
         {
             if (id != shipment.Id)
             {
@@ -122,13 +114,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
         // GET: Shipments/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -136,8 +126,6 @@ namespace WebApp.Controllers
             }
 
             var shipment = await _context.Shipments
-                .Include(s => s.Invoice)
-                .Include(s => s.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipment == null)
             {
@@ -150,7 +138,7 @@ namespace WebApp.Controllers
         // POST: Shipments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var shipment = await _context.Shipments.FindAsync(id);
             _context.Shipments.Remove(shipment);
@@ -158,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ShipmentExists(string id)
+        private bool ShipmentExists(Guid id)
         {
             return _context.Shipments.Any(e => e.Id == id);
         }

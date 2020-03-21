@@ -3,7 +3,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class PaintingCategory: DomainEntityMetadata
+    public class PaintingCategory: DomainEntity
     {
         [MaxLength(36)]
         public string PaintingId { get; set; } = default!;

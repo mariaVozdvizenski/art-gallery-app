@@ -22,12 +22,12 @@ namespace WebApp.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Orders.Include(o => o.AppUser).Include(o => o.OrderStatusCode);
+            var appDbContext = _context.Orders.Include(o => o.AppUser);
             return View(await appDbContext.ToListAsync());
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -36,7 +36,6 @@ namespace WebApp.Controllers
 
             var order = await _context.Orders
                 .Include(o => o.AppUser)
-                .Include(o => o.OrderStatusCode)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -50,7 +49,6 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Id");
             return View();
         }
 
@@ -59,21 +57,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Order order)
+        public async Task<IActionResult> Create([Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Order order)
         {
             if (ModelState.IsValid)
             {
+                order.Id = Guid.NewGuid();
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Id", order.OrderStatusCodeId);
             return View(order);
         }
 
         // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -86,7 +84,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Id", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -95,7 +92,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Order order)
+        public async Task<IActionResult> Edit(Guid id, [Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Order order)
         {
             if (id != order.Id)
             {
@@ -123,12 +120,11 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Id", order.OrderStatusCodeId);
             return View(order);
         }
 
         // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -137,7 +133,6 @@ namespace WebApp.Controllers
 
             var order = await _context.Orders
                 .Include(o => o.AppUser)
-                .Include(o => o.OrderStatusCode)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -150,7 +145,7 @@ namespace WebApp.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var order = await _context.Orders.FindAsync(id);
             _context.Orders.Remove(order);
@@ -158,7 +153,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(string id)
+        private bool OrderExists(Guid id)
         {
             return _context.Orders.Any(e => e.Id == id);
         }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.App.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200223220542_InitialDbCreation")]
+    [Migration("20200318141629_InitialDbCreation")]
     partial class InitialDbCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,14 +21,20 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Artist", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4")
                         .HasMaxLength(4096);
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -44,12 +50,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)")
                         .HasMaxLength(36);
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -68,14 +68,20 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Basket", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -85,12 +91,6 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -101,14 +101,23 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.BasketItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("BasketId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<Guid?>("BasketId1")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -119,45 +128,42 @@ namespace DAL.App.EF.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("PaintingId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<Guid?>("PaintingId1")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BasketId");
+                    b.HasIndex("BasketId1");
 
-                    b.HasIndex("PaintingId");
+                    b.HasIndex("PaintingId1");
 
                     b.ToTable("BasketItems");
                 });
 
             modelBuilder.Entity("Domain.Category", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
@@ -172,9 +178,9 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
@@ -186,16 +192,16 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4")
                         .HasMaxLength(4096);
 
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PaintingId")
@@ -203,11 +209,14 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("PaintingId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PaintingId");
+                    b.HasIndex("PaintingId1");
 
                     b.ToTable("Comments");
                 });
@@ -306,20 +315,20 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Invoice", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("InvoiceDate")
@@ -338,25 +347,37 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("InvoiceStatusCodeId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("OrderId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceStatusCodeId");
+                    b.HasIndex("InvoiceStatusCodeId1");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId1");
 
                     b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("Domain.InvoiceStatusCode", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -367,12 +388,6 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("InvoiceStatusDescr")
@@ -387,25 +402,25 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("OrderDate")
@@ -420,20 +435,29 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("OrderStatusCodeId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("OrderStatusCodeId");
+                    b.HasIndex("OrderStatusCodeId1");
 
                     b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Domain.OrderItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -441,35 +465,41 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("OrderId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("PaintingId")
                         .IsRequired()
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<Guid?>("PaintingId1")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId1");
 
-                    b.HasIndex("PaintingId");
+                    b.HasIndex("PaintingId1");
 
                     b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Domain.OrderStatusCode", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -480,12 +510,6 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("OrderStatusDescription")
@@ -500,25 +524,28 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Painting", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ArtistId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("ArtistId1")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Description")
@@ -541,32 +568,35 @@ namespace DAL.App.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArtistId");
+                    b.HasIndex("ArtistId1");
 
                     b.ToTable("Paintings");
                 });
 
             modelBuilder.Entity("Domain.PaintingCategory", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CategoryId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("CategoryId1")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PaintingId")
@@ -574,20 +604,29 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("PaintingId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId1");
 
-                    b.HasIndex("PaintingId");
+                    b.HasIndex("PaintingId1");
 
                     b.ToTable("PaintingCategories");
                 });
 
             modelBuilder.Entity("Domain.Payment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -595,16 +634,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("InvoiceId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<Guid?>("InvoiceId1")
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("PaymentAmount")
                         .HasColumnType("decimal(65,30)");
@@ -614,27 +650,27 @@ namespace DAL.App.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceId");
+                    b.HasIndex("InvoiceId1");
 
                     b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Domain.PaymentMethod", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PaymentMethodCode")
@@ -654,20 +690,20 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Shipment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("InvoiceId")
@@ -675,39 +711,45 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("InvoiceId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<Guid?>("OrderId1")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("ShipmentDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceId");
+                    b.HasIndex("InvoiceId1");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId1");
 
                     b.ToTable("Shipments");
                 });
 
             modelBuilder.Entity("Domain.ShipmentItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("OrderItemId")
@@ -715,30 +757,42 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("OrderItemId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("ShipmentId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("ShipmentId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderItemId");
+                    b.HasIndex("OrderItemId1");
 
-                    b.HasIndex("ShipmentId");
+                    b.HasIndex("ShipmentId1");
 
                     b.ToTable("ShipmentItems");
                 });
 
             modelBuilder.Entity("Domain.UserPaymentMethod", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -746,22 +800,19 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("PaymentMethodId")
                         .IsRequired()
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
                         .HasMaxLength(36);
 
+                    b.Property<Guid?>("PaymentMethodId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PaymentMethodId");
+                    b.HasIndex("PaymentMethodId1");
 
                     b.ToTable("UserPaymentMethods");
                 });
@@ -885,15 +936,11 @@ namespace DAL.App.EF.Migrations
                 {
                     b.HasOne("Domain.Basket", "Basket")
                         .WithMany("BasketItems")
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BasketId1");
 
                     b.HasOne("Domain.Painting", "Painting")
                         .WithMany("ItemBaskets")
-                        .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PaintingId1");
                 });
 
             modelBuilder.Entity("Domain.Comment", b =>
@@ -906,24 +953,18 @@ namespace DAL.App.EF.Migrations
 
                     b.HasOne("Domain.Painting", "Painting")
                         .WithMany("Comments")
-                        .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PaintingId1");
                 });
 
             modelBuilder.Entity("Domain.Invoice", b =>
                 {
                     b.HasOne("Domain.InvoiceStatusCode", "InvoiceStatusCode")
                         .WithMany("Invoices")
-                        .HasForeignKey("InvoiceStatusCodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceStatusCodeId1");
 
                     b.HasOne("Domain.Order", "Order")
                         .WithMany("Invoices")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId1");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -936,87 +977,65 @@ namespace DAL.App.EF.Migrations
 
                     b.HasOne("Domain.OrderStatusCode", "OrderStatusCode")
                         .WithMany("Orders")
-                        .HasForeignKey("OrderStatusCodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderStatusCodeId1");
                 });
 
             modelBuilder.Entity("Domain.OrderItem", b =>
                 {
                     b.HasOne("Domain.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId1");
 
                     b.HasOne("Domain.Painting", "Painting")
                         .WithMany("ItemOrders")
-                        .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PaintingId1");
                 });
 
             modelBuilder.Entity("Domain.Painting", b =>
                 {
                     b.HasOne("Domain.Artist", "Artist")
                         .WithMany("Paintings")
-                        .HasForeignKey("ArtistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ArtistId1");
                 });
 
             modelBuilder.Entity("Domain.PaintingCategory", b =>
                 {
                     b.HasOne("Domain.Category", "Category")
                         .WithMany("CategoryPaintings")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId1");
 
                     b.HasOne("Domain.Painting", "Painting")
                         .WithMany("PaintingCategories")
-                        .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PaintingId1");
                 });
 
             modelBuilder.Entity("Domain.Payment", b =>
                 {
                     b.HasOne("Domain.Invoice", "Invoice")
                         .WithMany("Payments")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceId1");
                 });
 
             modelBuilder.Entity("Domain.Shipment", b =>
                 {
                     b.HasOne("Domain.Invoice", "Invoice")
                         .WithMany("Shipments")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceId1");
 
                     b.HasOne("Domain.Order", "Order")
                         .WithMany("Shipments")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId1");
                 });
 
             modelBuilder.Entity("Domain.ShipmentItem", b =>
                 {
                     b.HasOne("Domain.OrderItem", "OrderItem")
                         .WithMany("ItemShipments")
-                        .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderItemId1");
 
                     b.HasOne("Domain.Shipment", "Shipment")
                         .WithMany("ShipmentItems")
-                        .HasForeignKey("ShipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShipmentId1");
                 });
 
             modelBuilder.Entity("Domain.UserPaymentMethod", b =>
@@ -1029,9 +1048,7 @@ namespace DAL.App.EF.Migrations
 
                     b.HasOne("Domain.PaymentMethod", "PaymentMethod")
                         .WithMany("UserPaymentMethods")
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PaymentMethodId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -19,10 +19,10 @@
                 @Html.DisplayNameFor(model => model.DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Basket)
+                @Html.DisplayNameFor(model => model.BasketId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Painting)
+                @Html.DisplayNameFor(model => model.PaintingId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedBy)
@@ -31,10 +31,10 @@
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedBy)
+                @Html.DisplayNameFor(model => model.ChangedBy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedAt)
+                @Html.DisplayNameFor(model => model.ChangedAt)
             </th>
             <th></th>
         </tr>
@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Basket.Id)
+                @Html.DisplayFor(modelItem => item.BasketId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Painting.Id)
+                @Html.DisplayFor(modelItem => item.PaintingId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)
@@ -61,10 +61,10 @@
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeletedBy)
+                @Html.DisplayFor(modelItem => item.ChangedBy)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeletedAt)
+                @Html.DisplayFor(modelItem => item.ChangedAt)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

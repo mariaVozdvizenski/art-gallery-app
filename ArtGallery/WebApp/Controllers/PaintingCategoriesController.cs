@@ -22,12 +22,11 @@ namespace WebApp.Controllers
         // GET: PaintingCategories
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.PaintingCategories.Include(p => p.Category).Include(p => p.Painting);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.PaintingCategories.ToListAsync());
         }
 
         // GET: PaintingCategories/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -35,8 +34,6 @@ namespace WebApp.Controllers
             }
 
             var paintingCategory = await _context.PaintingCategories
-                .Include(p => p.Category)
-                .Include(p => p.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (paintingCategory == null)
             {
@@ -49,8 +46,6 @@ namespace WebApp.Controllers
         // GET: PaintingCategories/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id");
             return View();
         }
 
@@ -59,21 +54,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaintingId,CategoryId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] PaintingCategory paintingCategory)
+        public async Task<IActionResult> Create([Bind("PaintingId,CategoryId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] PaintingCategory paintingCategory)
         {
             if (ModelState.IsValid)
             {
+                paintingCategory.Id = Guid.NewGuid();
                 _context.Add(paintingCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
         // GET: PaintingCategories/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -85,8 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -95,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PaintingId,CategoryId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] PaintingCategory paintingCategory)
+        public async Task<IActionResult> Edit(Guid id, [Bind("PaintingId,CategoryId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] PaintingCategory paintingCategory)
         {
             if (id != paintingCategory.Id)
             {
@@ -122,13 +114,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
         // GET: PaintingCategories/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -136,8 +126,6 @@ namespace WebApp.Controllers
             }
 
             var paintingCategory = await _context.PaintingCategories
-                .Include(p => p.Category)
-                .Include(p => p.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (paintingCategory == null)
             {
@@ -150,7 +138,7 @@ namespace WebApp.Controllers
         // POST: PaintingCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var paintingCategory = await _context.PaintingCategories.FindAsync(id);
             _context.PaintingCategories.Remove(paintingCategory);
@@ -158,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PaintingCategoryExists(string id)
+        private bool PaintingCategoryExists(Guid id)
         {
             return _context.PaintingCategories.Any(e => e.Id == id);
         }

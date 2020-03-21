@@ -22,12 +22,11 @@ namespace WebApp.Controllers
         // GET: BasketItems
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.BasketItems.Include(b => b.Basket).Include(b => b.Painting);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.BasketItems.ToListAsync());
         }
 
         // GET: BasketItems/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -35,8 +34,6 @@ namespace WebApp.Controllers
             }
 
             var basketItem = await _context.BasketItems
-                .Include(b => b.Basket)
-                .Include(b => b.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (basketItem == null)
             {
@@ -49,8 +46,6 @@ namespace WebApp.Controllers
         // GET: BasketItems/Create
         public IActionResult Create()
         {
-            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id");
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id");
             return View();
         }
 
@@ -59,21 +54,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Quantity,DateCreated,BasketId,PaintingId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] BasketItem basketItem)
+        public async Task<IActionResult> Create([Bind("Quantity,DateCreated,BasketId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] BasketItem basketItem)
         {
             if (ModelState.IsValid)
             {
+                basketItem.Id = Guid.NewGuid();
                 _context.Add(basketItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", basketItem.PaintingId);
             return View(basketItem);
         }
 
         // GET: BasketItems/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -85,8 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", basketItem.PaintingId);
             return View(basketItem);
         }
 
@@ -95,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Quantity,DateCreated,BasketId,PaintingId,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] BasketItem basketItem)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Quantity,DateCreated,BasketId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] BasketItem basketItem)
         {
             if (id != basketItem.Id)
             {
@@ -122,13 +114,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Id", basketItem.PaintingId);
             return View(basketItem);
         }
 
         // GET: BasketItems/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -136,8 +126,6 @@ namespace WebApp.Controllers
             }
 
             var basketItem = await _context.BasketItems
-                .Include(b => b.Basket)
-                .Include(b => b.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (basketItem == null)
             {
@@ -150,7 +138,7 @@ namespace WebApp.Controllers
         // POST: BasketItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var basketItem = await _context.BasketItems.FindAsync(id);
             _context.BasketItems.Remove(basketItem);
@@ -158,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BasketItemExists(string id)
+        private bool BasketItemExists(Guid id)
         {
             return _context.BasketItems.Any(e => e.Id == id);
         }

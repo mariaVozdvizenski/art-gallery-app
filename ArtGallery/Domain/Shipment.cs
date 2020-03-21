@@ -6,7 +6,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Shipment: DomainEntityMetadata
+    public class Shipment: DomainEntity
     {
         [MaxLength(36)] 
         public string OrderId { get; set; } = default!;

@@ -26,7 +26,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Artists/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -54,10 +54,11 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Bio,PlaceOfBirth,Country,DateOfBirth,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Artist artist)
+        public async Task<IActionResult> Create([Bind("Name,Bio,PlaceOfBirth,Country,DateOfBirth,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Artist artist)
         {
             if (ModelState.IsValid)
             {
+                artist.Id = Guid.NewGuid();
                 _context.Add(artist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -66,7 +67,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Artists/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -86,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Name,Bio,PlaceOfBirth,Country,DateOfBirth,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] Artist artist)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Bio,PlaceOfBirth,Country,DateOfBirth,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Artist artist)
         {
             if (id != artist.Id)
             {
@@ -117,7 +118,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Artists/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -137,7 +138,7 @@ namespace WebApp.Controllers
         // POST: Artists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var artist = await _context.Artists.FindAsync(id);
             _context.Artists.Remove(artist);
@@ -145,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ArtistExists(string id)
+        private bool ArtistExists(Guid id)
         {
             return _context.Artists.Any(e => e.Id == id);
         }

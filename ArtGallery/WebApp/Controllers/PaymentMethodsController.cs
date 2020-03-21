@@ -26,7 +26,7 @@ namespace WebApp.Controllers
         }
 
         // GET: PaymentMethods/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -54,10 +54,11 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentMethodDescription,PaymentMethodCode,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] PaymentMethod paymentMethod)
+        public async Task<IActionResult> Create([Bind("PaymentMethodDescription,PaymentMethodCode,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] PaymentMethod paymentMethod)
         {
             if (ModelState.IsValid)
             {
+                paymentMethod.Id = Guid.NewGuid();
                 _context.Add(paymentMethod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -66,7 +67,7 @@ namespace WebApp.Controllers
         }
 
         // GET: PaymentMethods/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -86,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PaymentMethodDescription,PaymentMethodCode,CreatedBy,CreatedAt,DeletedBy,DeletedAt,Id")] PaymentMethod paymentMethod)
+        public async Task<IActionResult> Edit(Guid id, [Bind("PaymentMethodDescription,PaymentMethodCode,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] PaymentMethod paymentMethod)
         {
             if (id != paymentMethod.Id)
             {
@@ -117,7 +118,7 @@ namespace WebApp.Controllers
         }
 
         // GET: PaymentMethods/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -137,7 +138,7 @@ namespace WebApp.Controllers
         // POST: PaymentMethods/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var paymentMethod = await _context.PaymentMethods.FindAsync(id);
             _context.PaymentMethods.Remove(paymentMethod);
@@ -145,7 +146,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PaymentMethodExists(string id)
+        private bool PaymentMethodExists(Guid id)
         {
             return _context.PaymentMethods.Any(e => e.Id == id);
         }
