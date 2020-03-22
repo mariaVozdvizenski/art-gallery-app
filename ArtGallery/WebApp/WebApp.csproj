@@ -265,4 +265,8 @@
       <UpToDateCheckInput Remove="Views\Payments\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Areas" />
+    </ItemGroup>
+
 </Project>
