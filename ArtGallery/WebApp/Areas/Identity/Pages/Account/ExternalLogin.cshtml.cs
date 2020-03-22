@@ -37,9 +37,10 @@ namespace WebApp.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        [BindProperty] public InputModel Input { get; set; } 
+        [BindProperty]
+        public InputModel Input { get; set; }
 
-        public string LoginProvider { get; set; } 
+        public string LoginProvider { get; set; }
 
         public string ReturnUrl { get; set; }
 

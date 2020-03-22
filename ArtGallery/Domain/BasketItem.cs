@@ -7,15 +7,11 @@ namespace Domain
     public class BasketItem: DomainEntity
     {
         public int Quantity { get; set; }
-        
         public DateTime DateCreated { get; set; }
-
-        [MaxLength(36)]
-        public string BasketId { get; set; } = default!;
+        public Guid BasketId { get; set; } = default!;
         public Basket? Basket { get; set; }
-
-        [MaxLength(36)]
-        public string PaintingId { get; set; } = default!;
+        
+        public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
     }
 }

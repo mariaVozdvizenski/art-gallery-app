@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: ShipmentItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ShipmentItems.ToListAsync());
+            var appDbContext = _context.ShipmentItems.Include(s => s.OrderItem).Include(s => s.Shipment);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: ShipmentItems/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var shipmentItem = await _context.ShipmentItems
+                .Include(s => s.OrderItem)
+                .Include(s => s.Shipment)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipmentItem == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: ShipmentItems/Create
         public IActionResult Create()
         {
+            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id");
+            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var shipmentItem = await _context.ShipmentItems
+                .Include(s => s.OrderItem)
+                .Include(s => s.Shipment)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipmentItem == null)
             {

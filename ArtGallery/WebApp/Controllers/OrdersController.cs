@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Orders.Include(o => o.AppUser);
+            var appDbContext = _context.Orders.Include(o => o.AppUser).Include(o => o.OrderStatusCode);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace WebApp.Controllers
 
             var order = await _context.Orders
                 .Include(o => o.AppUser)
+                .Include(o => o.OrderStatusCode)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -49,6 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code");
             return View();
         }
 
@@ -67,6 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
+            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -84,6 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
+            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -120,6 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
+            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -133,6 +138,7 @@ namespace WebApp.Controllers
 
             var order = await _context.Orders
                 .Include(o => o.AppUser)
+                .Include(o => o.OrderStatusCode)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {

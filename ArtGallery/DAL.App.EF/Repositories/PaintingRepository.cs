@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PaintingRepository : BaseRepository<Painting>, IPaintingRepository
+    public class PaintingRepository : EFBaseRepository<Painting, AppDbContext>, IPaintingRepository
     {
-        public PaintingRepository(DbContext dbContext) : base(dbContext)
+        public PaintingRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Comments.Include(c => c.AppUser);
+            var appDbContext = _context.Comments.Include(c => c.AppUser).Include(c => c.Painting);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace WebApp.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.AppUser)
+                .Include(c => c.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {
@@ -49,6 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
             return View();
         }
 
@@ -57,7 +59,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Body,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
+        public async Task<IActionResult> Create([Bind("CommentBody,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
         {
             if (ModelState.IsValid)
             {
@@ -67,6 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
             return View(comment);
         }
 
@@ -84,6 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
             return View(comment);
         }
 
@@ -92,7 +96,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Body,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("CommentBody,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
         {
             if (id != comment.Id)
             {
@@ -120,6 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
             return View(comment);
         }
 
@@ -133,6 +138,7 @@ namespace WebApp.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.AppUser)
+                .Include(c => c.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {

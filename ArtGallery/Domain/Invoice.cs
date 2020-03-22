@@ -15,13 +15,11 @@ namespace Domain
         [MaxLength(128)] 
         [MinLength(1)] 
         public string InvoiceDetails { get; set; } = default!;
-
-        [MaxLength(36)]
-        public string OrderId { get; set; } = default!;
+        
+        public Guid OrderId { get; set; } = default!;
         public Order? Order { get; set; }
-
-        [MaxLength(36)]
-        public string InvoiceStatusCodeId { get; set; } = default!;
+        
+        public Guid InvoiceStatusCodeId { get; set; } = default!;
         public InvoiceStatusCode? InvoiceStatusCode { get; set; }
 
         public ICollection<Payment>? Payments { get; set; }

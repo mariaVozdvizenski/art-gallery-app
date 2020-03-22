@@ -24,12 +24,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="BasketId" class="control-label"></label>
-                <input asp-for="BasketId" class="form-control" />
+                <select asp-for="BasketId" class="form-control" asp-items="ViewBag.BasketId"></select>
                 <span asp-validation-for="BasketId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PaintingId" class="control-label"></label>
-                <input asp-for="PaintingId" class="form-control" />
+                <select asp-for="PaintingId" class="form-control" asp-items="ViewBag.PaintingId"></select>
                 <span asp-validation-for="PaintingId" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />

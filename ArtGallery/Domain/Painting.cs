@@ -21,9 +21,8 @@ namespace Domain
         [MaxLength(16)] 
         [MinLength(1)]  
         public string Size { get; set; } = default!;
-
-        [MaxLength(36)]
-        public string ArtistId { get; set; } = default!;
+        
+        public Guid ArtistId { get; set; } = default!;
         public Artist? Artist { get; set; }
 
         public ICollection<Comment>? Comments { get; set; }

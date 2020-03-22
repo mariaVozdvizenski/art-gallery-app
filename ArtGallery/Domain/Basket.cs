@@ -10,9 +10,7 @@ namespace Domain
     public class Basket: DomainEntity
     {
         public DateTime DateCreated { get; set; }
-
-        [MaxLength(36)] 
-        public string AppUserId { get; set; } = default!;
+        public Guid AppUserId { get; set; } = default!;
         public AppUser? AppUser { get; set; }
         
         public ICollection<BasketItem>? BasketItems { get; set; }

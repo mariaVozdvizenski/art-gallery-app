@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Shipments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Shipments.ToListAsync());
+            var appDbContext = _context.Shipments.Include(s => s.Invoice).Include(s => s.Order);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Shipments/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var shipment = await _context.Shipments
+                .Include(s => s.Invoice)
+                .Include(s => s.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipment == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: Shipments/Create
         public IActionResult Create()
         {
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails");
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var shipment = await _context.Shipments
+                .Include(s => s.Invoice)
+                .Include(s => s.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (shipment == null)
             {

@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using DAL.App.EF;
 using Domain.Identity;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,11 +31,11 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseMySql(
-                    Configuration.GetConnectionString("MySqlConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("MsSqlConnection")));
             services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>();
-            
+            services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -41,6 +43,8 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            UpdateDatabase(app, env, Configuration);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -52,6 +56,7 @@ namespace WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -68,6 +73,18 @@ namespace WebApp
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app, IWebHostEnvironment env,
+            IConfiguration Configuration)
+        {
+            // give me the scoped services (everyhting created by it will be closed at the end of service scope life).
+            using var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope();
+
+            using var ctx = serviceScope.ServiceProvider.GetService<AppDbContext>();
+            
         }
     }
 }

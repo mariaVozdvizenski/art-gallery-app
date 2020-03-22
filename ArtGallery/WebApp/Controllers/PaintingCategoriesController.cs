@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: PaintingCategories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PaintingCategories.ToListAsync());
+            var appDbContext = _context.PaintingCategories.Include(p => p.Category).Include(p => p.Painting);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: PaintingCategories/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var paintingCategory = await _context.PaintingCategories
+                .Include(p => p.Category)
+                .Include(p => p.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (paintingCategory == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: PaintingCategories/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var paintingCategory = await _context.PaintingCategories
+                .Include(p => p.Category)
+                .Include(p => p.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (paintingCategory == null)
             {

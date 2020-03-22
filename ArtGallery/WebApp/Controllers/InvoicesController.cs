@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Invoices.ToListAsync());
+            var appDbContext = _context.Invoices.Include(i => i.InvoiceStatusCode).Include(i => i.Order);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Invoices/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var invoice = await _context.Invoices
+                .Include(i => i.InvoiceStatusCode)
+                .Include(i => i.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (invoice == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
+            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code");
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var invoice = await _context.Invoices
+                .Include(i => i.InvoiceStatusCode)
+                .Include(i => i.Order)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (invoice == null)
             {

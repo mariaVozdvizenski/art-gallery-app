@@ -30,8 +30,7 @@ namespace WebApp.Controllers
         {
             return "Test it is!" + User.Identity.Name;
         }
-        
-        
+
         public IActionResult Privacy()
         {
             return View();

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
+    public class ArtistRepository : EFBaseRepository<Artist, AppDbContext>, IArtistRepository
     {
-        public ArtistRepository(DbContext dbContext) : base(dbContext)
+        public ArtistRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }

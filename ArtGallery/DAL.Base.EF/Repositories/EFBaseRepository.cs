@@ -8,30 +8,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF.Repositories
 {
-    public class BaseRepository<TEntity> : BaseRepository<TEntity, Guid>
+    public class EFBaseRepository<TEntity, TDbContext> : BaseRepository<TEntity, Guid, TDbContext>
         where TEntity : class, IDomainEntity<Guid>, new()
+        where TDbContext : DbContext
     {
-        public BaseRepository(DbContext dbContext) : base(dbContext)
+        public EFBaseRepository(TDbContext dbContext) : base(dbContext)
         {
         }
     }
 
-    public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
+    public class BaseRepository<TEntity, TKey, TDbContext> : IBaseRepository<TEntity, TKey>
         where TEntity : class, IDomainEntity<TKey>, new()
         where TKey : struct, IComparable
+        where TDbContext : DbContext
     {
-        protected DbContext RepoDbContext;
+        protected TDbContext RepoDbContext;
         protected DbSet<TEntity> RepoDbSet;
-        public BaseRepository(DbContext dbContext)
+
+        public BaseRepository(TDbContext dbContext)
         {
             RepoDbContext = dbContext;
             RepoDbSet = RepoDbContext.Set<TEntity>();
             if (RepoDbSet == null)
             {
-               throw new ArgumentNullException(typeof(TEntity).Name + " was not found as DBSet!");
+                throw new ArgumentNullException(typeof(TEntity).Name + " was not found as DBSet!");
             }
         }
-        
+
         public virtual IEnumerable<TEntity> All()
         {
             return RepoDbSet.ToList();
@@ -54,11 +57,23 @@ namespace DAL.Base.EF.Repositories
 
         public virtual TEntity Add(TEntity entity)
         {
+            if (entity.GetType().GetInterface(nameof(IDomainMetadata)) != null)
+            {
+                var entityMetadata = (IDomainMetadata) entity;
+                entityMetadata.ChangedAt = DateTime.UtcNow;
+            }
+
             return RepoDbSet.Add(entity).Entity;
         }
 
         public virtual TEntity Update(TEntity entity)
         {
+            if (entity.GetType().GetInterface(nameof(IDomainMetadata)) != null)
+            {
+                var entityMetadata = (IDomainMetadata) entity;
+                entityMetadata.ChangedAt = DateTime.UtcNow;
+            }
+
             return RepoDbSet.Update(entity).Entity;
         }
 
@@ -71,16 +86,7 @@ namespace DAL.Base.EF.Repositories
         {
             return Remove(Find(id));
         }
-
-        public virtual int SaveChanges()
-        {
-            return RepoDbContext.SaveChanges();
-        }
-
-        public virtual async Task<int> SaveChangesAsync()
-        {
-            return await RepoDbContext.SaveChangesAsync();
-        }
     }
 }
+
 

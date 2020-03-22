@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
+    public class CommentRepository : EFBaseRepository<Comment, AppDbContext>, ICommentRepository
     {
-        public CommentRepository(DbContext dbContext) : base(dbContext)
+        public CommentRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }

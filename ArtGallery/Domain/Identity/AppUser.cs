@@ -1,15 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class AppUser: IdentityUser
+    public class AppUser: IdentityUser<Guid>
     {
-        [MaxLength(36)] 
-        public override string Id { get; set; } = default!;
-
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<UserPaymentMethod>? UserPaymentMethods { get; set; }
         public ICollection<Basket>? Baskets { get; set; }

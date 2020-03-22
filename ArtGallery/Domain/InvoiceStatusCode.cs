@@ -9,7 +9,7 @@ namespace Domain
     {
         [MaxLength(128)]
         [MinLength(1)]
-        public string InvoiceStatusDescr { get; set; } = default!;
+        public string InvoiceStatusDescription { get; set; } = default!;
 
         [MaxLength(128)]
         [MinLength(1)]

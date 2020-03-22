@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Domain;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF
 {
-    public class AppDbContext: IdentityDbContext<AppUser, AppRole, string>
+    public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid>
     {
         public DbSet<Artist> Artists { get; set; } = default!;
         public DbSet<Basket> Baskets { get; set; } = default!;
@@ -32,6 +33,15 @@ namespace DAL.App.EF
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            foreach (var relationship in builder.Model
+                .GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }

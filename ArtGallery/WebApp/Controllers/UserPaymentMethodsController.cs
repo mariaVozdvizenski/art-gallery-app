@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: UserPaymentMethods
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserPaymentMethods.Include(u => u.AppUser);
+            var appDbContext = _context.UserPaymentMethods.Include(u => u.AppUser).Include(u => u.PaymentMethod);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace WebApp.Controllers
 
             var userPaymentMethod = await _context.UserPaymentMethods
                 .Include(u => u.AppUser)
+                .Include(u => u.PaymentMethod)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (userPaymentMethod == null)
             {
@@ -49,6 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode");
             return View();
         }
 
@@ -67,6 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -84,6 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -120,6 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -133,6 +138,7 @@ namespace WebApp.Controllers
 
             var userPaymentMethod = await _context.UserPaymentMethods
                 .Include(u => u.AppUser)
+                .Include(u => u.PaymentMethod)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (userPaymentMethod == null)
             {

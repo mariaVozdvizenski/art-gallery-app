@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class BasketRepository : BaseRepository<Basket>, IBasketRepository
+    public class BasketRepository : EFBaseRepository<Basket, AppDbContext>, IBasketRepository
     {
-        public BasketRepository(DbContext dbContext) : base(dbContext)
+        public BasketRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }

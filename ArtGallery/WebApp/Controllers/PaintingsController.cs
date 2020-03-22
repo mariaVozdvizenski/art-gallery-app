@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Paintings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Paintings.ToListAsync());
+            var appDbContext = _context.Paintings.Include(p => p.Artist);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Paintings/Details/5
@@ -34,6 +35,7 @@ namespace WebApp.Controllers
             }
 
             var painting = await _context.Paintings
+                .Include(p => p.Artist)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (painting == null)
             {
@@ -46,6 +48,7 @@ namespace WebApp.Controllers
         // GET: Paintings/Create
         public IActionResult Create()
         {
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio");
             return View();
         }
 
@@ -63,6 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -79,6 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -114,6 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -126,6 +132,7 @@ namespace WebApp.Controllers
             }
 
             var painting = await _context.Paintings
+                .Include(p => p.Artist)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (painting == null)
             {

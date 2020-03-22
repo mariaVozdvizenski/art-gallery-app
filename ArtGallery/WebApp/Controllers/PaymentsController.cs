@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Payments.ToListAsync());
+            var appDbContext = _context.Payments.Include(p => p.Invoice);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Payments/Details/5
@@ -34,6 +35,7 @@ namespace WebApp.Controllers
             }
 
             var payment = await _context.Payments
+                .Include(p => p.Invoice)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (payment == null)
             {
@@ -46,6 +48,7 @@ namespace WebApp.Controllers
         // GET: Payments/Create
         public IActionResult Create()
         {
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails");
             return View();
         }
 
@@ -63,6 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", payment.InvoiceId);
             return View(payment);
         }
 
@@ -79,6 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", payment.InvoiceId);
             return View(payment);
         }
 
@@ -114,6 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", payment.InvoiceId);
             return View(payment);
         }
 
@@ -126,6 +132,7 @@ namespace WebApp.Controllers
             }
 
             var payment = await _context.Payments
+                .Include(p => p.Invoice)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (payment == null)
             {

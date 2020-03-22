@@ -22,7 +22,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             _userManager = userManager;
         }
 
-        [TempData] public string StatusMessage { get; set; } 
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {

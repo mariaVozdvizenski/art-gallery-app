@@ -15,12 +15,10 @@ namespace Domain
         [MaxLength(4096)]
         public string? OrderDetails { get; set; }
         
-        [MaxLength(36)] 
-        public string AppUserId { get; set; } = default!;
+        public Guid AppUserId { get; set; } = default!;
         public AppUser? AppUser { get; set; }
-
-        [MaxLength(36)]
-        public string OrderStatusCodeId { get; set; } = default!;
+        
+        public Guid OrderStatusCodeId { get; set; } = default!;
         public OrderStatusCode? OrderStatusCode { get; set; }
 
         public ICollection<Shipment>? Shipments { get; set; }

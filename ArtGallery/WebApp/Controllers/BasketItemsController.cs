@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: BasketItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BasketItems.ToListAsync());
+            var appDbContext = _context.BasketItems.Include(b => b.Basket).Include(b => b.Painting);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: BasketItems/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var basketItem = await _context.BasketItems
+                .Include(b => b.Basket)
+                .Include(b => b.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (basketItem == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: BasketItems/Create
         public IActionResult Create()
         {
+            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id");
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", basketItem.PaintingId);
             return View(basketItem);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", basketItem.PaintingId);
             return View(basketItem);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BasketId"] = new SelectList(_context.Baskets, "Id", "Id", basketItem.BasketId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", basketItem.PaintingId);
             return View(basketItem);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var basketItem = await _context.BasketItems
+                .Include(b => b.Basket)
+                .Include(b => b.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (basketItem == null)
             {

@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: OrderItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.OrderItems.ToListAsync());
+            var appDbContext = _context.OrderItems.Include(o => o.Order).Include(o => o.Painting);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: OrderItems/Details/5
@@ -34,6 +35,8 @@ namespace WebApp.Controllers
             }
 
             var orderItem = await _context.OrderItems
+                .Include(o => o.Order)
+                .Include(o => o.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderItem == null)
             {
@@ -46,6 +49,8 @@ namespace WebApp.Controllers
         // GET: OrderItems/Create
         public IActionResult Create()
         {
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
             return View();
         }
 
@@ -63,6 +68,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -79,6 +86,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -114,6 +123,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -126,6 +137,8 @@ namespace WebApp.Controllers
             }
 
             var orderItem = await _context.OrderItems
+                .Include(o => o.Order)
+                .Include(o => o.Painting)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderItem == null)
             {
