@@ -9,6 +9,7 @@ namespace DAL.App.EF.Repositories
     {
         public CategoryRepository(AppDbContext dbContext) : base(dbContext)
         {
+            
         }
     }
 }

@@ -9,6 +9,7 @@ namespace DAL.App.EF.Repositories
     {
         public CommentRepository(AppDbContext dbContext) : base(dbContext)
         {
+            
         }
     }
 }
