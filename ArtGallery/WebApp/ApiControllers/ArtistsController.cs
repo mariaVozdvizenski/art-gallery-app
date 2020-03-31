@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
@@ -23,17 +24,24 @@ namespace WebApp.ApiControllers
 
         // GET: api/Artists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Artist>>> GetArtists()
+        public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
         {
-            return await _context.Artists.ToListAsync();
+            return await _context.Artists.Select(a => new ArtistDTO()
+            {
+                Id = a.Id, FirstName = a.FirstName, LastName = a.LastName, Country = a.Country,
+                PaintingCount = a.Paintings.Count
+            }).ToListAsync();
         }
 
         // GET: api/Artists/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Artist>> GetArtist(Guid id)
+        public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
         {
-            var artist = await _context.Artists.FindAsync(id);
-
+            var artist = await _context.Artists.Select(a => new ArtistDTO()
+            {
+                Id = a.Id, Country = a.Country, FirstName = a.FirstName, LastName = a.LastName, PaintingCount = a.Paintings.Count
+            }).Where(a => a.Id == id).FirstOrDefaultAsync();
+            
             if (artist == null)
             {
                 return NotFound();

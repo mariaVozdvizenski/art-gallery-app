@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
@@ -23,16 +24,22 @@ namespace WebApp.ApiControllers
 
         // GET: api/Paintings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Painting>>> GetPaintings()
+        public async Task<ActionResult<IEnumerable<PaintingDTO>>> GetPaintings()
         {
-            return await _context.Paintings.ToListAsync();
+            return await _context.Paintings.Select(p => new PaintingDTO()
+            {
+                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title
+            }).ToListAsync();
         }
 
         // GET: api/Paintings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Painting>> GetPainting(Guid id)
+        public async Task<ActionResult<PaintingDTO>> GetPainting(Guid id)
         {
-            var painting = await _context.Paintings.FindAsync(id);
+            var painting = await _context.Paintings.Select(p => new PaintingDTO()
+            {
+                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title
+            }).Where(p => p.Id == id).FirstOrDefaultAsync();
 
             if (painting == null)
             {

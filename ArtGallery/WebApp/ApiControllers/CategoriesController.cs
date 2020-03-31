@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
@@ -23,22 +24,27 @@ namespace WebApp.ApiControllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.Select(c => new CategoryDTO()
+            {
+                Id = c.Id, CategoryName = c.CategoryName, PaintingCount = c.CategoryPaintings.Count
+            }).ToListAsync();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(Guid id)
+        public async Task<ActionResult<CategoryDTO>> GetCategory(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Categories.Select(c => new CategoryDTO()
+            {
+                Id = c.Id, CategoryName = c.CategoryName, PaintingCount = c.CategoryPaintings.Count
+            }).Where(c => c.Id == id).FirstOrDefaultAsync();
 
             if (category == null)
             {
                 return NotFound();
             }
-
             return category;
         }
 
