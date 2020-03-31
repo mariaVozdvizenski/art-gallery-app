@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,17 @@ namespace WebApp.Controllers
 {
     public class InvoiceStatusCodesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public InvoiceStatusCodesController(AppDbContext context)
+        public InvoiceStatusCodesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: InvoiceStatusCodes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.InvoiceStatusCodes.ToListAsync());
+            return View(await _uow.InvoiceStatusCodes.AllAsync());
         }
 
         // GET: InvoiceStatusCodes/Details/5
@@ -33,8 +34,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoiceStatusCode = await _context.InvoiceStatusCodes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoiceStatusCode = await _uow.InvoiceStatusCodes
+                .FindAsync(id);
             if (invoiceStatusCode == null)
             {
                 return NotFound();
@@ -59,8 +60,8 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 invoiceStatusCode.Id = Guid.NewGuid();
-                _context.Add(invoiceStatusCode);
-                await _context.SaveChangesAsync();
+                _uow.InvoiceStatusCodes.Add(invoiceStatusCode);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(invoiceStatusCode);
@@ -74,7 +75,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoiceStatusCode = await _context.InvoiceStatusCodes.FindAsync(id);
+            var invoiceStatusCode = await _uow.InvoiceStatusCodes.FindAsync(id);
             if (invoiceStatusCode == null)
             {
                 return NotFound();
@@ -98,12 +99,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(invoiceStatusCode);
-                    await _context.SaveChangesAsync();
+                    _uow.InvoiceStatusCodes.Update(invoiceStatusCode);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InvoiceStatusCodeExists(invoiceStatusCode.Id))
+                    if (!await InvoiceStatusCodeExists(invoiceStatusCode.Id))
                     {
                         return NotFound();
                     }
@@ -125,8 +126,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoiceStatusCode = await _context.InvoiceStatusCodes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoiceStatusCode = await _uow.InvoiceStatusCodes.FindAsync();
             if (invoiceStatusCode == null)
             {
                 return NotFound();
@@ -140,15 +140,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var invoiceStatusCode = await _context.InvoiceStatusCodes.FindAsync(id);
-            _context.InvoiceStatusCodes.Remove(invoiceStatusCode);
-            await _context.SaveChangesAsync();
+            var invoiceStatusCode = await _uow.InvoiceStatusCodes.FindAsync(id);
+            _uow.InvoiceStatusCodes.Remove(invoiceStatusCode);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceStatusCodeExists(Guid id)
+        private async Task<bool> InvoiceStatusCodeExists(Guid id)
         {
-            return _context.InvoiceStatusCodes.Any(e => e.Id == id);
+            return await _uow.InvoiceStatusCodes.ExsistsAsync(id);
         }
     }
 }

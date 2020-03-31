@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class ShipmentsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ShipmentsController(AppDbContext context)
+        public ShipmentsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Shipments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Shipments.Include(s => s.Invoice).Include(s => s.Order);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Shipments.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: Shipments/Details/5
@@ -34,10 +35,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipment = await _context.Shipments
-                .Include(s => s.Invoice)
-                .Include(s => s.Order)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var shipment = await _uow.Shipments
+                .FirstOrDefaultAsync(id);
             if (shipment == null)
             {
                 return NotFound();
@@ -47,10 +46,10 @@ namespace WebApp.Controllers
         }
 
         // GET: Shipments/Create
-        public IActionResult Create()
+        public async Task<IActionResult>  Create()
         {
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails");
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
+            ViewData["InvoiceId"] = new SelectList(await _uow.Invoices.AllAsync(), "Id", "InvoiceDetails");
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id");
             return View();
         }
 
@@ -64,12 +63,12 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 shipment.Id = Guid.NewGuid();
-                _context.Add(shipment);
-                await _context.SaveChangesAsync();
+                _uow.Shipments.Add(shipment);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
+            ViewData["InvoiceId"] = new SelectList(await _uow.Invoices.AllAsync(), "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -81,13 +80,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipment = await _context.Shipments.FindAsync(id);
+            var shipment = await _uow.Shipments.FindAsync(id);
             if (shipment == null)
             {
                 return NotFound();
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
+            ViewData["InvoiceId"] = new SelectList(await _uow.Invoices.AllAsync(), "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -107,12 +106,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(shipment);
-                    await _context.SaveChangesAsync();
+                    _uow.Shipments.Update(shipment);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ShipmentExists(shipment.Id))
+                    if (! await ShipmentExists(shipment.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "InvoiceDetails", shipment.InvoiceId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", shipment.OrderId);
+            ViewData["InvoiceId"] = new SelectList(await _uow.Invoices.AllAsync(), "Id", "InvoiceDetails", shipment.InvoiceId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", shipment.OrderId);
             return View(shipment);
         }
 
@@ -136,10 +135,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipment = await _context.Shipments
-                .Include(s => s.Invoice)
-                .Include(s => s.Order)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var shipment = await _uow.Shipments
+                .FirstOrDefaultAsync( id);
             if (shipment == null)
             {
                 return NotFound();
@@ -153,15 +150,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var shipment = await _context.Shipments.FindAsync(id);
-            _context.Shipments.Remove(shipment);
-            await _context.SaveChangesAsync();
+            var shipment = await _uow.Shipments.FindAsync(id);
+            _uow.Shipments.Remove(shipment);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ShipmentExists(Guid id)
+        private async Task<bool> ShipmentExists(Guid id)
         {
-            return _context.Shipments.Any(e => e.Id == id);
+            return await _uow.Shipments.ExistsAsync(id);
         }
     }
 }

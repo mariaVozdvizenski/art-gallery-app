@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class PaintingsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PaintingsController(AppDbContext context)
+        public PaintingsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Paintings
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Paintings.Include(p => p.Artist);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Paintings.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: Paintings/Details/5
@@ -34,9 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var painting = await _context.Paintings
-                .Include(p => p.Artist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var painting = await _uow.Paintings.FirstOrDefaultAsync(id);
             if (painting == null)
             {
                 return NotFound();
@@ -46,9 +45,9 @@ namespace WebApp.Controllers
         }
 
         // GET: Paintings/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio");
+            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", "Bio");
             return View();
         }
 
@@ -62,11 +61,11 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 painting.Id = Guid.NewGuid();
-                _context.Add(painting);
-                await _context.SaveChangesAsync();
+                _uow.Paintings.Add(painting);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
+            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -78,12 +77,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var painting = await _context.Paintings.FindAsync(id);
+            var painting = await _uow.Paintings.FindAsync(id);
             if (painting == null)
             {
                 return NotFound();
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
+            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -103,12 +102,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(painting);
-                    await _context.SaveChangesAsync();
+                    _uow.Paintings.Update(painting);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaintingExists(painting.Id))
+                    if (!await PaintingExists(painting.Id))
                     {
                         return NotFound();
                     }
@@ -119,7 +118,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Bio", painting.ArtistId);
+            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", "Bio", painting.ArtistId);
             return View(painting);
         }
 
@@ -131,9 +130,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var painting = await _context.Paintings
-                .Include(p => p.Artist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var painting = await _uow.Paintings.FirstOrDefaultAsync(id);
             if (painting == null)
             {
                 return NotFound();
@@ -147,15 +144,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var painting = await _context.Paintings.FindAsync(id);
-            _context.Paintings.Remove(painting);
-            await _context.SaveChangesAsync();
+            var painting = await _uow.Paintings.FindAsync(id);
+            _uow.Paintings.Remove(painting);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PaintingExists(Guid id)
+        private async Task<bool> PaintingExists(Guid id)
         {
-            return _context.Paintings.Any(e => e.Id == id);
+            return await _uow.Paintings.ExistsAsync(id);
         }
     }
 }

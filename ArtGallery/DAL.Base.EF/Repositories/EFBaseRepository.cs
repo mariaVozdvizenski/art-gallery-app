@@ -16,7 +16,7 @@ namespace DAL.Base.EF.Repositories
         {
         }
     }
-
+    
     public class BaseRepository<TEntity, TKey, TDbContext> : IBaseRepository<TEntity, TKey>
         where TEntity : class, IDomainEntity<TKey>, new()
         where TKey : struct, IComparable
@@ -49,6 +49,7 @@ namespace DAL.Base.EF.Repositories
         {
             return RepoDbSet.Find(id);
         }
+        
 
         public virtual async Task<TEntity> FindAsync(params object[] id)
         {

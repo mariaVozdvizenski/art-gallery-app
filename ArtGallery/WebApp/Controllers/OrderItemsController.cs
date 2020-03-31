@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class OrderItemsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public OrderItemsController(AppDbContext context)
+        public OrderItemsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: OrderItems
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.OrderItems.Include(o => o.Order).Include(o => o.Painting);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.OrderItems.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: OrderItems/Details/5
@@ -34,10 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderItem = await _context.OrderItems
-                .Include(o => o.Order)
-                .Include(o => o.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var orderItem = await _uow.OrderItems.FirstOrDefaultAsync(id);
             if (orderItem == null)
             {
                 return NotFound();
@@ -47,10 +45,10 @@ namespace WebApp.Controllers
         }
 
         // GET: OrderItems/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id");
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description");
             return View();
         }
 
@@ -64,12 +62,12 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 orderItem.Id = Guid.NewGuid();
-                _context.Add(orderItem);
-                await _context.SaveChangesAsync();
+                _uow.OrderItems.Add(orderItem);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -81,13 +79,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderItem = await _context.OrderItems.FindAsync(id);
+            var orderItem = await _uow.OrderItems.FindAsync(id);
             if (orderItem == null)
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -107,12 +105,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(orderItem);
-                    await _context.SaveChangesAsync();
+                    _uow.OrderItems.Update(orderItem);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderItemExists(orderItem.Id))
+                    if (!await OrderItemExists(orderItem.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +121,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", orderItem.OrderId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", orderItem.PaintingId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", orderItem.OrderId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", orderItem.PaintingId);
             return View(orderItem);
         }
 
@@ -136,10 +134,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderItem = await _context.OrderItems
-                .Include(o => o.Order)
-                .Include(o => o.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var orderItem = await _uow.OrderItems.FirstOrDefaultAsync(id);
             if (orderItem == null)
             {
                 return NotFound();
@@ -153,15 +148,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var orderItem = await _context.OrderItems.FindAsync(id);
-            _context.OrderItems.Remove(orderItem);
-            await _context.SaveChangesAsync();
+            var orderItem = await _uow.OrderItems.FindAsync(id);
+            _uow.OrderItems.Remove(orderItem);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderItemExists(Guid id)
+        private async Task<bool> OrderItemExists(Guid id)
         {
-            return _context.OrderItems.Any(e => e.Id == id);
+            return await _uow.OrderItems.ExsistsAsync(id);
         }
     }
 }

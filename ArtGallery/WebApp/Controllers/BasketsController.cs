@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class BasketsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public BasketsController(AppDbContext context)
+        public BasketsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Baskets
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Baskets.Include(b => b.AppUser);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Baskets.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: Baskets/Details/5
@@ -34,9 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var basket = await _context.Baskets
-                .Include(b => b.AppUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var basket = await _uow.Baskets.FirstOrDefaultAsync(id);
             if (basket == null)
             {
                 return NotFound();
@@ -46,9 +45,9 @@ namespace WebApp.Controllers
         }
 
         // GET: Baskets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["AppUserId"] = new SelectList(await _uow.Baskets.GetUsers(), "Id", "Id");
             return View();
         }
 
@@ -62,11 +61,11 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 basket.Id = Guid.NewGuid();
-                _context.Add(basket);
-                await _context.SaveChangesAsync();
+                _uow.Baskets.Add(basket);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", basket.AppUserId);
+            ViewData["AppUserId"] = new SelectList(await _uow.Baskets.GetUsers(), "Id", "Id", basket.AppUserId);
             return View(basket);
         }
 
@@ -78,12 +77,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var basket = await _context.Baskets.FindAsync(id);
+            var basket = await _uow.Baskets.FindAsync(id);
             if (basket == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", basket.AppUserId);
+            ViewData["AppUserId"] = new SelectList(await _uow.Baskets.GetUsers(), "Id", "Id", basket.AppUserId);
             return View(basket);
         }
 
@@ -103,12 +102,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(basket);
-                    await _context.SaveChangesAsync();
+                    _uow.Baskets.Update(basket);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BasketExists(basket.Id))
+                    if (!await BasketExists(basket.Id))
                     {
                         return NotFound();
                     }
@@ -119,7 +118,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", basket.AppUserId);
+            ViewData["AppUserId"] = new SelectList(await _uow.Baskets.GetUsers(), "Id", "Id", basket.AppUserId);
             return View(basket);
         }
 
@@ -131,9 +130,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var basket = await _context.Baskets
-                .Include(b => b.AppUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var basket = await _uow.Baskets
+                .FirstOrDefaultAsync(id);
             if (basket == null)
             {
                 return NotFound();
@@ -147,15 +145,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var basket = await _context.Baskets.FindAsync(id);
-            _context.Baskets.Remove(basket);
-            await _context.SaveChangesAsync();
+            var basket = await _uow.Baskets.FindAsync(id);
+            _uow.Baskets.Remove(basket);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BasketExists(Guid id)
+        private async Task<bool> BasketExists(Guid id)
         {
-            return _context.Baskets.Any(e => e.Id == id);
+            return await _uow.Baskets.ExistsAsync(id);
         }
     }
 }

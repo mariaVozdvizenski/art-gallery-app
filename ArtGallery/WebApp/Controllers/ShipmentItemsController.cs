@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class ShipmentItemsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ShipmentItemsController(AppDbContext context)
+        public ShipmentItemsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: ShipmentItems
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.ShipmentItems.Include(s => s.OrderItem).Include(s => s.Shipment);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.ShipmentItems.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: ShipmentItems/Details/5
@@ -34,10 +35,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipmentItem = await _context.ShipmentItems
-                .Include(s => s.OrderItem)
-                .Include(s => s.Shipment)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var shipmentItem = await _uow.ShipmentItems
+                .FirstOrDefaultAsync(id);
             if (shipmentItem == null)
             {
                 return NotFound();
@@ -47,10 +46,10 @@ namespace WebApp.Controllers
         }
 
         // GET: ShipmentItems/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id");
-            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id");
+            ViewData["OrderItemId"] = new SelectList(await _uow.OrderItems.AllAsync(), "Id", "Id");
+            ViewData["ShipmentId"] = new SelectList(await _uow.Shipments.AllAsync(), "Id", "Id");
             return View();
         }
 
@@ -64,12 +63,12 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 shipmentItem.Id = Guid.NewGuid();
-                _context.Add(shipmentItem);
-                await _context.SaveChangesAsync();
+                _uow.ShipmentItems.Add(shipmentItem);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
-            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
+            ViewData["OrderItemId"] = new SelectList(await _uow.OrderItems.AllAsync(), "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(await _uow.Shipments.AllAsync(), "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -81,13 +80,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipmentItem = await _context.ShipmentItems.FindAsync(id);
+            var shipmentItem = await _uow.ShipmentItems.FindAsync(id);
             if (shipmentItem == null)
             {
                 return NotFound();
             }
-            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
-            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
+            ViewData["OrderItemId"] = new SelectList(await _uow.OrderItems.AllAsync(), "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(await _uow.Shipments.AllAsync(), "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -107,12 +106,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(shipmentItem);
-                    await _context.SaveChangesAsync();
+                    _uow.ShipmentItems.Update(shipmentItem);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ShipmentItemExists(shipmentItem.Id))
+                    if (!await ShipmentItemExists(shipmentItem.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderItemId"] = new SelectList(_context.OrderItems, "Id", "Id", shipmentItem.OrderItemId);
-            ViewData["ShipmentId"] = new SelectList(_context.Shipments, "Id", "Id", shipmentItem.ShipmentId);
+            ViewData["OrderItemId"] = new SelectList(await _uow.OrderItems.AllAsync(), "Id", "Id", shipmentItem.OrderItemId);
+            ViewData["ShipmentId"] = new SelectList(await _uow.Shipments.AllAsync(), "Id", "Id", shipmentItem.ShipmentId);
             return View(shipmentItem);
         }
 
@@ -136,10 +135,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var shipmentItem = await _context.ShipmentItems
-                .Include(s => s.OrderItem)
-                .Include(s => s.Shipment)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var shipmentItem = await _uow.ShipmentItems
+                .FirstOrDefaultAsync(id);
             if (shipmentItem == null)
             {
                 return NotFound();
@@ -153,15 +150,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var shipmentItem = await _context.ShipmentItems.FindAsync(id);
-            _context.ShipmentItems.Remove(shipmentItem);
-            await _context.SaveChangesAsync();
+            var shipmentItem = await _uow.ShipmentItems.FindAsync(id);
+            _uow.ShipmentItems.Remove(shipmentItem);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ShipmentItemExists(Guid id)
+        private async Task<bool>  ShipmentItemExists(Guid id)
         {
-            return _context.ShipmentItems.Any(e => e.Id == id);
+            return await _uow.ShipmentItems.ExistsAsync(id);
         }
     }
 }

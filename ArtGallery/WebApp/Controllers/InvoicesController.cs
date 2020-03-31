@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class InvoicesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public InvoicesController(AppDbContext context)
+        public InvoicesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Invoices.Include(i => i.InvoiceStatusCode).Include(i => i.Order);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Invoices.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: Invoices/Details/5
@@ -34,10 +35,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.InvoiceStatusCode)
-                .Include(i => i.Order)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _uow.Invoices
+                .FirstOrDefaultAsync(id);
             if (invoice == null)
             {
                 return NotFound();
@@ -47,10 +46,10 @@ namespace WebApp.Controllers
         }
 
         // GET: Invoices/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code");
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
+            ViewData["InvoiceStatusCodeId"] = new SelectList(await _uow.InvoiceStatusCodes.AllAsync(), "Id", "Code");
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id");
             return View();
         }
 
@@ -64,12 +63,12 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 invoice.Id = Guid.NewGuid();
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
+                _uow.Invoices.Add(invoice);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
+            ViewData["InvoiceStatusCodeId"] = new SelectList(await _uow.InvoiceStatusCodes.AllAsync(), "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -81,13 +80,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _uow.Invoices.FindAsync(id);
             if (invoice == null)
             {
                 return NotFound();
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
+            ViewData["InvoiceStatusCodeId"] = new SelectList(await _uow.InvoiceStatusCodes.AllAsync(), "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -107,12 +106,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
+                    _uow.Invoices.Update(invoice);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InvoiceExists(invoice.Id))
+                    if (!await InvoiceExists(invoice.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceStatusCodeId"] = new SelectList(_context.InvoiceStatusCodes, "Id", "Code", invoice.InvoiceStatusCodeId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", invoice.OrderId);
+            ViewData["InvoiceStatusCodeId"] = new SelectList(await _uow.InvoiceStatusCodes.AllAsync(), "Id", "Code", invoice.InvoiceStatusCodeId);
+            ViewData["OrderId"] = new SelectList(await _uow.Orders.AllAsync(), "Id", "Id", invoice.OrderId);
             return View(invoice);
         }
 
@@ -136,10 +135,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.InvoiceStatusCode)
-                .Include(i => i.Order)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _uow.Invoices
+                .FirstOrDefaultAsync(id);
             if (invoice == null)
             {
                 return NotFound();
@@ -153,15 +150,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            var invoice = await _uow.Invoices.FindAsync(id);
+            _uow.Invoices.Remove(invoice);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(Guid id)
+        private async Task<bool> InvoiceExists(Guid id)
         {
-            return _context.Invoices.Any(e => e.Id == id);
+            return await _uow.Invoices.ExsistsAsync(id);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,17 @@ namespace WebApp.Controllers
 {
     public class OrderStatusCodesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public OrderStatusCodesController(AppDbContext context)
+        public OrderStatusCodesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: OrderStatusCodes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.OrderStatusCodes.ToListAsync());
+            return View(await _uow.OrderStatusCodes.AllAsync());
         }
 
         // GET: OrderStatusCodes/Details/5
@@ -33,8 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderStatusCode = await _context.OrderStatusCodes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -59,8 +59,8 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 orderStatusCode.Id = Guid.NewGuid();
-                _context.Add(orderStatusCode);
-                await _context.SaveChangesAsync();
+                _uow.OrderStatusCodes.Add(orderStatusCode);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(orderStatusCode);
@@ -74,7 +74,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderStatusCode = await _context.OrderStatusCodes.FindAsync(id);
+            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -98,12 +98,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(orderStatusCode);
-                    await _context.SaveChangesAsync();
+                    _uow.OrderStatusCodes.Update(orderStatusCode);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderStatusCodeExists(orderStatusCode.Id))
+                    if (!await OrderStatusCodeExists(orderStatusCode.Id))
                     {
                         return NotFound();
                     }
@@ -125,8 +125,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderStatusCode = await _context.OrderStatusCodes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var orderStatusCode = await _uow.OrderStatusCodes
+                .FindAsync(id);
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -140,15 +140,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var orderStatusCode = await _context.OrderStatusCodes.FindAsync(id);
-            _context.OrderStatusCodes.Remove(orderStatusCode);
-            await _context.SaveChangesAsync();
+            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
+            _uow.OrderStatusCodes.Remove(orderStatusCode);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderStatusCodeExists(Guid id)
+        private async Task<bool> OrderStatusCodeExists(Guid id)
         {
-            return _context.OrderStatusCodes.Any(e => e.Id == id);
+            return await _uow.OrderStatusCodes.ExistsAsync(id);
         }
     }
 }

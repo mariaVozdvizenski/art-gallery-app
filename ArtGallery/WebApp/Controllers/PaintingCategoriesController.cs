@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,18 @@ namespace WebApp.Controllers
 {
     public class PaintingCategoriesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PaintingCategoriesController(AppDbContext context)
+        public PaintingCategoriesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: PaintingCategories
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.PaintingCategories.Include(p => p.Category).Include(p => p.Painting);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.PaintingCategories.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: PaintingCategories/Details/5
@@ -34,10 +35,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var paintingCategory = await _context.PaintingCategories
-                .Include(p => p.Category)
-                .Include(p => p.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var paintingCategory = await _uow.PaintingCategories
+                .FirstOrDefaultAsync(id);
             if (paintingCategory == null)
             {
                 return NotFound();
@@ -47,10 +46,10 @@ namespace WebApp.Controllers
         }
 
         // GET: PaintingCategories/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", "CategoryName");
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description");
             return View();
         }
 
@@ -64,12 +63,12 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 paintingCategory.Id = Guid.NewGuid();
-                _context.Add(paintingCategory);
-                await _context.SaveChangesAsync();
+                _uow.PaintingCategories.Add(paintingCategory);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -81,13 +80,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var paintingCategory = await _context.PaintingCategories.FindAsync(id);
+            var paintingCategory = await _uow.PaintingCategories.FindAsync(id);
             if (paintingCategory == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -107,12 +106,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(paintingCategory);
-                    await _context.SaveChangesAsync();
+                    _uow.PaintingCategories.Update(paintingCategory);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaintingCategoryExists(paintingCategory.Id))
+                    if (!await PaintingCategoryExists(paintingCategory.Id))
                     {
                         return NotFound();
                     }
@@ -123,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", paintingCategory.CategoryId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", paintingCategory.PaintingId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", "CategoryName", paintingCategory.CategoryId);
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description", paintingCategory.PaintingId);
             return View(paintingCategory);
         }
 
@@ -136,10 +135,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var paintingCategory = await _context.PaintingCategories
-                .Include(p => p.Category)
-                .Include(p => p.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var paintingCategory = await _uow.PaintingCategories.FirstOrDefaultAsync(id);
             if (paintingCategory == null)
             {
                 return NotFound();
@@ -153,15 +149,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var paintingCategory = await _context.PaintingCategories.FindAsync(id);
-            _context.PaintingCategories.Remove(paintingCategory);
-            await _context.SaveChangesAsync();
+            var paintingCategory = await _uow.PaintingCategories.FindAsync(id);
+            _uow.PaintingCategories.Remove(paintingCategory);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PaintingCategoryExists(Guid id)
+        private async Task<bool> PaintingCategoryExists(Guid id)
         {
-            return _context.PaintingCategories.Any(e => e.Id == id);
+            return await _uow.PaintingCategories.ExistsAsync(id);
         }
     }
 }

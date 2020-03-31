@@ -26,7 +26,7 @@ namespace DAL.App.EF
         public IOrderStatusCodeRepository OrderStatusCodes => GetRepository<IOrderStatusCodeRepository>(() => new OrderStatusCodeRepository(UOWDbContext));
         public IPaintingRepository Paintings => GetRepository<IPaintingRepository>(() => new PaintingRepository(UOWDbContext));
         public IPaintingCategoryRepository PaintingCategories => GetRepository<IPaintingCategoryRepository>(() => new PaintingCategoryRepository(UOWDbContext));
-        public IPaymentRepository PaymentsRepository => GetRepository<IPaymentRepository>(() => new PaymentRepository(UOWDbContext));
+        public IPaymentRepository Payments => GetRepository<IPaymentRepository>(() => new PaymentRepository(UOWDbContext));
         public IPaymentMethodRepository PaymentMethods => GetRepository<IPaymentMethodRepository>(() => new PaymentMethodRepository(UOWDbContext));
         public IShipmentRepository Shipments => GetRepository<IShipmentRepository>(() => new ShipmentRepository(UOWDbContext));
         public IShipmentItemRepository ShipmentItems => GetRepository<IShipmentItemRepository>(() => new ShipmentItemRepository(UOWDbContext));
