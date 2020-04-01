@@ -1,4 +1,37 @@
-
 <template>
-Categories Index
+    <h1>Index</h1>
+
+    <p>
+        <a href="/Categories/Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    CategoryName
+                </th>
+                <th>
+                    PaintingCount
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="category of _categories">
+                <td>
+                    ${category.categoryName}
+                </td>
+                <td>
+                    ${category.paintingCount}
+                </td>
+                <td>
+                    <a href="/Categories/Edit/xxx">Edit</a> |
+                    <a route-href="route: categoryDetails; params.bind: {id: category.id}">Details</a> |
+                    <a href="/Categories/Delete/xxx">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </main>
+    </div>
 </template>

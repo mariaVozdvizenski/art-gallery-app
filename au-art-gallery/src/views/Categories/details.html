@@ -1,0 +1,27 @@
+<template>
+    <h1>Details</h1>
+
+<div>
+    <h4>PaintingCategory</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            CategoryName
+        </dt>
+        <dd class = "col-sm-10">
+            ${_category.categoryName}
+        </dd>
+        <dt class = "col-sm-2">
+            PaintingCount
+        </dt>
+        <dd class = "col-sm-10">
+            ${_category.paintingCount}
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/PaintingCategories/Edit/b369f73c-5b1d-4baa-ab41-bf3aa58d1dc7">Edit</a> |
+    <a route-href="route: categories">Back to List</a>
+</div>
+
+</template>

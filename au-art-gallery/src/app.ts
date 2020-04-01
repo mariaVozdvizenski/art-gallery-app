@@ -23,9 +23,11 @@ export class App {
       {route: ['artists/edit/:id'], name: 'artistEdit', moduleId: PLATFORM.moduleName('views/artists/edit'), nav: false, title:'Artist Edit'},
 
       {route: ['paintings', 'paintings/index'], name: 'paintings', moduleId: PLATFORM.moduleName('views/paintings/index'), nav: true, title:'Paintings'},
-      {route: ['categories', 'categories/index'], name: 'categories', moduleId: PLATFORM.moduleName('views/categories/index'), nav: true, title:'Categories'}]
-    
-      );
+      {route: ['paintings/details/:id'], name: 'paintingDetails', moduleId: PLATFORM.moduleName('views/paintings/details'), nav: false, title:'Painting Details'},
+
+      {route: ['categories', 'categories/index'], name: 'categories', moduleId: PLATFORM.moduleName('views/categories/index'), nav: true, title:'Categories'},
+      {route: ['categories/details/:id'], name: 'categoryDetails', moduleId: PLATFORM.moduleName('views/categories/details'), nav: false, title:'Category Details'}
+    ]);
 
     config.mapUnknownRoutes('views/home/index')
 

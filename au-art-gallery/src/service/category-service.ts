@@ -1,40 +1,36 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
-import {IArtist} from 'domain/IArtist';
+import {ICategory} from 'domain/ICategory';
 
 @autoinject
-export class ArtistService {
-    constructor(private httpClient: HttpClient){
+export class CategoryService {
+
+    private readonly _baseUrl = 'https://localhost:5001/api/Categories';
+
+    constructor(private httpClient: HttpClient) {
 
     }
 
-    private readonly _baseUrl = 'https://localhost:5001/api/Artists';
-    private _artist: IArtist | null = null;
-
-    getArtists(): Promise<IArtist []>{
+    getCategories(): Promise<ICategory[]> {
         return this.httpClient
         .fetch(this._baseUrl)
         .then(response => response.json())
-        .then((data: IArtist[]) => data)
+        .then((data: ICategory[]) => data)
         .catch(reason => {
             console.log(reason); 
             return [];
         });
     }
 
-    getArtist(id: string): Promise<IArtist | null> {
+    getCategory(id: string): Promise<ICategory | null> {
         return this.httpClient
         .fetch(this._baseUrl + '/' + id)
         .then(response => response.json())
-        .then((data: IArtist) => data)
+        .then((data: ICategory) => data)
         .catch(reason => {
             console.log(reason); 
             return null;
         });
 
-    }
-
-    updateArtist(artist: IArtist) {
-        
     }
 }

@@ -16,7 +16,6 @@ export class ArtistEdit{
     }
     
     activate(params: any, routeConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
-        console.log(params)
         if (params.id && typeof(params) == "string") {
             this.artistService.getArtist(params).then(
                 data => data = this._artist)

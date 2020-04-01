@@ -1,10 +1,10 @@
-import {autoinject} from 'aurelia-framework';
+import { autoinject } from 'aurelia-framework';
 import { ArtistService } from 'service/artist-service';
 import { IArtist } from 'domain/IArtist';
 
 
 @autoinject
-export class ArtistsIndex{
+export class ArtistsIndex {
     private _artists: IArtist[] = []
 
     constructor(private artistService: ArtistService) {
@@ -12,9 +12,9 @@ export class ArtistsIndex{
     }
 
     attached() {
-       this.artistService.getArtists().then(
-           data => this._artists = data
-       ); 
+        this.artistService.getArtists().then(
+            data => this._artists = data
+        );
     }
-    
+
 }

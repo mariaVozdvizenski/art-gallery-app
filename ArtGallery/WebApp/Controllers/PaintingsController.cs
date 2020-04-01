@@ -47,7 +47,7 @@ namespace WebApp.Controllers
         // GET: Paintings/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", "Bio");
+            ViewData["ArtistId"] = new SelectList(await _uow.Artists.AllAsync(), "Id", nameof(Artist.FirstLastName));
             return View();
         }
 

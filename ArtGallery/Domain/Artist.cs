@@ -30,5 +30,7 @@ namespace Domain
         public DateTime DateOfBirth { get; set; } = default!;
         
         public ICollection<Painting>? Paintings { get; set; }
+
+        public string FirstLastName => FirstName + " " + LastName;
     }
 }

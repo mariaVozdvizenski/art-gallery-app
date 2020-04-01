@@ -1,0 +1,33 @@
+<template>
+    <h1>Details</h1>
+
+    <div>
+        <h4>Painting</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                Title
+            </dt>
+            <dd class="col-sm-10">
+                ${_painting.title}
+            </dd>
+            <dt class="col-sm-2">
+                Description
+            </dt>
+            <dd class="col-sm-10">
+                ${_painting.description}
+            </dd>
+            <dt class="col-sm-2">
+                Price
+            </dt>
+            <dd class="col-sm-10">
+                ${_painting.price}
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a href="/Paintings/Edit/cb19cf3a-945a-4d51-935d-12fb76102edb">Edit</a> |
+        <a route-href="route: paintings">Back to List</a>
+    </div>
+
+</template>

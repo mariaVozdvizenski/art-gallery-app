@@ -48,8 +48,8 @@ namespace WebApp.Controllers
         // GET: PaintingCategories/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", "CategoryName");
-            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", "Description");
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.AllAsync(), "Id", nameof(Category.CategoryName));
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", nameof(Painting.Title));
             return View();
         }
 
