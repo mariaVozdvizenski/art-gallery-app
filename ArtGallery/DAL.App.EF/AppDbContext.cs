@@ -31,7 +31,7 @@ namespace DAL.App.EF
 
         
         public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
+            : base(options)  
         {
         }
         protected override void OnModelCreating(ModelBuilder builder)

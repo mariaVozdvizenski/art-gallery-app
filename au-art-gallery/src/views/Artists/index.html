@@ -1,0 +1,47 @@
+
+<template>
+    <h1>Index</h1>
+
+    <p>
+        <a href="/Artists/Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    FirstName
+                </th>
+                <th>
+                    LastName
+                </th>
+                <th>
+                    Country
+                </th>
+                <th>
+                    PaintingCount
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="artist of _artists">
+                <td>
+                    ${artist.firstName}
+                </td>
+                <td>
+                    ${artist.lastName}
+                </td>
+                <td>
+                    ${artist.country}
+                </td>
+                <td>
+                    ${artist.paintingCount}
+                </td>
+                <td>
+                    <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
+                    <a route-href="route: artistDetails; params.bind: {id: artist.id}">Details</a> |
+                    <a href="/Artists/Delete/22fc8183-1171-4733-b39c-039d8564e4c1">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+</template>
