@@ -33,8 +33,10 @@ namespace WebApp
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MsSqlConnection")));
-            services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<AppUser, AppRole>()
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<AppDbContext>();
+            //AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -96,7 +98,30 @@ namespace WebApp
                 .CreateScope();
 
             using var ctx = serviceScope.ServiceProvider.GetService<AppDbContext>();
-            
+
+            using var userManager = serviceScope.ServiceProvider.GetService<UserManager<AppUser>>();
+            using var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<AppRole>>();
+             
+            if (Configuration["AppDataInitialization:DropDatabase"] == "True")
+            {
+                Console.WriteLine("DropDatabase");
+                DAL.App.EF.Helpers.DataInitializers.DeleteDatabase(ctx);
+            }
+            if (Configuration["AppDataInitialization:MigrateDatabase"] == "True")
+            {
+                Console.WriteLine("MigrateDatabase");
+                DAL.App.EF.Helpers.DataInitializers.MigrateDatabase(ctx);
+            }
+            if (Configuration["AppDataInitialization:SeedIdentity"] == "True")
+            {
+                Console.WriteLine("SeedIdentity");
+                DAL.App.EF.Helpers.DataInitializers.SeedIdentity(userManager, roleManager);
+            }
+            if (Configuration["AppDataInitialization:SeedData"] == "True")
+            {
+                Console.WriteLine("SeedData");
+                DAL.App.EF.Helpers.DataInitializers.SeedData(ctx);
+            }
         }
     }
 }
