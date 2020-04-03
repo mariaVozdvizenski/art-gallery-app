@@ -1,5 +1,4 @@
-export interface IPainting{
-    id: string;
+export interface IPaintingCreate{
     title: string;
     description: string;
     price: number;

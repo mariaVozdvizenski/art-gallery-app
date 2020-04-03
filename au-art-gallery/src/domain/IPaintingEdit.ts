@@ -1,4 +1,4 @@
-export interface IPainting{
+export interface IPaintingEdit {
     id: string;
     title: string;
     description: string;

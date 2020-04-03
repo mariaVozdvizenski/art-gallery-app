@@ -1,0 +1,45 @@
+<template>
+    <h1>Create</h1>
+
+<h4>Artist</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form submit.trigger="onSubmit($event)">
+            <div class="form-group">
+                <label class="control-label" for="FirstName">FirstName</label>
+                <input class="form-control" type="text" maxlength="128" id="FirstName" value.bind="_firstName"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="LastName">LastName</label>
+                <input class="form-control" type="text" maxlength="128" id="LastName" value.bind="_lastName"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="Bio">Bio</label>
+                <input class="form-control" type="text" maxlength="4096" id="Bio" value.bind="_bio"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="PlaceOfBirth">PlaceOfBirth</label>
+                <input class="form-control" type="text" maxlength="128" id="PlaceOfBirth" value.bind="_placeOfBirth"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="Country">Country</label>
+                <input class="form-control" type="text" maxlength="128" id="Country" value.bind="_country"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="DateOfBirth">DateOfBirth</label>
+                <input class="form-control" type="datetime-local" id="DateOfBirth" value.bind="_dateOfBirth"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+    </form>
+    </div>
+</div>
+
+<div>
+    <a route-href="route: artists">Back to List</a>
+</div>
+        </main>
+    </div>
+</template>

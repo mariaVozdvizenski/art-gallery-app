@@ -1,13 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Schema;
+using Domain;
 
 namespace PublicApi.DTO.v1
 {
-    public class PaintingDTO
+    public class PaintingCreateDTO
     {
-        public Guid Id { get; set; }
-
         [MaxLength(4096)] 
         [MinLength(1)] 
         public string Description { get; set; } = default!;

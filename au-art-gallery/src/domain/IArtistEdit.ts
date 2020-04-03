@@ -1,7 +1,6 @@
-export interface IArtist {
+export interface IArtistEdit {
     id: string;
     firstName: string;
     lastName: string;
     country: string;
-    paintingCount: number;
 }

@@ -28,7 +28,8 @@ namespace WebApp.ApiControllers
         {
             return await _context.Paintings.Select(p => new PaintingDTO()
             {
-                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title
+                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title, 
+                ArtistId = p.ArtistId,
             }).ToListAsync();
         }
 
@@ -85,8 +86,12 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Painting>> PostPainting(Painting painting)
+        public async Task<ActionResult<Painting>> PostPainting(PaintingCreateDTO paintingCreateDTO)
         {
+            var painting = new Painting()
+            {
+                Price = paintingCreateDTO.Price,
+            };
             _context.Paintings.Add(painting);
             await _context.SaveChangesAsync();
 

@@ -2,7 +2,7 @@
     <h1>Index</h1>
 
     <p>
-        <a href="/Categories/Create">Create New</a>
+        <a route-href="route: categoryCreate">Create New</a>
     </p>
     <table class="table">
         <thead>
@@ -25,9 +25,9 @@
                     ${category.paintingCount}
                 </td>
                 <td>
-                    <a href="/Categories/Edit/xxx">Edit</a> |
+                    <a route-href="route: categoryEdit; params.bind: {id: category.id}">Edit</a> |
                     <a route-href="route: categoryDetails; params.bind: {id: category.id}">Details</a> |
-                    <a href="/Categories/Delete/xxx">Delete</a>
+                    <a route-href="route: categoryDelete; params.bind: {id: category.id}">Delete</a>
                 </td>
             </tr>
         </tbody>

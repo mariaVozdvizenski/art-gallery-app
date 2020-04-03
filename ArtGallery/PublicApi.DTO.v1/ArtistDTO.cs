@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PublicApi.DTO.v1
 {
@@ -6,11 +7,11 @@ namespace PublicApi.DTO.v1
     {
         public Guid Id { get; set; }
 
-        public string FirstName { get; set; }
+        [MinLength(1)] [MaxLength(64)] public string FirstName { get; set; } = default!;
 
-        public string LastName { get; set; }
+        [MinLength(1)] [MaxLength(64)] public string LastName { get; set; } = default!;
 
-        public string Country { get; set; }
+        [MinLength(1)] [MaxLength(64)] public string Country { get; set; } = default!;
 
         public int PaintingCount { get; set; }
     }

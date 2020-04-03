@@ -3,7 +3,7 @@
     <h1>Index</h1>
 
     <p>
-        <a href="/Artists/Create">Create New</a>
+        <a route-href="route: artistCreate">Create New</a>
     </p>
     <table class="table">
         <thead>
@@ -40,7 +40,7 @@
                 <td>
                     <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
                     <a route-href="route: artistDetails; params.bind: {id: artist.id}">Details</a> |
-                    <a href="/Artists/Delete/22fc8183-1171-4733-b39c-039d8564e4c1">Delete</a>
+                    <a route-href="route: artistDelete; params.bind: {id: artist.id}">Delete</a>
                 </td>
             </tr>
         </tbody>

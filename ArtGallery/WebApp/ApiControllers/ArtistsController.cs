@@ -54,15 +54,26 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutArtist(Guid id, Artist artist)
+        public async Task<IActionResult> PutArtist(Guid id, ArtistEditDTO artistEditDTO)
         {
-            if (id != artist.Id)
+            if (id != artistEditDTO.Id)
+            {
+                return BadRequest();
+            }
+            
+            var artist = await _context.Artists.FindAsync(artistEditDTO.Id);
+
+            if (artist == null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(artist).State = EntityState.Modified;
+            artist.Country = artistEditDTO.Country;
+            artist.FirstName = artistEditDTO.FirstName;
+            artist.LastName = artistEditDTO.LastName;
 
+            _context.Artists.Update(artist);
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -86,8 +97,17 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Artist>> PostArtist(Artist artist)
+        public async Task<ActionResult<Artist>> PostArtist(ArtistCreateDTO artistCreateDTO)
         {
+            var artist = new Artist()
+            {
+                FirstName = artistCreateDTO.FirstName,
+                LastName = artistCreateDTO.LastName,
+                Country = artistCreateDTO.Country,
+                PlaceOfBirth = artistCreateDTO.PlaceOfBirth,
+                Bio = artistCreateDTO.Bio,
+                DateOfBirth = artistCreateDTO.DateOfBirth
+            };
             _context.Artists.Add(artist);
             await _context.SaveChangesAsync();
 

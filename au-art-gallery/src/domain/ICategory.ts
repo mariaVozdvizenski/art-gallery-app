@@ -1,6 +1,6 @@
 
 export interface ICategory{
-    Id: string;
+    id: string;
     categoryName: string;
     paintingCount: number;
 }

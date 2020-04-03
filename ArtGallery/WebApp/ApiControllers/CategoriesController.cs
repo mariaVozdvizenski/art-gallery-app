@@ -52,15 +52,24 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(Guid id, Category category)
+        public async Task<IActionResult> PutCategory(Guid id, CategoryEditDTO categoryEditDTO)
         {
-            if (id != category.Id)
+            if (id != categoryEditDTO.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            var category = await _context.Categories.FindAsync(categoryEditDTO.Id);
+            
+            if (category == null)
+            {
+                return BadRequest();
+            }
 
+            category.CategoryName = categoryEditDTO.CategoryName;
+            
+            _context.Categories.Update(category);
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -84,8 +93,13 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(CategoryCreateDTO categoryCreateDTO)
         {
+            var category = new Category()
+            {
+                CategoryName = categoryCreateDTO.CategoryName
+            };
+            
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
