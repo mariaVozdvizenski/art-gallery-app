@@ -148,7 +148,7 @@ namespace WebApp.Controllers
 
         private async Task<bool> InvoiceStatusCodeExists(Guid id)
         {
-            return await _uow.InvoiceStatusCodes.ExsistsAsync(id);
+            return await _uow.InvoiceStatusCodes.ExistsAsync(id);
         }
     }
 }

@@ -2,28 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Roles = "User")]
     public class OrdersController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public OrdersController(AppDbContext context)
+        public OrdersController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Orders.Include(o => o.AppUser).Include(o => o.OrderStatusCode);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Orders.AllAsync(User.UserGuidId());
+            return View(await appDbContext);
         }
 
         // GET: Orders/Details/5
@@ -34,10 +38,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.AppUser)
-                .Include(o => o.OrderStatusCode)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _uow.Orders
+                .FirstOrDefaultAsync(id, User.UserGuidId());
             if (order == null)
             {
                 return NotFound();
@@ -47,10 +49,9 @@ namespace WebApp.Controllers
         }
 
         // GET: Orders/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code");
+            ViewData["OrderStatusCodeId"] = new SelectList(await _uow.OrderStatusCodes.AllAsync(), "Id", "Code");
             return View();
         }
 
@@ -59,17 +60,17 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Order order)
+        public async Task<IActionResult> Create( Order order)
         {
+            order.AppUserId = User.UserGuidId();
+            
             if (ModelState.IsValid)
             {
-                order.Id = Guid.NewGuid();
-                _context.Add(order);
-                await _context.SaveChangesAsync();
+                _uow.Orders.Add(order);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
+            ViewData["OrderStatusCodeId"] = new SelectList(await _uow.OrderStatusCodes.AllAsync(), "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -81,13 +82,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _uow.Orders.FirstOrDefaultAsync(id, User.UserGuidId());
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
+            ViewData["OrderStatusCodeId"] = new SelectList(await _uow.OrderStatusCodes.AllAsync(), "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -96,8 +96,10 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("OrderDate,OrderDetails,AppUserId,OrderStatusCodeId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Order order)
+        public async Task<IActionResult> Edit(Guid id, Order order)
         {
+            order.AppUserId = User.UserGuidId();
+            
             if (id != order.Id)
             {
                 return NotFound();
@@ -107,12 +109,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    _uow.Orders.Update(order);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Id))
+                    if (!await _uow.Orders.ExistsAsync(id, User.UserGuidId()))
                     {
                         return NotFound();
                     }
@@ -123,8 +125,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", order.AppUserId);
-            ViewData["OrderStatusCodeId"] = new SelectList(_context.OrderStatusCodes, "Id", "Code", order.OrderStatusCodeId);
+            ViewData["OrderStatusCodeId"] = new SelectList(await _uow.OrderStatusCodes.AllAsync(), "Id", "Code", order.OrderStatusCodeId);
             return View(order);
         }
 
@@ -136,10 +137,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.AppUser)
-                .Include(o => o.OrderStatusCode)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _uow.Orders
+                .FirstOrDefaultAsync( id, User.UserGuidId());
             if (order == null)
             {
                 return NotFound();
@@ -153,15 +152,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            await _uow.Orders.DeleteAsync(id, User.UserGuidId());
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool OrderExists(Guid id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
         }
     }
 }

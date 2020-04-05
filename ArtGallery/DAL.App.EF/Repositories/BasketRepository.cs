@@ -17,29 +17,48 @@ namespace DAL.App.EF.Repositories
         }
         public async Task<Basket> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
-            var query = RepoDbSet
-                .Include(u => u.AppUser)
-                .Where(b => b.Id == id)
+            var query = RepoDbSet.Where(a => a.Id == id)
+                .Include(a => a.AppUser)
                 .AsQueryable();
+            
+            if (userId != null)
+            {
+                query = query.Where(a => a.AppUserId == userId);
+            }
+
             return await query.FirstOrDefaultAsync();
         }
 
         public async Task<bool> ExistsAsync(Guid? id, Guid? userId = null)
         {
-            return await RepoDbSet.AnyAsync(b => b.Id == id);
+            if (userId == null)
+            {
+                return await RepoDbSet.AnyAsync(a => a.Id == id);
+            }
+
+            return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
 
-        public async Task<IEnumerable<Basket>> AllAsync(Guid? id, Guid? userId = null)
+        public async Task<IEnumerable<Basket>> AllAsync(Guid? userId = null)
         {
             var query = RepoDbSet
-                .Include(u => u.AppUser)
+                .Include(up => up.AppUser)
                 .AsQueryable();
-            return await query.ToListAsync();        
+
+            if (userId != null)
+            {
+                query = query.Where(up => up.AppUserId == userId);
+            }
+
+            return await query.ToListAsync();
+        }
+        
+        public async Task DeleteAsync(Guid id, Guid? userId = null)
+        {
+            var basket = await FirstOrDefaultAsync(id, userId);
+            base.Remove(basket);
         }
 
-        public async Task<IEnumerable<AppUser>> GetUsers()
-        {
-            return await RepoDbContext.Users.ToListAsync();
-        }
+        
     }
 }

@@ -148,7 +148,7 @@ namespace WebApp.Controllers
 
         private async Task<bool> CategoryExists(Guid id)
         {
-            return await _uow.Categories.ExsistsAsync(id);
+            return await _uow.Categories.ExistsAsync(id);
         }
     }
 }

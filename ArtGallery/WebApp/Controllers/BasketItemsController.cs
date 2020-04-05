@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["BasketId"] = new SelectList( await _uow.Baskets.AllAsync(), nameof(Basket.Id), nameof(Basket.Id));
-            ViewData["PaintingId"] = new SelectList( await _uow.Paintings.AllAsync(), nameof(Painting.Title), nameof(Painting.Title));
+            ViewData["PaintingId"] = new SelectList( await _uow.Paintings.AllAsync(), nameof(Painting.Id), nameof(Painting.Title));
             return View();
         }
 

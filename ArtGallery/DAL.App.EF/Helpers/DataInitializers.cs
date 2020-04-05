@@ -20,20 +20,23 @@ namespace DAL.App.EF.Helpers
 
         public static void SeedIdentity(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
         {
-            var roleName = "Admin";
-            var role = roleManager.FindByNameAsync(roleName).Result;
-            if (role == null)
+            var roleNames = new string[] {"User", "Admin"};
+            foreach (var roleName in roleNames)
             {
-                role = new AppRole();
-                role.Name = roleName;
-                var result = roleManager.CreateAsync(role).Result;
-                
-                if (!result.Succeeded)
+                var role = roleManager.FindByNameAsync(roleName).Result;
+                if (role == null)
                 {
-                    throw new ApplicationException("Role creation failed!");
+                    role = new AppRole();
+                    role.Name = roleName;
+                    var result = roleManager.CreateAsync(role).Result;
+                
+                    if (!result.Succeeded)
+                    {
+                        throw new ApplicationException("Role creation failed!");
+                    }
                 }
             }
-
+            
             var userName = "mavozd@mavozd.com";
             var password = "Fake.pass123";
 
@@ -50,7 +53,8 @@ namespace DAL.App.EF.Helpers
                 }
             }
 
-            var roleResult = userManager.AddToRoleAsync(user, roleName).Result;
+            var roleResult = userManager.AddToRoleAsync(user, "Admin").Result;
+            roleResult = userManager.AddToRoleAsync(user, "User").Result;
         }
         
         public static void SeedData(AppDbContext context)

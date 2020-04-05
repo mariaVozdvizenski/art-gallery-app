@@ -2,28 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     public class CommentsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CommentsController(AppDbContext context)
+        public CommentsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Comments.Include(c => c.AppUser).Include(c => c.Painting);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.Comments.AllAsync();
+            return View(await appDbContext);
         }
 
         // GET: Comments/Details/5
@@ -34,10 +37,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .Include(c => c.AppUser)
-                .Include(c => c.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _uow.Comments
+                .FirstOrDefaultAsync(id);
             if (comment == null)
             {
                 return NotFound();
@@ -47,32 +48,34 @@ namespace WebApp.Controllers
         }
 
         // GET: Comments/Create
-        public IActionResult Create()
+        
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description");
+            ViewData["PaintingId"] = new SelectList(await _uow.Paintings.AllAsync(), "Id", nameof(Painting.Title));
             return View();
         }
 
         // POST: Comments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CommentBody,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
+        public async Task<IActionResult> Create(Comment comment)
         {
+            comment.AppUserId = User.UserGuidId();
+            
             if (ModelState.IsValid)
             {
-                comment.Id = Guid.NewGuid();
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
+                _uow.Comments.Add(comment);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
             return View(comment);
         }
 
+        [Authorize]
         // GET: Comments/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -81,23 +84,26 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _uow.Comments.FirstOrDefaultAsync(id, User.UserGuidId());
             if (comment == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
+          
             return View(comment);
         }
 
         // POST: Comments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("CommentBody,AppUserId,PaintingId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Comment comment)
+        public async Task<IActionResult> Edit(Guid id, Comment comment)
         {
+            comment.AppUserId = User.UserGuidId();
+
+            
             if (id != comment.Id)
             {
                 return NotFound();
@@ -107,12 +113,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
+                    _uow.Comments.Update(comment);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommentExists(comment.Id))
+                    if (!await _uow.Comments.ExistsAsync(comment.Id, User.UserGuidId()))
                     {
                         return NotFound();
                     }
@@ -123,11 +129,10 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", comment.AppUserId);
-            ViewData["PaintingId"] = new SelectList(_context.Paintings, "Id", "Description", comment.PaintingId);
             return View(comment);
         }
 
+        [Authorize]
         // GET: Comments/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -136,10 +141,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .Include(c => c.AppUser)
-                .Include(c => c.Painting)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _uow.Comments
+                .FirstOrDefaultAsync(id, User.UserGuidId());
             if (comment == null)
             {
                 return NotFound();
@@ -148,20 +151,16 @@ namespace WebApp.Controllers
             return View(comment);
         }
 
+        [Authorize]
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            await _uow.Comments.DeleteAsync(id, User.UserGuidId());
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CommentExists(Guid id)
-        {
-            return _context.Comments.Any(e => e.Id == id);
-        }
     }
 }

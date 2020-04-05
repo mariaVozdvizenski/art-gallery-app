@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,32 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ArtistsController(AppDbContext context)
+        public ArtistsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Artists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
         {
-            return await _context.Artists.Select(a => new ArtistDTO()
-            {
-                Id = a.Id, FirstName = a.FirstName, LastName = a.LastName, Country = a.Country,
-                PaintingCount = a.Paintings.Count
-            }).ToListAsync();
+            return Ok(await _uow.Artists.DTOAllAsync());
         }
 
         // GET: api/Artists/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
         {
-            var artist = await _context.Artists.Select(a => new ArtistDTO()
-            {
-                Id = a.Id, Country = a.Country, FirstName = a.FirstName, LastName = a.LastName, PaintingCount = a.Paintings.Count
-            }).Where(a => a.Id == id).FirstOrDefaultAsync();
+            var artist = await _uow.Artists.DTOFirstOrDefaultAsync(id);
             
             if (artist == null)
             {
@@ -61,7 +55,7 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
             
-            var artist = await _context.Artists.FindAsync(artistEditDTO.Id);
+            var artist = await _uow.Artists.FirstOrDefaultAsync(artistEditDTO.Id);
 
             if (artist == null)
             {
@@ -72,15 +66,15 @@ namespace WebApp.ApiControllers
             artist.FirstName = artistEditDTO.FirstName;
             artist.LastName = artistEditDTO.LastName;
 
-            _context.Artists.Update(artist);
+            _uow.Artists.Update(artist);
             
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ArtistExists(id))
+                if (! await _uow.Artists.ExistsAsync(id))
                 {
                     return NotFound();
                 }
@@ -108,8 +102,8 @@ namespace WebApp.ApiControllers
                 Bio = artistCreateDTO.Bio,
                 DateOfBirth = artistCreateDTO.DateOfBirth
             };
-            _context.Artists.Add(artist);
-            await _context.SaveChangesAsync();
+            _uow.Artists.Add(artist);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
         }
@@ -118,21 +112,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Artist>> DeleteArtist(Guid id)
         {
-            var artist = await _context.Artists.FindAsync(id);
+            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
             if (artist == null)
             {
                 return NotFound();
             }
 
-            _context.Artists.Remove(artist);
-            await _context.SaveChangesAsync();
+            _uow.Artists.Remove(artist);
+            await _uow.SaveChangesAsync();
 
-            return artist;
-        }
-
-        private bool ArtistExists(Guid id)
-        {
-            return _context.Artists.Any(e => e.Id == id);
+            return Ok(artist);
         }
     }
 }

@@ -11,8 +11,7 @@ namespace Contracts.DAL.App.Repositories
     {
          Task<Basket> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
          Task<bool> ExistsAsync(Guid? id, Guid? userId = null);
-         Task<IEnumerable<Basket>> AllAsync(Guid? id, Guid? userId = null);
-         Task<IEnumerable<AppUser>> GetUsers();
-
+         Task<IEnumerable<Basket>> AllAsync(Guid? userId = null);
+         Task DeleteAsync(Guid id, Guid? userId = null);
     }
 }

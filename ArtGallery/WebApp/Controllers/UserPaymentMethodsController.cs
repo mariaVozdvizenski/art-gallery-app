@@ -2,28 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class UserPaymentMethodsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserPaymentMethodsController(AppDbContext context)
+        public UserPaymentMethodsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: UserPaymentMethods
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserPaymentMethods.Include(u => u.AppUser).Include(u => u.PaymentMethod);
-            return View(await appDbContext.ToListAsync());
+            var appDbContext = _uow.UserPaymentMethods.AllAsync(User.UserGuidId());
+            return View(await appDbContext);
         }
 
         // GET: UserPaymentMethods/Details/5
@@ -34,10 +38,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userPaymentMethod = await _context.UserPaymentMethods
-                .Include(u => u.AppUser)
-                .Include(u => u.PaymentMethod)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userPaymentMethod = await _uow.UserPaymentMethods
+                .FirstOrDefaultAsync(id, User.UserGuidId());
             if (userPaymentMethod == null)
             {
                 return NotFound();
@@ -47,10 +49,9 @@ namespace WebApp.Controllers
         }
 
         // GET: UserPaymentMethods/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode");
+            ViewData["PaymentMethodId"] = new SelectList(await _uow.PaymentMethods.AllAsync(), "Id", "PaymentMethodCode");
             return View();
         }
 
@@ -63,13 +64,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                userPaymentMethod.Id = Guid.NewGuid();
-                _context.Add(userPaymentMethod);
-                await _context.SaveChangesAsync();
+                _uow.UserPaymentMethods.Add(userPaymentMethod);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
+            ViewData["PaymentMethodId"] = new SelectList(await _uow.PaymentMethods.AllAsync(), "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -81,13 +80,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userPaymentMethod = await _context.UserPaymentMethods.FindAsync(id);
+            var userPaymentMethod = await _uow.UserPaymentMethods.FindAsync(id, User.UserGuidId());
             if (userPaymentMethod == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
+            ViewData["PaymentMethodId"] = new SelectList(await _uow.UserPaymentMethods.AllAsync(), "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -98,6 +96,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("AppUserId,PaymentMethodId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] UserPaymentMethod userPaymentMethod)
         {
+            userPaymentMethod.AppUserId = User.UserGuidId();
+            
             if (id != userPaymentMethod.Id)
             {
                 return NotFound();
@@ -107,12 +107,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(userPaymentMethod);
-                    await _context.SaveChangesAsync();
+                    _uow.UserPaymentMethods.Update(userPaymentMethod);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserPaymentMethodExists(userPaymentMethod.Id))
+                    if (!await _uow.UserPaymentMethods.ExistsAsync(id, User.UserGuidId()))
                     {
                         return NotFound();
                     }
@@ -123,8 +123,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", userPaymentMethod.AppUserId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
+            ViewData["PaymentMethodId"] = new SelectList(await _uow.PaymentMethods.AllAsync(), "Id", "PaymentMethodCode", userPaymentMethod.PaymentMethodId);
             return View(userPaymentMethod);
         }
 
@@ -136,10 +135,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userPaymentMethod = await _context.UserPaymentMethods
-                .Include(u => u.AppUser)
-                .Include(u => u.PaymentMethod)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userPaymentMethod = await _uow.UserPaymentMethods
+                .FirstOrDefaultAsync(id, User.UserGuidId());
             if (userPaymentMethod == null)
             {
                 return NotFound();
@@ -152,16 +149,11 @@ namespace WebApp.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var userPaymentMethod = await _context.UserPaymentMethods.FindAsync(id);
-            _context.UserPaymentMethods.Remove(userPaymentMethod);
-            await _context.SaveChangesAsync();
+        { 
+            await _uow.UserPaymentMethods.DeleteAsync(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool UserPaymentMethodExists(Guid id)
-        {
-            return _context.UserPaymentMethods.Any(e => e.Id == id);
-        }
+        
     }
 }

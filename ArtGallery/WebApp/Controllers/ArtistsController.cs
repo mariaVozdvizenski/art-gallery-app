@@ -34,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FindAsync(id);
+            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
             if (artist == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FindAsync(id);
+            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
             if (artist == null)
             {
                 return NotFound();
@@ -118,7 +118,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FindAsync(id);
+            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
             if (artist == null)
             {
                 return NotFound();
