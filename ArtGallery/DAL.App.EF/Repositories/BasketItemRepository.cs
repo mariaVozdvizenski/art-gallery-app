@@ -51,10 +51,10 @@ namespace DAL.App.EF.Repositories
             }*/
             return await query.FirstOrDefaultAsync();
         }
-        /*public async Task DeleteAsync(Guid id, Guid? userId = null)
+        public async Task DeleteAsync(Guid id, Guid? userId = null)
         {
             var owner = await FirstOrDefaultAsync(id, userId);
             base.Remove(owner);
-        }*/
+        }
     }
 }

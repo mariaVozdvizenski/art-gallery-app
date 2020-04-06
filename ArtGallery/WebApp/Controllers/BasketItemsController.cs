@@ -154,8 +154,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var basketItem = await _uow.BasketItems.FindAsync(id);
-            _uow.BasketItems.Remove(basketItem);
+            await _uow.BasketItems.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

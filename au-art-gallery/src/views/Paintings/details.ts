@@ -5,8 +5,9 @@ import {RouteConfig, NavigationInstruction} from 'aurelia-router';
 
 
 @autoinject
-export class CategoryDetails {
+export class PaintingDetails {
     private _painting: IPainting | null = null;
+    private _id = ""
 
     constructor(private paintingService: PaintingService) {
 
@@ -16,6 +17,8 @@ export class CategoryDetails {
         if (params.id && typeof(params.id) == "string") {
             this.paintingService.getPainting(params.id)
             .then(data => this._painting = data)
+            this._id = params.id;
+            console.log(this._id);
         }
     }
 }

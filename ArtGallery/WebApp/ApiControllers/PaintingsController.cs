@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,32 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class PaintingsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PaintingsController(AppDbContext context)
+        public PaintingsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Paintings
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PaintingDTO>>> GetPaintings()
         {
-            return await _context.Paintings.Select(p => new PaintingDTO()
-            {
-                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title, 
-                ArtistId = p.ArtistId,
-            }).ToListAsync();
+            return Ok(await _uow.Paintings.DTOAllAsync());
         }
 
         // GET: api/Paintings/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PaintingDTO>> GetPainting(Guid id)
         {
-            var painting = await _context.Paintings.Select(p => new PaintingDTO()
-            {
-                Id = p.Id, Description = p.Description, Price = p.Price, Title = p.Title
-            }).Where(p => p.Id == id).FirstOrDefaultAsync();
+            var painting = await _uow.Paintings.DTOFirstOrDefaultAsync(id);
 
             if (painting == null)
             {
@@ -54,22 +48,35 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPainting(Guid id, Painting painting)
+        public async Task<IActionResult> PutPainting(Guid id, PaintingEditDTO paintingEditDTO)
         {
-            if (id != painting.Id)
+            if (id != paintingEditDTO.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(painting).State = EntityState.Modified;
+            
+            var painting = await _uow.Paintings.FirstOrDefaultAsync(paintingEditDTO.Id);
+            
+            if (painting == null)
+            {
+                return BadRequest();
+            }
+            
+            painting.Title = paintingEditDTO.Title;
+            painting.Price = paintingEditDTO.Price;
+            painting.Size = paintingEditDTO.Size;
+            painting.ArtistId = paintingEditDTO.ArtistId;
+            painting.Artist = await _uow.Artists.FirstOrDefaultAsync(paintingEditDTO.ArtistId);
+            
+            _uow.Paintings.Update(painting);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PaintingExists(id))
+                if (!await _uow.Paintings.ExistsAsync(id))
                 {
                     return NotFound();
                 }
@@ -88,12 +95,17 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Painting>> PostPainting(PaintingCreateDTO paintingCreateDTO)
         {
-            var painting = new Painting()
+            var painting = new Painting
             {
+                Description = paintingCreateDTO.Description,
                 Price = paintingCreateDTO.Price,
+                ArtistId = paintingCreateDTO.ArtistId,
+                Size = paintingCreateDTO.Size,
+                Title = paintingCreateDTO.Title
             };
-            _context.Paintings.Add(painting);
-            await _context.SaveChangesAsync();
+            
+            _uow.Paintings.Add(painting);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetPainting", new { id = painting.Id }, painting);
         }
@@ -102,21 +114,17 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Painting>> DeletePainting(Guid id)
         {
-            var painting = await _context.Paintings.FindAsync(id);
+            var painting = await _uow.Paintings.FirstOrDefaultAsync(id);
             if (painting == null)
             {
                 return NotFound();
             }
 
-            _context.Paintings.Remove(painting);
-            await _context.SaveChangesAsync();
+            _uow.Paintings.Remove(painting);
+            await _uow.SaveChangesAsync();
 
             return painting;
         }
-
-        private bool PaintingExists(Guid id)
-        {
-            return _context.Paintings.Any(e => e.Id == id);
-        }
+        
     }
 }

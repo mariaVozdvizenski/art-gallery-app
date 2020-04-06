@@ -58,7 +58,5 @@ namespace DAL.App.EF.Repositories
             var basket = await FirstOrDefaultAsync(id, userId);
             base.Remove(basket);
         }
-
-        
     }
 }

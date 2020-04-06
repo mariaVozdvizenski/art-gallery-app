@@ -15,7 +15,7 @@ namespace DAL.App.EF.Repositories
         {
         }
 
-        public async Task<bool> ExsistsAsync(Guid id, Guid? userId = null)
+        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
         {
             return await RepoDbSet.AnyAsync(a => a.Id == id);
         }

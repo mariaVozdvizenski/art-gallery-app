@@ -51,7 +51,6 @@ namespace DAL.App.EF.Repositories
             {
                 return await RepoDbSet.AnyAsync(a => a.Id == id);
             }
-
             return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
 

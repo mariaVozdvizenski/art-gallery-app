@@ -14,13 +14,13 @@ namespace DAL.App.EF.Repositories
         public InvoiceRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
-        public async Task<bool> ExsistsAsync(Guid id, Guid? userId = null)
+        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
         {
-            /*if (userId == null)
+            if (userId == null)
             {
                 return await RepoDbSet.AnyAsync(a => a.Id == id);
-            }*/
-            return await RepoDbSet.AnyAsync(a => a.Id == id);
+            }
+            return await RepoDbSet.AnyAsync(a => a.Id == id); // add userId if needed
         }
         
         public async Task<IEnumerable<Invoice>> AllAsync(Guid? userId = null)
@@ -49,10 +49,10 @@ namespace DAL.App.EF.Repositories
             }*/
             return await query.FirstOrDefaultAsync();
         }
-        /*public async Task DeleteAsync(Guid id, Guid? userId = null)
+        public async Task DeleteAsync(Guid id, Guid? userId = null)
         {
             var owner = await FirstOrDefaultAsync(id, userId);
             base.Remove(owner);
-        }*/
+        }
     }
 }

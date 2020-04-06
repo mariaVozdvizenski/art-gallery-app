@@ -2,7 +2,7 @@
     <h1>Index</h1>
 
     <p>
-        <a href="/Paintings/Create">Create New</a>
+        <a route-href="route: paintingCreate">Create New</a>
     </p>
     <table class="table">
         <thead>
@@ -11,7 +11,7 @@
                     Title
                 </th>
                 <th>
-                    Description
+                    Size
                 </th>
                 <th>
                     Price
@@ -25,15 +25,15 @@
                     ${painting.title}
                 </td>
                 <td>
-                    ${painting.description}
+                    ${painting.size}
                 </td>
                 <td>
                     ${painting.price}
                 </td>
                 <td>
-                    <a href="/Paintings/Edit/xxx">Edit</a> |
+                    <a route-href="route: paintingEdit; params.bind: {id: painting.id}">Edit</a> |
                     <a route-href="route: paintingDetails; params.bind: {id: painting.id}">Details</a> |
-                    <a href="/Paintings/Delete/xxx">Delete</a>
+                    <a route-href="route: paintingDelete; params.bind: {id: painting.id}">Delete</a>
                 </td>
             </tr>
         </tbody>

@@ -10,7 +10,6 @@ namespace PublicApi.DTO.v1
 
         [MaxLength(4096)] 
         [MinLength(1)] 
-        public string Description { get; set; } = default!;
         
         public decimal Price { get; set; }
         

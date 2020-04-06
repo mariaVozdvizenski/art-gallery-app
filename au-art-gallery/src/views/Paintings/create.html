@@ -1,0 +1,41 @@
+<template>
+    <h1>Create</h1>
+
+    <h4>Painting</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form submit.trigger="onSubmit($event)">
+                <div class="form-group">
+                    <label class="control-label" for="Description">Description</label>
+                    <input class="form-control" type="text"  id="Description" maxlength="4096" name="Description" value.bind="_painting.description"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Price">Price</label>
+                    <input class="form-control" type="number"  id="Price" maxlength="36" name="Price" model.bind="_painting.price"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Title">Title</label>
+                    <input class="form-control" type="text"  id="Title" maxlength="36" name="Title" value.bind="_painting.title"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Size">Size</label>
+                    <input class="form-control" type="text"  id="Size" maxlength="16" name="Size" value.bind="_painting.size"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Artist">Artist</label>
+                    <select class="form-control" type="text"  id="Artist" maxlength="36" name="Artist" value.bind="_artistId">
+                        <option repeat.for="artist of _artists" value.bind="artist.id">${artist.firstName} ${artist.lastName}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a route-href="route: paintings">Back to List</a>
+    </div>
+</template>

@@ -12,10 +12,10 @@
                 ${_painting.title}
             </dd>
             <dt class="col-sm-2">
-                Description
+                Size
             </dt>
             <dd class="col-sm-10">
-                ${_painting.description}
+                ${_painting.size}
             </dd>
             <dt class="col-sm-2">
                 Price
@@ -26,7 +26,7 @@
         </dl>
     </div>
     <div>
-        <a href="/Paintings/Edit/cb19cf3a-945a-4d51-935d-12fb76102edb">Edit</a> |
+        <a route-href="route: paintingEdit; params.bind: {id: _painting.id}">Edit</a> |
         <a route-href="route: paintings">Back to List</a>
     </div>
 

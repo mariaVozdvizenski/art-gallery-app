@@ -34,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var category = await _uow.Categories.FindAsync(id);
+            var category = await _uow.Categories.FirstOrDefaultAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var category = await _uow.Categories.FindAsync(id);
+            var category = await _uow.Categories.FirstOrDefaultAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -126,7 +126,7 @@ namespace WebApp.Controllers
             }
 
             var category = await _uow.Categories
-                .FindAsync(id);
+                .FirstOrDefaultAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -140,8 +140,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var category = await _uow.Categories.FindAsync(id);
-            _uow.Categories.Remove(category);
+            await _uow.Categories.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

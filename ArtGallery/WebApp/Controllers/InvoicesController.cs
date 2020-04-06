@@ -150,15 +150,14 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var invoice = await _uow.Invoices.FindAsync(id);
-            _uow.Invoices.Remove(invoice);
+            await _uow.Invoices.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> InvoiceExists(Guid id)
         {
-            return await _uow.Invoices.ExsistsAsync(id);
+            return await _uow.Invoices.ExistsAsync(id);
         }
     }
 }

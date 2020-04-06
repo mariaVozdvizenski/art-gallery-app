@@ -6,6 +6,7 @@ using Contracts.DAL.App.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
@@ -45,11 +46,46 @@ namespace DAL.App.EF.Repositories
             return await RepoDbSet.AnyAsync(a => a.Id == id);
             //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
-
         public async Task DeleteAsync(Guid id, Guid? userId = null)
         {
             var category = await FirstOrDefaultAsync(id, userId);
             base.Remove(category);
+        }
+        
+        public async Task<IEnumerable<CategoryDTO>> DTOAllAsync(Guid? userId = null)
+        {
+            var query = RepoDbSet.AsQueryable();
+            if (userId != null)
+            {
+                //query = query.Where(o => o.AppUserId == userId);
+            }
+            return await query
+                .Select(c => new CategoryDTO()
+                {
+                    Id = c.Id,
+                    CategoryName = c.CategoryName,
+                    PaintingCount = c.CategoryPaintings.Count,
+                })
+                .ToListAsync();
+        }
+
+        public async Task<CategoryDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
+        {
+            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
+            if (userId != null)
+            {
+                //query = query.Where(a => a.AppUserId == userId);
+            }
+            
+            var categoryDTO = await query.Select(o => new CategoryDTO()
+            {
+                Id = o.Id,
+                CategoryName = o.CategoryName,
+                PaintingCount = o.CategoryPaintings.Count
+                
+            }).FirstOrDefaultAsync();
+            
+            return categoryDTO;
         }
     }
 }

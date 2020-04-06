@@ -21,6 +21,5 @@ namespace PublicApi.DTO.v1
         public string Size { get; set; } = default!;
         
         public Guid ArtistId { get; set; } 
-        public ArtistDTO Artist { get; set; } = default!;
     }
 }

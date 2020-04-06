@@ -1,6 +1,7 @@
 export interface IPaintingEdit {
     id: string;
     title: string;
-    description: string;
+    size: string;
     price: number;
+    artistId: string;
 }

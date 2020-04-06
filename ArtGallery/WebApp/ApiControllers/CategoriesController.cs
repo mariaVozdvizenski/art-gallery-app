@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,31 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CategoriesController(AppDbContext context)
+        public CategoriesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Categories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
         {
-            return await _context.Categories.Select(c => new CategoryDTO()
-            {
-                Id = c.Id, CategoryName = c.CategoryName, PaintingCount = c.CategoryPaintings.Count
-            }).ToListAsync();
+            return Ok(await _uow.Categories.DTOAllAsync());
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDTO>> GetCategory(Guid id)
         {
-            var category = await _context.Categories.Select(c => new CategoryDTO()
-            {
-                Id = c.Id, CategoryName = c.CategoryName, PaintingCount = c.CategoryPaintings.Count
-            }).Where(c => c.Id == id).FirstOrDefaultAsync();
+            var category = await _uow.Categories.DTOFirstOrDefaultAsync(id);
 
             if (category == null)
             {
@@ -59,7 +54,7 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            var category = await _context.Categories.FindAsync(categoryEditDTO.Id);
+            var category = await _uow.Categories.FirstOrDefaultAsync(categoryEditDTO.Id);
             
             if (category == null)
             {
@@ -68,15 +63,15 @@ namespace WebApp.ApiControllers
 
             category.CategoryName = categoryEditDTO.CategoryName;
             
-            _context.Categories.Update(category);
+            _uow.Categories.Update(category);
             
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
+                if (!await _uow.Categories.ExistsAsync(id))
                 {
                     return NotFound();
                 }
@@ -100,8 +95,8 @@ namespace WebApp.ApiControllers
                 CategoryName = categoryCreateDTO.CategoryName
             };
             
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            _uow.Categories.Add(category);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -110,21 +105,10 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return category;
+            await _uow.Categories.DeleteAsync(id);
+            await _uow.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-
-        private bool CategoryExists(Guid id)
-        {
-            return _context.Categories.Any(e => e.Id == id);
-        }
+        
     }
 }

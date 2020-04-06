@@ -74,7 +74,7 @@ namespace WebApp.ApiControllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await _uow.Artists.ExistsAsync(id))
+                if (!await _uow.Artists.ExistsAsync(id))
                 {
                     return NotFound();
                 }
@@ -100,7 +100,7 @@ namespace WebApp.ApiControllers
                 Country = artistCreateDTO.Country,
                 PlaceOfBirth = artistCreateDTO.PlaceOfBirth,
                 Bio = artistCreateDTO.Bio,
-                DateOfBirth = artistCreateDTO.DateOfBirth
+                DateOfBirth = artistCreateDTO.DateOfBirth,
             };
             _uow.Artists.Add(artist);
             await _uow.SaveChangesAsync();
@@ -112,16 +112,9 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Artist>> DeleteArtist(Guid id)
         {
-            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
-            if (artist == null)
-            {
-                return NotFound();
-            }
-
-            _uow.Artists.Remove(artist);
+            await _uow.Artists.DeleteAsync(id);
             await _uow.SaveChangesAsync();
-
-            return Ok(artist);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

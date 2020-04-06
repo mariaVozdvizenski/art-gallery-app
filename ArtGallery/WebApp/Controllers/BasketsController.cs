@@ -151,7 +151,6 @@ namespace WebApp.Controllers
         {
             await _uow.Baskets.DeleteAsync(id, User.UserGuidId());
             await _uow.SaveChangesAsync();
-            
             return RedirectToAction(nameof(Index));
         }
         

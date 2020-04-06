@@ -156,7 +156,7 @@ namespace WebApp.Controllers
 
         private async Task<bool> OrderItemExists(Guid id)
         {
-            return await _uow.OrderItems.ExsistsAsync(id);
+            return await _uow.OrderItems.ExistsAsync(id);
         }
     }
 }

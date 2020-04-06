@@ -140,8 +140,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var invoiceStatusCode = await _uow.InvoiceStatusCodes.FindAsync(id);
-            _uow.InvoiceStatusCodes.Remove(invoiceStatusCode);
+            await _uow.InvoiceStatusCodes.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
