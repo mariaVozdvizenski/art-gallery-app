@@ -38,6 +38,9 @@ export class App {
       {route: ['categories/edit/:id'], name: 'categoryEdit', moduleId: PLATFORM.moduleName('views/categories/edit'), nav: false, title:'Category Edit'},
       {route: ['categories/create'], name: 'categoryCreate', moduleId: PLATFORM.moduleName('views/categories/create'), nav: false, title:'Category Create'},
 
+      { route: ['account/login'], name: 'account-login', moduleId: PLATFORM.moduleName('views/account/login'), nav: true, title: 'Login' },
+      { route: ['account/register'], name: 'account-register', moduleId: PLATFORM.moduleName('views/account/register'), nav: true, title: 'Register' }
+
     ]);
 
     config.mapUnknownRoutes('views/home/index')
