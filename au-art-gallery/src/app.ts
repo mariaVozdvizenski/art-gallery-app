@@ -1,12 +1,13 @@
 import {RouterConfiguration, Router} from 'aurelia-router';
 import {autoinject, PLATFORM} from 'aurelia-framework';
+import { AppState } from 'state/app-state';
 
 @autoinject
 export class App {
 
   router?: Router
 
-  constructor(){
+  constructor(private appState: AppState){
 
   }
 
@@ -31,6 +32,7 @@ export class App {
       {route: ['paintings/edit/:id'], name: 'paintingEdit', moduleId: PLATFORM.moduleName('views/paintings/edit'), nav: false, title:'Painting Edit'},
       {route: ['paintings/delete/:id'], name: 'paintingDelete', moduleId: PLATFORM.moduleName('views/paintings/delete'), nav: false, title:'Painting Delete'},
 
+      {route: ['baskets', 'baskets/index'], name: 'baskets', moduleId: PLATFORM.moduleName('views/baskets/index'), nav: true, title:'Baskets'},
 
       {route: ['categories', 'categories/index'], name: 'categories', moduleId: PLATFORM.moduleName('views/categories/index'), nav: true, title:'Categories'},
       {route: ['categories/delete/:id'], name: 'categoryDelete', moduleId: PLATFORM.moduleName('views/categories/delete'), nav: false, title:'Category Delete'},
@@ -38,13 +40,18 @@ export class App {
       {route: ['categories/edit/:id'], name: 'categoryEdit', moduleId: PLATFORM.moduleName('views/categories/edit'), nav: false, title:'Category Edit'},
       {route: ['categories/create'], name: 'categoryCreate', moduleId: PLATFORM.moduleName('views/categories/create'), nav: false, title:'Category Create'},
 
-      { route: ['account/login'], name: 'account-login', moduleId: PLATFORM.moduleName('views/account/login'), nav: true, title: 'Login' },
-      { route: ['account/register'], name: 'account-register', moduleId: PLATFORM.moduleName('views/account/register'), nav: true, title: 'Register' }
+      { route: ['account/login'], name: 'account-login', moduleId: PLATFORM.moduleName('views/account/login'), nav: false, title: 'Login' },
+      { route: ['account/register'], name: 'account-register', moduleId: PLATFORM.moduleName('views/account/register'), nav: false, title: 'Register' }
 
     ]);
 
     config.mapUnknownRoutes('views/home/index')
 
+  }
+
+  logoutOnClick() {
+    this.appState.jwt = null;
+    this.router!.navigateToRoute('account-login');
   }
 
 }

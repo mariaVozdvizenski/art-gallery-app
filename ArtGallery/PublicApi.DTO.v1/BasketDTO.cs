@@ -8,5 +8,6 @@ namespace PublicApi.DTO.v1
         
         public DateTime DateCreated { get; set; }
         
+        public int ItemCount { get; set; }
     }
 }

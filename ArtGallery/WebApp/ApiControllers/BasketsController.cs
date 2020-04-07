@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
@@ -26,23 +28,39 @@ namespace WebApp.ApiControllers
 
         // GET: api/Baskets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Basket>>> GetBaskets()
+        public async Task<ActionResult<IEnumerable<BasketDTO>>> GetBaskets()
         {
-            return await _context.Baskets.ToListAsync();
+            var basketList =  _context.Baskets
+                .Where(b => b.AppUserId == User.UserGuidId())
+                .Select(b => new BasketDTO()
+                {
+                    Id = b.Id,
+                    DateCreated = b.DateCreated,
+                    ItemCount = b.BasketItems.Count
+                });
+            
+            return await basketList.ToListAsync();
         }
 
         // GET: api/Baskets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Basket>> GetBasket(Guid id)
+        public async Task<ActionResult<BasketDTO>> GetBasket(Guid id)
         {
-            var basket = await _context.Baskets.FindAsync(id);
-
+            var basket = _context.Baskets
+                .Where(o => o.Id == id && o.AppUserId == User.UserGuidId())
+                .Select(b => new BasketDTO()
+                {
+                    Id = b.Id,
+                    DateCreated = b.DateCreated,
+                    ItemCount = b.BasketItems.Count
+                })
+                .FirstOrDefaultAsync();
+            
             if (basket == null)
             {
                 return NotFound();
             }
-
-            return basket;
+            return await basket;
         }
 
         // PUT: api/Baskets/5

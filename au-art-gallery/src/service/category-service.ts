@@ -3,14 +3,15 @@ import {HttpClient} from 'aurelia-fetch-client';
 import {ICategory} from 'domain/ICategory';
 import { ICategoryCreate } from 'domain/ICategoryCreate';
 import { ICategoryEdit } from 'domain/ICategoryEdit';
+import { AppState } from 'state/app-state';
 
 @autoinject
 export class CategoryService {
 
-    private readonly _baseUrl = 'https://localhost:5001/api/Categories';
+    private readonly _baseUrl = 'Categories';
 
-    constructor(private httpClient: HttpClient) {
-
+    constructor(private appState: AppState, private httpClient: HttpClient) {
+        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     getCategories(): Promise<ICategory[]> {

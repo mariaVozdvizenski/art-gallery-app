@@ -3,14 +3,15 @@ import {HttpClient} from 'aurelia-fetch-client';
 import {IPainting} from 'domain/IPainting';
 import { IPaintingCreate } from 'domain/IPaintingCreate';
 import { IPaintingEdit } from 'domain/IPaintingEdit';
+import { AppState } from 'state/app-state';
 
 @autoinject
 export class PaintingService {
 
-    private readonly _baseUrl = 'https://localhost:5001/api/paintings';
+    private readonly _baseUrl = 'Paintings';
 
-    constructor(private httpClient: HttpClient){
-
+    constructor(private appState: AppState, private httpClient: HttpClient){
+        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     getPaintings(): Promise<IPainting[]>{

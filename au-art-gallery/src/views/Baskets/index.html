@@ -1,0 +1,35 @@
+<template>
+    <h1>Index</h1>
+
+<p>
+    <a href="/Baskets/Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                DateCreated
+            </th>
+            <th>
+                ItemCount
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr repeat.for="basket of _baskets">
+            <td>
+                ${basket.dateCreated}
+            </td>
+            <td>
+                ${basket.itemCount}
+            </td>
+            <td>
+                <a href="/Baskets/Edit/d5adfe2e-be82-4c6d-0e41-08d7d8136da6">Edit</a> |
+                <a href="/Baskets/Details/d5adfe2e-be82-4c6d-0e41-08d7d8136da6">Details</a> |
+                <a href="/Baskets/Delete/d5adfe2e-be82-4c6d-0e41-08d7d8136da6">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</template>

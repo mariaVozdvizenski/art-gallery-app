@@ -3,16 +3,17 @@ import {HttpClient, json} from 'aurelia-fetch-client';
 import {IArtistCreate} from 'domain/IArtistCreate';
 import { IArtistEdit } from 'domain/IArtistEdit';
 import {IArtist} from 'domain/IArtist';
+import { AppState } from 'state/app-state';
 
 
 
 @autoinject
 export class ArtistService {
-    constructor(private httpClient: HttpClient){
-
+    constructor(private appState: AppState, private httpClient: HttpClient){
+        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
-    private readonly _baseUrl = 'https://localhost:5001/api/Artists';
+    private readonly _baseUrl = 'Artists';
   
 
 
