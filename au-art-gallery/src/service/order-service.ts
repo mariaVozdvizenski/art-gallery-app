@@ -1,22 +1,23 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient, json} from 'aurelia-fetch-client';
-import {IBasket} from 'domain/IBasket';
+import {IOrder} from 'domain/IOrder';
 import { AppState } from 'state/app-state';
 import { IFetchResponse } from 'types/IFetchResponse';
 
 
 
 @autoinject
-export class BasketService {
+export class OrderService {
     
     constructor(private appState: AppState, private httpClient: HttpClient){
         this.httpClient.baseUrl = this.appState.baseUrl;
 
     }
 
-    private readonly _baseUrl = 'Baskets';
+    private readonly _baseUrl = 'Orders';
+  
 
-    async getBaskets(): Promise<IFetchResponse<IBasket[]>> {
+    async getOrders(): Promise<IFetchResponse<IOrder[]>> {
 
         try {
             const response = await this.httpClient
@@ -28,7 +29,7 @@ export class BasketService {
                 });
             // happy case
             if (response.status >= 200 && response.status < 300) {
-                const data = (await response.json()) as IBasket[];
+                const data = (await response.json()) as IOrder[];
                 return {
                     statusCode: response.status,
                     data: data
@@ -49,7 +50,7 @@ export class BasketService {
         }
     }
 
-    async getBasket(id: string): Promise<IFetchResponse<IBasket>> {
+    async getOrder(id: string): Promise<IFetchResponse<IOrder>> {
         try {
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
@@ -60,7 +61,7 @@ export class BasketService {
                 });
 
             if (response.status >= 200 && response.status < 300) {
-                const data = (await response.json()) as IBasket;
+                const data = (await response.json()) as IOrder;
                 return {
                     statusCode: response.status,
                     data: data
@@ -80,5 +81,4 @@ export class BasketService {
         }
     }
 
-  
 }

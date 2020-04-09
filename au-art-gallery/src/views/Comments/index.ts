@@ -1,28 +1,27 @@
 import { autoinject } from 'aurelia-framework';
-import { BasketService } from 'service/basket-service';
-import { IBasket } from 'domain/IBasket';
+import { CommentService } from 'service/comment-service';
+import { IComment } from 'domain/IComment';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
 
 
 @autoinject
-export class BasketsIndex {
-
-    private _baskets: IBasket[] = []
+export class CommentsIndex {
+    private _comments: IComment[] = []
 
     private _alert: IAlertData | null = null;
 
 
-    constructor(private basketService: BasketService) {
+    constructor(private commentService: CommentService) {
 
     }
 
     attached() {
-        this.basketService.getBaskets().then(
+        this.commentService.getComments().then(
             response => {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
-                    this._baskets = response.data!;
+                    this._comments = response.data!;
                 } else {
                     // show error message
                     this._alert = {

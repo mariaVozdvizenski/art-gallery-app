@@ -1,3 +1,41 @@
 <template>
-    register
+    <h1>Register</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form submit.trigger="onSubmit($event)">
+                <h4>Create a new account.</h4>
+                <hr />
+                <div class="text-danger validation-summary-valid" data-valmsg-summary="true">
+                    <ul>
+                        <li style="display:none"></li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="Input_Email">Email</label>
+                    <input class="form-control" type="email" data-val="true"
+                         id="Input_Email" name="Input.Email" value.bind="_email" />
+                </div>
+                <div class="form-group">
+                    <label for="Input_Password">Password</label>
+                    <input class="form-control" type="password" value.bind="_password"
+                         id="Input_Password" maxlength="100"
+                        name="Input.Password" />
+                </div>
+                <div class="form-group">
+                    <label for="Input_ConfirmPassword">Confirm password</label>
+                    <input class="form-control" type="password" 
+                        id="Input_ConfirmPassword" name="Input.ConfirmPassword" />
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <section>
+            </section>
+        </div>
+    </div>
+
+    </main>
+    </div>
 </template>

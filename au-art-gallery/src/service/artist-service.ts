@@ -1,7 +1,7 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {IArtistCreate} from 'domain/IArtistCreate';
-import { IArtistEdit } from 'domain/IArtistEdit';
+import {IArtistEdit } from 'domain/IArtistEdit';
 import {IArtist} from 'domain/IArtist';
 import { AppState } from 'state/app-state';
 

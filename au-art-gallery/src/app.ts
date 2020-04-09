@@ -25,7 +25,11 @@ export class App {
       {route: ['artists/create'], name: 'artistCreate', moduleId: PLATFORM.moduleName('views/artists/create'), nav: false, title:'Artist Create'},
       {route: ['artists/delete/:id'], name: 'artistDelete', moduleId: PLATFORM.moduleName('views/artists/delete'), nav: false, title:'Artist Delete'},
 
-      
+      {route: ['comments', 'comments/index'], name: 'comments', moduleId: PLATFORM.moduleName('views/comments/index'), nav: true, title:'Comments'},
+
+      {route: ['orders', 'orders/index'], name: 'orders', moduleId: PLATFORM.moduleName('views/orders/index'), nav: true, title:'Orders'},
+
+
       {route: ['paintings', 'paintings/index'], name: 'paintings', moduleId: PLATFORM.moduleName('views/paintings/index'), nav: true, title:'Paintings'},
       {route: ['paintings/details/:id'], name: 'paintingDetails', moduleId: PLATFORM.moduleName('views/paintings/details'), nav: false, title:'Painting Details'},
       {route: ['paintings/create'], name: 'paintingCreate', moduleId: PLATFORM.moduleName('views/paintings/create'), nav: false, title:'Painting Create'},

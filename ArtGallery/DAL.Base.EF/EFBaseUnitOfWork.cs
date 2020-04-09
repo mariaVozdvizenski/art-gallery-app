@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.Base;
+using Contracts.DAL.Base.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF
@@ -25,6 +26,11 @@ namespace DAL.Base.EF
         {
             return await UOWDbContext.SaveChangesAsync();
         }
-        
+
+        public IBaseRepository<TDALEntity> FindRepository<TDALEntity>() 
+            where TDALEntity : class, IDomainEntity<Guid>, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

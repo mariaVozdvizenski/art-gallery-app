@@ -54,7 +54,18 @@ namespace WebApp.ApiControllers.Identity
         [HttpPost]
         public async Task<ActionResult<string>> Register([FromBody] RegisterDTO model)
         {
-            return "{}";
+            var user = new AppUser { UserName = model.Email, Email = model.Email };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return StatusCode(200);
+            }
+            
+            _logger.LogInformation("Web-Api register. Cannot create a new account!");
+            return StatusCode(403);
         }
 
         public class LoginDTO

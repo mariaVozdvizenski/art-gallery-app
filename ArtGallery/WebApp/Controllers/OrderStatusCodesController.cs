@@ -33,8 +33,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
+            
+            var orderStatusCode = await _uow.OrderStatusCodes.FirstOrDefaultAsync(id);
+            
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -74,7 +75,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
+            var orderStatusCode = await _uow.OrderStatusCodes.FirstOrDefaultAsync(id);
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -103,7 +104,7 @@ namespace WebApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await OrderStatusCodeExists(orderStatusCode.Id))
+                    if (!await _uow.OrderStatusCodes.ExistsAsync(id))
                     {
                         return NotFound();
                     }
@@ -126,7 +127,7 @@ namespace WebApp.Controllers
             }
 
             var orderStatusCode = await _uow.OrderStatusCodes
-                .FindAsync(id);
+                .FirstOrDefaultAsync(id);
             if (orderStatusCode == null)
             {
                 return NotFound();
@@ -140,15 +141,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var orderStatusCode = await _uow.OrderStatusCodes.FindAsync(id);
-            _uow.OrderStatusCodes.Remove(orderStatusCode);
+            await _uow.OrderStatusCodes.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> OrderStatusCodeExists(Guid id)
-        {
-            return await _uow.OrderStatusCodes.ExistsAsync(id);
         }
     }
 }

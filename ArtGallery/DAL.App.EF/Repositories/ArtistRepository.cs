@@ -28,6 +28,7 @@ namespace DAL.App.EF.Repositories
         public async Task<Artist> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
+            
             if (userId != null)
             {
                 //query = query.Where(a => a.AppUserId == userId);

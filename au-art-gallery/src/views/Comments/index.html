@@ -1,0 +1,39 @@
+<template>
+    <h1>Index</h1>
+
+<p>
+    <a href="/Comments/Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                CommentBody
+            </th>
+            <th>
+                Painting Title
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr repeat.for="comment of _comments">
+            <td>
+                ${comment.commentBody}
+            </td>
+            <td>
+                ${comment.paintingTitle}
+            </td>
+            <td>
+                <a href="/Comments/Edit/be71802f-243d-421c-f005-08d7d87d6a7a">Edit</a> |
+                <a href="/Comments/Details/be71802f-243d-421c-f005-08d7d87d6a7a">Details</a> |
+                <a href="/Comments/Delete/be71802f-243d-421c-f005-08d7d87d6a7a">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+        </main>
+    </div>
+
+</template>

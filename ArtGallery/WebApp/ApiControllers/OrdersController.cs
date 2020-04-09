@@ -2,66 +2,77 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class OrdersController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public OrdersController(AppDbContext context)
+        public OrdersController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<OrderDTO>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return Ok(await _uow.Orders.DTOAllAsync(User.UserGuidId()));
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
+        public async Task<ActionResult<OrderDTO>> GetOrder(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _uow.Orders.DTOFirstOrDefaultAsync(id, User.UserGuidId());
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return Ok(order);
         }
 
         // PUT: api/Orders/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(Guid id, Order order)
+        public async Task<IActionResult> PutOrder(Guid id, OrderEditDTO orderEditDTO)
         {
-            if (id != order.Id)
+            if (id != orderEditDTO.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(order).State = EntityState.Modified;
+            var order = await _uow.Orders.FirstOrDefaultAsync(orderEditDTO.Id, User.UserGuidId());
 
+            order.OrderDetails = orderEditDTO.OrderDetails;
+            order.OrderStatusCodeId = orderEditDTO.OrderStatusCodeId;
+            order.OrderStatusCode = await _uow.OrderStatusCodes.FirstOrDefaultAsync(orderEditDTO.OrderStatusCodeId);
+            
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(id))
+                if (!await  _uow.Orders.ExistsAsync(id, User.UserGuidId()))
                 {
                     return NotFound();
                 }
@@ -80,8 +91,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            _uow.Orders.Add(order);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
@@ -90,21 +101,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Order>> DeleteOrder(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _uow.Orders.FirstOrDefaultAsync(id, User.UserGuidId());
             if (order == null)
             {
                 return NotFound();
             }
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            _uow.Orders.Remove(order);
+            await _uow.SaveChangesAsync();
 
             return order;
-        }
-
-        private bool OrderExists(Guid id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
         }
     }
 }

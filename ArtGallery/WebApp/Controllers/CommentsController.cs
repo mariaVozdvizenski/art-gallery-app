@@ -103,7 +103,6 @@ namespace WebApp.Controllers
         {
             comment.AppUserId = User.UserGuidId();
 
-            
             if (id != comment.Id)
             {
                 return NotFound();

@@ -6,6 +6,7 @@ using Contracts.DAL.App.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
@@ -58,6 +59,44 @@ namespace DAL.App.EF.Repositories
         {
             var comment = await FirstOrDefaultAsync(id, userId);
             base.Remove(comment);
+        }
+
+        public async Task<IEnumerable<OrderDTO>> DTOAllAsync(Guid? userId = null)
+        {
+            var query = RepoDbSet.AsQueryable();
+
+            if (userId != null)
+            {
+                query = query.Where(o => o.AppUserId == userId);
+            }
+
+            return await query.Select(o => new OrderDTO()
+            {
+                Id = o.Id,
+                OrderDate = o.OrderDate,
+                OrderDetails = o.OrderDetails,
+                OrderStatusCode = o.OrderStatusCode.Code
+            }).ToListAsync();
+        }
+
+        public async Task<OrderDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
+        {
+            var query = RepoDbSet.Where(o => o.Id == id).AsQueryable();
+
+            if (userId != null)
+            {
+                query = query.Where(o => o.AppUserId == userId);
+            }
+
+            var orderDTO = query.Select(o => new OrderDTO()
+            {
+                Id = o.Id,
+                OrderDate = o.OrderDate,
+                OrderDetails = o.OrderDetails,
+                OrderStatusCode = o.OrderStatusCode.Code
+            });
+
+            return await orderDTO.FirstOrDefaultAsync();
         }
     }
 }

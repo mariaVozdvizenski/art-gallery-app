@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,48 +20,34 @@ namespace WebApp.ApiControllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BasketsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public BasketsController(AppDbContext context)
+        public BasketsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Baskets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BasketDTO>>> GetBaskets()
         {
-            var basketList =  _context.Baskets
-                .Where(b => b.AppUserId == User.UserGuidId())
-                .Select(b => new BasketDTO()
-                {
-                    Id = b.Id,
-                    DateCreated = b.DateCreated,
-                    ItemCount = b.BasketItems.Count
-                });
+            var basketList = _uow.Baskets.DTOAllAsync(User.UserGuidId());
             
-            return await basketList.ToListAsync();
+            return Ok(await basketList);
         }
 
         // GET: api/Baskets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BasketDTO>> GetBasket(Guid id)
         {
-            var basket = _context.Baskets
-                .Where(o => o.Id == id && o.AppUserId == User.UserGuidId())
-                .Select(b => new BasketDTO()
-                {
-                    Id = b.Id,
-                    DateCreated = b.DateCreated,
-                    ItemCount = b.BasketItems.Count
-                })
-                .FirstOrDefaultAsync();
+            var basket = _uow.Baskets.DTOFirstOrDefaultAsync(id, User.UserGuidId());
             
             if (basket == null)
             {
                 return NotFound();
             }
-            return await basket;
+            
+            return Ok(await basket);
         }
 
         // PUT: api/Baskets/5
@@ -74,15 +61,24 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(basket).State = EntityState.Modified;
+            var basketUpdate = await _uow.Baskets.FirstOrDefaultAsync(basket.Id, User.UserGuidId());
+            
+            if (basketUpdate == null)
+            {
+                return BadRequest();
+            }
 
+            basketUpdate.DateCreated = basket.DateCreated;
+
+            _uow.Baskets.Update(basketUpdate);
+                
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BasketExists(id))
+                if (await _uow.Baskets.ExistsAsync(id, User.UserGuidId()))
                 {
                     return NotFound();
                 }
@@ -101,8 +97,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Basket>> PostBasket(Basket basket)
         {
-            _context.Baskets.Add(basket);
-            await _context.SaveChangesAsync();
+            _uow.Baskets.Add(basket);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetBasket", new { id = basket.Id }, basket);
         }
@@ -111,21 +107,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Basket>> DeleteBasket(Guid id)
         {
-            var basket = await _context.Baskets.FindAsync(id);
+            var basket = await _uow.Baskets.FirstOrDefaultAsync(id, User.UserGuidId());
             if (basket == null)
             {
                 return NotFound();
             }
 
-            _context.Baskets.Remove(basket);
-            await _context.SaveChangesAsync();
+            _uow.Baskets.Remove(basket);
+            await _uow.SaveChangesAsync();
 
             return basket;
-        }
-
-        private bool BasketExists(Guid id)
-        {
-            return _context.Baskets.Any(e => e.Id == id);
         }
     }
 }

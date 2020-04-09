@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicApi.DTO.v1", "PublicA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{F7960592-EE1C-4775-AA1E-80450E61A26F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts.BLL.Base", "Contracts.BLL.Base\Contracts.BLL.Base.csproj", "{EDD36373-AB67-490A-B34E-046BC7BFAAE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.Base", "BLL.Base\BLL.Base.csproj", "{58B3C302-FE80-4BD8-8D00-FBDE2F014F32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,5 +69,13 @@ Global
 		{F7960592-EE1C-4775-AA1E-80450E61A26F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7960592-EE1C-4775-AA1E-80450E61A26F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7960592-EE1C-4775-AA1E-80450E61A26F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDD36373-AB67-490A-B34E-046BC7BFAAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDD36373-AB67-490A-B34E-046BC7BFAAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDD36373-AB67-490A-B34E-046BC7BFAAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDD36373-AB67-490A-B34E-046BC7BFAAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58B3C302-FE80-4BD8-8D00-FBDE2F014F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58B3C302-FE80-4BD8-8D00-FBDE2F014F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58B3C302-FE80-4BD8-8D00-FBDE2F014F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58B3C302-FE80-4BD8-8D00-FBDE2F014F32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

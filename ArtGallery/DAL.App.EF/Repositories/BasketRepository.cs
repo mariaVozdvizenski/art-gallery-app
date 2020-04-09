@@ -7,6 +7,7 @@ using DAL.Base.EF.Repositories;
 using Domain;
 using Domain.Identity;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
@@ -35,7 +36,7 @@ namespace DAL.App.EF.Repositories
             {
                 return await RepoDbSet.AnyAsync(a => a.Id == id);
             }
-
+            
             return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
 
@@ -57,6 +58,42 @@ namespace DAL.App.EF.Repositories
         {
             var basket = await FirstOrDefaultAsync(id, userId);
             base.Remove(basket);
+        }
+        
+        public async Task<IEnumerable<BasketDTO>> DTOAllAsync(Guid? userId = null)
+        {
+            var query = RepoDbSet.AsQueryable();
+            if (userId != null)
+            {
+                query = query.Where(o => o.AppUserId == userId);
+            }
+            return await query
+                .Select(o => new BasketDTO()
+                {
+                    Id = o.Id,
+                    DateCreated = o.DateCreated,
+                    ItemCount = o.BasketItems.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task<BasketDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
+        {
+            var query = RepoDbSet.Where(o => o.Id == id).AsQueryable();
+            if (userId != null)
+            {
+                query = query.Where(o => o.AppUserId == userId);
+            }
+
+            var basketDTO = query.Select(b => new BasketDTO()
+            {
+                Id = b.Id,
+                DateCreated = b.DateCreated,
+                ItemCount = b.BasketItems.Count
+
+            }).FirstOrDefaultAsync();
+
+            return await basketDTO;
         }
     }
 }

@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers
 {
@@ -14,25 +19,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CommentsController(AppDbContext context)
+        public CommentsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            return Ok(await _uow.Comments.DTOAllAsync());
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(Guid id)
+        public async Task<ActionResult<CommentDTO>> GetComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _uow.Comments.DTOFirstOrDefaultAsync(id);
 
             if (comment == null)
             {
@@ -46,22 +51,32 @@ namespace WebApp.ApiControllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(Guid id, Comment comment)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+        public async Task<IActionResult> PutComment(Guid id, CommentEditDTO commentEditDTO)
         {
-            if (id != comment.Id)
+            if (id != commentEditDTO.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(comment).State = EntityState.Modified;
+            var comment = await _uow.Comments.FirstOrDefaultAsync(commentEditDTO.Id, User.UserGuidId());
 
+            if (comment == null)
+            {
+                return BadRequest();
+            }
+
+            comment.CommentBody = commentEditDTO.CommentBody;
+            _uow.Comments.Update(comment);
+            
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CommentExists(id))
+                if (!await _uow.Comments.ExistsAsync(id, User.UserGuidId()))
                 {
                     return NotFound();
                 }
@@ -80,8 +95,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            _uow.Comments.Add(comment);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
@@ -90,21 +105,17 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Comment>> DeleteComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _uow.Comments.FirstOrDefaultAsync(id, User.UserGuidId());
             if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            _uow.Comments.Remove(comment);
+            await _uow.SaveChangesAsync();
 
             return comment;
         }
 
-        private bool CommentExists(Guid id)
-        {
-            return _context.Comments.Any(e => e.Id == id);
-        }
     }
 }
