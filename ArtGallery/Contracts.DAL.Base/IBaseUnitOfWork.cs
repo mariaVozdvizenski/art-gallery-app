@@ -8,8 +8,6 @@ namespace Contracts.DAL.Base
     {
         int SaveChanges();
         Task<int> SaveChangesAsync();
-
-        IBaseRepository<TDALEntity> FindRepository<TDALEntity>()
-            where TDALEntity : class, IDomainEntity<Guid>, new();
+        TRepository GetRepository<TRepository>(Func<TRepository> repoCreationMethod);
     }
 }

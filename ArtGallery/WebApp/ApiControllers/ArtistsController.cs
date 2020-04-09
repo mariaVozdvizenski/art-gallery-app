@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,25 +17,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        //private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
+        
 
-        public ArtistsController(IAppUnitOfWork uow)
+        public ArtistsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: api/Artists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
         {
-            return Ok(await _uow.Artists.DTOAllAsync());
+            return Ok(await _bll.Artists.DTOAllAsync());
         }
 
         // GET: api/Artists/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
         {
-            var artist = await _uow.Artists.DTOFirstOrDefaultAsync(id);
+            var artist = await _bll.Artists.DTOFirstOrDefaultAsync(id);
             
             if (artist == null)
             {
@@ -55,7 +58,7 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
             
-            var artist = await _uow.Artists.FirstOrDefaultAsync(artistEditDTO.Id);
+            var artist = await _bll.Artists.FirstOrDefaultAsync(artistEditDTO.Id);
 
             if (artist == null)
             {
@@ -66,15 +69,15 @@ namespace WebApp.ApiControllers
             artist.FirstName = artistEditDTO.FirstName;
             artist.LastName = artistEditDTO.LastName;
 
-            _uow.Artists.Update(artist);
+            _bll.Artists.Update(artist);
             
             try
             {
-                await _uow.SaveChangesAsync();
+                await _bll.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _uow.Artists.ExistsAsync(id))
+                if (!await _bll.Artists.ExistsAsync(id))
                 {
                     return NotFound();
                 }
@@ -102,8 +105,8 @@ namespace WebApp.ApiControllers
                 Bio = artistCreateDTO.Bio,
                 DateOfBirth = artistCreateDTO.DateOfBirth,
             };
-            _uow.Artists.Add(artist);
-            await _uow.SaveChangesAsync();
+            _bll.Artists.Add(artist);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
         }
@@ -112,8 +115,8 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Artist>> DeleteArtist(Guid id)
         {
-            await _uow.Artists.DeleteAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.Artists.DeleteAsync(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

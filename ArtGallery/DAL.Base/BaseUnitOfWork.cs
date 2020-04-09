@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Contracts.DAL.Base;
+using Contracts.DAL.Base.Repositories;
 
 namespace DAL.Base
 {
-    public class BaseUnitOfWork
+    public abstract class BaseUnitOfWork : IBaseUnitOfWork
     {
+        
         private readonly Dictionary<Type, object> _repoCache  = new Dictionary<Type, object>();
 
-        protected TRepository GetRepository<TRepository>(Func<TRepository> repoCreationMethod)
+        public TRepository GetRepository<TRepository>(Func<TRepository> repoCreationMethod)
         {
             if (_repoCache.TryGetValue(typeof(TRepository), out var repo))
             {
@@ -17,5 +21,9 @@ namespace DAL.Base
             _repoCache.Add(typeof(TRepository), repo);
             return (TRepository) repo;
         }
+
+        public abstract int SaveChanges();
+
+        public abstract Task<int> SaveChangesAsync();
     }
 }

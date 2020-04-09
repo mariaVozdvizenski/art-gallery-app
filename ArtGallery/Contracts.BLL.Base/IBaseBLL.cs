@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Contracts.BLL.Base
 {
@@ -6,5 +7,6 @@ namespace Contracts.BLL.Base
     {
         Task<int> SaveChangesAsync();
         int SaveChanges();
+        TService GetService<TService>(Func<TService> serviceCreationMethod);
     }
 }

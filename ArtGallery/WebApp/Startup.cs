@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.App;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using DAL.App.EF;
 using Domain.Identity;
@@ -44,6 +46,7 @@ namespace WebApp
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<IAppBLL, AppBLL>();
 
             services.AddCors(options =>
             {
