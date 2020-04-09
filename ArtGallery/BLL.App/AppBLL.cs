@@ -10,6 +10,8 @@ namespace BLL.App
 {
     public class AppBLL : BaseBLL<IAppUnitOfWork>, IAppBLL
     {
+        //TODO
+        //Finish these
         public AppBLL(IAppUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }

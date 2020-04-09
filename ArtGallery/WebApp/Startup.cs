@@ -15,12 +15,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using WebApp.Helpers;
 
 namespace WebApp
 {
@@ -75,10 +80,21 @@ namespace WebApp
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     }; 
                 });
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                //options.DefaultApiVersion = new ApiVersion(1, 0);
+                //options.AssumeDefaultVersionWhenUnspecified = false;
+            });
+            
+            services.AddVersionedApiExplorer( options => options.GroupNameFormat = "'v'VVV" );
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  IApiVersionDescriptionProvider provider)
         {
             UpdateDatabase(app, env, Configuration);
 
@@ -93,14 +109,26 @@ namespace WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseCors("CorsAllowAll");
 
             app.UseRouting();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                options =>
+                {
+                    foreach ( var description in provider.ApiVersionDescriptions )
+                    {
+                        options.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json"
+                            ,
+                            description.GroupName.ToUpperInvariant());
+                    }
+                } );
 
             app.UseAuthentication();
             app.UseAuthorization();

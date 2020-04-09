@@ -1,20 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using Contracts.DAL.App;
-using Microsoft.AspNetCore.Http;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 using PublicApi.DTO.v1;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers._1._1
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion( "1.1" )]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ArtistsController : ControllerBase
     {
         //private readonly IAppUnitOfWork _uow;

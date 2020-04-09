@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace WebApp.ApiControllers.Identity
+namespace WebApp.ApiControllers._1._0.Identity
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [ApiVersion( "1.0" )]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
+
     public class AccountController: ControllerBase
     {
         private readonly IConfiguration _configuration;
