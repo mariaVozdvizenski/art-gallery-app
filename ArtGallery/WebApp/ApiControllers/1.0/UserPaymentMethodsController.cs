@@ -2,38 +2,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using DAL.App.EF;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.DTO.v1;
 
 namespace WebApp.ApiControllers._1._0
 {
     [ApiController]
     [ApiVersion( "1.0" )]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     
     public class UserPaymentMethodsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserPaymentMethodsController(AppDbContext context)
+        public UserPaymentMethodsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/UserPaymentMethods
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserPaymentMethod>>> GetUserPaymentMethods()
+        public async Task<ActionResult<IEnumerable<UserPaymentMethodDTO>>> GetUserPaymentMethods()
         {
-            return await _context.UserPaymentMethods.ToListAsync();
+            return Ok(await _uow.UserPaymentMethods.DTOAllAsync(User.UserGuidId()));
         }
 
         // GET: api/UserPaymentMethods/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserPaymentMethod>> GetUserPaymentMethod(Guid id)
+        public async Task<ActionResult<UserPaymentMethodDTO>> GetUserPaymentMethod(Guid id)
         {
-            var userPaymentMethod = await _context.UserPaymentMethods.FindAsync(id);
+            var userPaymentMethod = await _uow.UserPaymentMethods.DTOFirstOrDefaultAsync(id, User.UserGuidId());
 
             if (userPaymentMethod == null)
             {
@@ -54,15 +61,15 @@ namespace WebApp.ApiControllers._1._0
                 return BadRequest();
             }
 
-            _context.Entry(userPaymentMethod).State = EntityState.Modified;
-
+            _uow.UserPaymentMethods.Update(userPaymentMethod);
+            
             try
             {
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserPaymentMethodExists(id))
+                if (!await _uow.UserPaymentMethods.ExistsAsync(userPaymentMethod.Id, User.UserGuidId()))
                 {
                     return NotFound();
                 }
@@ -81,8 +88,8 @@ namespace WebApp.ApiControllers._1._0
         [HttpPost]
         public async Task<ActionResult<UserPaymentMethod>> PostUserPaymentMethod(UserPaymentMethod userPaymentMethod)
         {
-            _context.UserPaymentMethods.Add(userPaymentMethod);
-            await _context.SaveChangesAsync();
+            _uow.UserPaymentMethods.Add(userPaymentMethod);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetUserPaymentMethod", new { id = userPaymentMethod.Id }, userPaymentMethod);
         }
@@ -91,21 +98,10 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserPaymentMethod>> DeleteUserPaymentMethod(Guid id)
         {
-            var userPaymentMethod = await _context.UserPaymentMethods.FindAsync(id);
-            if (userPaymentMethod == null)
-            {
-                return NotFound();
-            }
-
-            _context.UserPaymentMethods.Remove(userPaymentMethod);
-            await _context.SaveChangesAsync();
-
-            return userPaymentMethod;
-        }
-
-        private bool UserPaymentMethodExists(Guid id)
-        {
-            return _context.UserPaymentMethods.Any(e => e.Id == id);
+            await _uow.UserPaymentMethods.DeleteAsync(id, User.UserGuidId());
+            await _uow.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            
         }
     }
 }

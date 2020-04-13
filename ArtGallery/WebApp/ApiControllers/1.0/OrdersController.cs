@@ -98,16 +98,10 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Order>> DeleteOrder(Guid id)
         {
-            var order = await _uow.Orders.FirstOrDefaultAsync(id, User.UserGuidId());
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            _uow.Orders.Remove(order);
+            await _uow.Orders.DeleteAsync(id, User.UserGuidId());
             await _uow.SaveChangesAsync();
 
-            return order;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

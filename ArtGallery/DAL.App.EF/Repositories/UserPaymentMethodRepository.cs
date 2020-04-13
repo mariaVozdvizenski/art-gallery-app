@@ -6,6 +6,8 @@ using Contracts.DAL.App.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
@@ -63,5 +65,38 @@ namespace DAL.App.EF.Repositories
             base.Remove(owner);
         }
 
+        public async Task<IEnumerable<UserPaymentMethodDTO>> DTOAllAsync(Guid? userId = null)
+        {
+            var query =  RepoDbSet.AsQueryable();
+
+            if (userId != null)
+            {
+                query = query.Where(p => p.AppUserId == userId);
+            }
+
+            return await query.Select(p => new UserPaymentMethodDTO()
+            {
+                Id = p.Id,
+                UserPaymentMethod = p.PaymentMethod.PaymentMethodCode,
+            }).ToListAsync();
+        }
+
+        public Task<UserPaymentMethodDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
+        {
+            var query =  RepoDbSet.Where(p => p.Id == id).AsQueryable();
+
+            if (userId != null)
+            {
+                query = query.Where(p => p.AppUserId == userId);
+            }
+
+            var userPaymentDTO = query.Select(p => new UserPaymentMethodDTO()
+            {
+                Id = p.Id,
+                UserPaymentMethod = p.PaymentMethod.PaymentMethodCode
+            }).FirstOrDefaultAsync();
+
+            return userPaymentDTO;
+        }
     }
 }

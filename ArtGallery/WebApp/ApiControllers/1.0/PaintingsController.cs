@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Domain;
+using Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
@@ -113,17 +114,9 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Painting>> DeletePainting(Guid id)
         {
-            var painting = await _uow.Paintings.FirstOrDefaultAsync(id);
-            if (painting == null)
-            {
-                return NotFound();
-            }
-
-            _uow.Paintings.Remove(painting);
+            await _uow.Paintings.DeleteAsync(id, User.UserGuidId());
             await _uow.SaveChangesAsync();
-
-            return painting;
+            return RedirectToAction(nameof(Index));
         }
-        
     }
 }

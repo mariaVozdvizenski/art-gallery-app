@@ -39,6 +39,12 @@ namespace DAL.App.EF.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task DeleteAsync(Guid id, Guid? userId = null)
+        {
+            var painting = await FirstOrDefaultAsync(id, userId);
+            base.Remove(painting);
+        }
+
         public async Task<IEnumerable<PaintingDTO>> DTOAllAsync(Guid? userId = null)
         {
             var query = RepoDbSet

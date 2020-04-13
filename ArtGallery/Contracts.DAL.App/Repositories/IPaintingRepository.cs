@@ -12,6 +12,7 @@ namespace Contracts.DAL.App.Repositories
         Task<bool> ExistsAsync (Guid? id, Guid? userId = null);
         Task<IEnumerable<Painting>> AllAsync (Guid? userId = null);
         Task<Painting> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
+        Task DeleteAsync(Guid id, Guid? userId = null);
         Task<IEnumerable<PaintingDTO>> DTOAllAsync(Guid? userId = null);
         Task<PaintingDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null);
 

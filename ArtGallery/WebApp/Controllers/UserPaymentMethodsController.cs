@@ -62,6 +62,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppUserId,PaymentMethodId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] UserPaymentMethod userPaymentMethod)
         {
+            userPaymentMethod.AppUserId = User.UserGuidId();
+            
             if (ModelState.IsValid)
             {
                 _uow.UserPaymentMethods.Add(userPaymentMethod);

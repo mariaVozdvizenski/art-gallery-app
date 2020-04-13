@@ -92,6 +92,8 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
             _uow.Comments.Add(comment);
@@ -104,16 +106,10 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Comment>> DeleteComment(Guid id)
         {
-            var comment = await _uow.Comments.FirstOrDefaultAsync(id, User.UserGuidId());
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            _uow.Comments.Remove(comment);
+            await _uow.Comments.DeleteAsync(id, User.UserGuidId());
             await _uow.SaveChangesAsync();
 
-            return comment;
+            return RedirectToAction(nameof(Index));
         }
 
     }

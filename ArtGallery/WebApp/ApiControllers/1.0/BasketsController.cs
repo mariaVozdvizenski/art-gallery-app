@@ -105,16 +105,9 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Basket>> DeleteBasket(Guid id)
         {
-            var basket = await _uow.Baskets.FirstOrDefaultAsync(id, User.UserGuidId());
-            if (basket == null)
-            {
-                return NotFound();
-            }
-
-            _uow.Baskets.Remove(basket);
+            await _uow.Baskets.DeleteAsync(id, User.UserGuidId());
             await _uow.SaveChangesAsync();
-
-            return basket;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

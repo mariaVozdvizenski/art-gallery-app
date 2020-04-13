@@ -34,6 +34,12 @@ namespace BLL.App.Services
             return await ServiceRepository.FirstOrDefaultAsync(id, userId);
         }
 
+        public async Task DeleteAsync(Guid id, Guid? userId = null)
+        {
+            var painting = await FirstOrDefaultAsync(id, userId);
+            base.Remove(painting);        
+        }
+
         public async Task<IEnumerable<PaintingDTO>> DTOAllAsync(Guid? userId = null)
         {
             return await ServiceRepository.DTOAllAsync(userId);

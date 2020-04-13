@@ -29,6 +29,7 @@ export class App {
 
       {route: ['orders', 'orders/index'], name: 'orders', moduleId: PLATFORM.moduleName('views/orders/index'), nav: true, title:'Orders'},
 
+      {route: ['userPaymentMethods', 'userPaymentMethods/index'], name: 'userPaymentMethods', moduleId: PLATFORM.moduleName('views/UPMethods/index'), nav: true, title:'User Payment Methods'},
 
       {route: ['paintings', 'paintings/index'], name: 'paintings', moduleId: PLATFORM.moduleName('views/paintings/index'), nav: true, title:'Paintings'},
       {route: ['paintings/details/:id'], name: 'paintingDetails', moduleId: PLATFORM.moduleName('views/paintings/details'), nav: false, title:'Painting Details'},
