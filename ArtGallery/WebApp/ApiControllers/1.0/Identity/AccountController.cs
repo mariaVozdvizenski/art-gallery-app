@@ -62,8 +62,7 @@ namespace WebApp.ApiControllers._1._0.Identity
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return StatusCode(200);
+                return Ok(new {status = "Registered"});
             }
             
             _logger.LogInformation("Web-Api register. Cannot create a new account!");

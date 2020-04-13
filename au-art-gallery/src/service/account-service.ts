@@ -4,6 +4,7 @@ import { AppState } from 'state/app-state';
 import { HttpClient } from 'aurelia-fetch-client';
 import { IResponse } from 'domain/IResponse';
 import { ILoginResponse } from 'domain/ILoginResponse';
+import { IRegisterResponse } from 'domain/IRegisterResponse';
 
 
 @autoinject
@@ -28,6 +29,37 @@ export class AccountService {
                 return {
                     statusCode: response.status,
                     data: data as ILoginResponse
+                }
+            } 
+
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+        }
+        catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
+    }
+    async register (email: string, password: string): Promise<IResponse<IRegisterResponse>> {
+        
+        try {
+            const response = await this.httpClient.post('account/register', JSON.stringify({
+                email: email,
+                password: password}), 
+
+                {cache: 'no-store'});
+
+            // happy case
+            if (response.status >= 200 && response.status < 300){
+                const data = (await response.json()) as IRegisterResponse;
+                return {
+                    statusCode: response.status,
+                    data: data as IRegisterResponse
                 }
             } 
 

@@ -1,3 +1,3 @@
 export interface IRegisterResponse {
-    responseCode: string;
+    status: string;
 }
