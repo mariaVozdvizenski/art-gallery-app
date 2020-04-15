@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
 using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
@@ -12,6 +15,8 @@ namespace WebApp.ApiControllers._1._0
     [ApiController]
     [ApiVersion( "1.0" )]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class ArtistsController : ControllerBase
     {
         //private readonly IAppUnitOfWork _uow;
@@ -26,7 +31,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
         {
-            return Ok(await _bll.Artists.DTOAllAsync());
+            return Ok(await _bll.Artists.DTOAllAsync(User.UserGuidId())); // need this to not get a SyntaxError: Unexpected end of JSON
         }
 
         /// <summary>
@@ -43,7 +48,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}")]
         public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
         {
-            var artist = await _bll.Artists.DTOFirstOrDefaultAsync(id);
+            var artist = await _bll.Artists.DTOFirstOrDefaultAsync(id, User.UserGuidId());
             
             if (artist == null)
             {
@@ -83,7 +88,7 @@ namespace WebApp.ApiControllers._1._0
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _bll.Artists.ExistsAsync(id))
+                if (!await _bll.Artists.ExistsAsync(id, User.UserGuidId()))
                 {
                     return NotFound();
                 }

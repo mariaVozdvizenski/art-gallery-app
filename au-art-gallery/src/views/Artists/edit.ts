@@ -3,11 +3,16 @@ import { ArtistService } from 'service/artist-service';
 import { IArtist } from 'domain/IArtist';
 import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
 import { IArtistEdit } from 'domain/IArtistEdit';
+import { IAlertData } from 'types/IAlertData';
+import { AlertType } from 'types/AlertType';
+
 
 @autoinject
 export class ArtistEdit{
     private _artist: IArtist | null = null;
     private _id = "";
+    private _alert: IAlertData | null = null;
+
 
     constructor(private artistService: ArtistService, private router: Router) {
 
@@ -19,8 +24,20 @@ export class ArtistEdit{
     activate (params: any, routeConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
         if (params.id && typeof(params.id) == "string"){
             this.artistService.getArtist(params.id).then(
-                data => this._artist = data)
-            this._id = params.id;   
+                response => {
+                    if (response.statusCode >= 200 && response.statusCode < 300) {
+                        this._alert = null;
+                        this._artist = response.data!;
+                    } else {
+                        // show error message
+                        this._alert = {
+                            message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                            type: AlertType.Danger,
+                            dismissable: true,
+                        }
+                    }
+                }
+            );
         }
     }
 
@@ -31,13 +48,22 @@ export class ArtistEdit{
             firstName: this._artist!.firstName,
             lastName: this._artist!.lastName,
             country: this._artist!.country,
-            id: this._id
+            id: this._artist!.id
         }
 
         this.artistService.updateArtist(artist)
         .then((response) => {
-            console.log('redirect?', response);
-            this.router.navigateToRoute('artists');
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+                this._alert = null;
+                this.router.navigateToRoute('artists', {});
+            } else {
+                this._alert = {
+                    message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                    type: AlertType.Danger,
+                    dismissable: true,
+
+                }
+            }
         });
 
         event.preventDefault();

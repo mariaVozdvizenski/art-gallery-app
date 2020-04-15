@@ -15,6 +15,8 @@ namespace WebApp.ApiControllers._1._0
     [ApiController]
     [ApiVersion( "1.0" )]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     
     public class CommentsController : ControllerBase
     {
@@ -29,14 +31,14 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
         {
-            return Ok(await _uow.Comments.DTOAllAsync());
+            return Ok(await _uow.Comments.DTOAllAsync(User.UserGuidId()));
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CommentDTO>> GetComment(Guid id)
         {
-            var comment = await _uow.Comments.DTOFirstOrDefaultAsync(id);
+            var comment = await _uow.Comments.DTOFirstOrDefaultAsync(id, User.UserGuidId());
 
             if (comment == null)
             {
@@ -50,7 +52,6 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
         public async Task<IActionResult> PutComment(Guid id, CommentEditDTO commentEditDTO)
         {
@@ -92,10 +93,16 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult<CommentCreateDTO>> PostComment(CommentCreateDTO commentCreateDTO)
         {
+            var comment = new Comment()
+            {
+                CommentBody = commentCreateDTO.CommentBody,
+                AppUserId = User.UserGuidId(),
+                PaintingId = commentCreateDTO.PaintingId
+            };
+            
             _uow.Comments.Add(comment);
             await _uow.SaveChangesAsync();
 

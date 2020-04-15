@@ -4,6 +4,8 @@ import {IPainting} from 'domain/IPainting';
 import { IPaintingCreate } from 'domain/IPaintingCreate';
 import { IPaintingEdit } from 'domain/IPaintingEdit';
 import { AppState } from 'state/app-state';
+import { IFetchResponse } from 'types/IFetchResponse';
+
 
 @autoinject
 export class PaintingService {
@@ -14,56 +16,161 @@ export class PaintingService {
         this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
-    getPaintings(): Promise<IPainting[]>{
-        return this.httpClient.fetch(this._baseUrl)
-        .then(response => response.json())
-        .then((data: IPainting[]) => data)
-        .catch(reason => {
-            console.log(reason); 
-            return []
-        });
-    }
-
-    getPainting(id: string): Promise<IPainting | null>{
-        return this.httpClient.fetch(this._baseUrl + '/' + id)
-        .then(response => response.json())
-        .then((data: IPainting) => data)
-        .catch(reason => {
-            console.log(reason); 
-            return null
-        });
-    }
-
-    createPainting(painting: IPaintingCreate): Promise<string> {
-        return this.httpClient.post(this._baseUrl, JSON.stringify(painting),{
-            cache: 'no-store'
-        }).then(
-            response => {
-                console.log('createArtist response', response);
-                return response.statusText;
+    async getPaintings(): Promise<IFetchResponse<IPainting[]>> {
+        try {
+            const response = await this.httpClient
+                .fetch(this._baseUrl, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                const data = (await response.json()) as IPainting[];
+                console.log(data);
+                return {
+                    statusCode: response.status,
+                    data: data
+                }
             }
-        );
+
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 
-    updatePainting(painting: IPaintingEdit): Promise<string>{
-        return this.httpClient.put(this._baseUrl + '/' + painting.id, JSON.stringify(painting), {
-            cache: 'no-store'
-        }).then (
-            response => {
-                console.log('updatePainting response', response);
-                return response.statusText;
-            }
-        )
 
+    async getPainting(id: string): Promise<IFetchResponse<IPainting>> {
+        try {
+            const response = await this.httpClient
+                .fetch(this._baseUrl + '/' + id, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                const data = (await response.json()) as IPainting;
+                console.log(data);
+                return {
+                    statusCode: response.status,
+                    data: data
+                }
+            }
+
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 
-    deletePainting(id: string): Promise<string>{
-        return this.httpClient.delete(this._baseUrl + '/' + id)
-        .then(
-            response => {
-                console.log('deletePainting response', response);
-                return response.statusText;
+    async updatePainting(painting: IPaintingEdit): Promise<IFetchResponse<string>>{
+        try {
+            const response = await this.httpClient
+                .put(this._baseUrl + '/' + painting.id, JSON.stringify(painting), {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
             }
-        )
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
+    }
+
+    async createPainting(painting: IPaintingCreate): Promise<IFetchResponse<string>> {
+        try{
+            const response = await this.httpClient
+            .post(this._baseUrl, JSON.stringify(painting), {
+                cache: 'no-store',
+                headers: {
+                    authorization: "Bearer " + this.appState.jwt
+
+                }
+            })
+
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
+            }
+
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+        }
+        catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
+    }
+
+    async deletePainting(id: string): Promise<IFetchResponse<string>> {
+        try {
+            const response = await this.httpClient
+                .delete(this._baseUrl + '/' + id, null, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
+            }
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 }

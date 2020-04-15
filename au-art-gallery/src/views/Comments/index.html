@@ -2,7 +2,7 @@
     <h1>Index</h1>
 
 <p>
-    <a href="/Comments/Create">Create New</a>
+    <a route-href="route: commentCreate">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -25,9 +25,9 @@
                 ${comment.paintingTitle}
             </td>
             <td>
-                <a href="/Comments/Edit/be71802f-243d-421c-f005-08d7d87d6a7a">Edit</a> |
-                <a href="/Comments/Details/be71802f-243d-421c-f005-08d7d87d6a7a">Details</a> |
-                <a href="/Comments/Delete/be71802f-243d-421c-f005-08d7d87d6a7a">Delete</a>
+                <a route-href="route: commentEdit; params.bind: {id: comment.id}">Edit</a> |
+                <a route-href="route: commentDetails; params.bind: {id: comment.id}">Details</a> |
+                <a route-href="route: commentDelete; params.bind: {id: comment.id}">Delete</a>
             </td>
         </tr>
     </tbody>

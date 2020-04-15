@@ -5,6 +5,8 @@ import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
 import { ArtistService } from 'service/artist-service';
 import { IArtist } from 'domain/IArtist';
 import { IPaintingEdit } from 'domain/IPaintingEdit';
+import { IAlertData } from 'types/IAlertData';
+import { AlertType } from 'types/AlertType';
 
 @autoinject
 export class PaintingEdit{
@@ -12,6 +14,7 @@ export class PaintingEdit{
     private _painting: IPainting | null = null;
     private _artists: IArtist[] = [];
     private _artistId = null;
+    private _alert: IAlertData | null = null;
 
 
     constructor(private paintingService: PaintingService, private artistService: ArtistService, private router: Router) {
@@ -20,7 +23,19 @@ export class PaintingEdit{
 
     attached() {
         this.artistService.getArtists().then(
-            data => this._artists = data
+            response => {
+                if (response.statusCode >= 200 && response.statusCode < 300) {
+                    this._alert = null;
+                    this._artists = response.data!;
+                } else {
+                    // show error message
+                    this._alert = {
+                        message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                        type: AlertType.Danger,
+                        dismissable: true,
+                    }
+                }
+            }
         );
     }
 
@@ -28,8 +43,21 @@ export class PaintingEdit{
         console.log(params);
         if (params.id && typeof(params.id) == "string") {
             this.paintingService.getPainting(params.id)
-            .then(data => this._painting = data)
-        }
+            .then(
+                response => {
+                    if (response.statusCode >= 200 && response.statusCode < 300) {
+                        this._alert = null;
+                        this._painting = response.data!;
+                    } else {
+                        // show error message
+                        this._alert = {
+                            message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                            type: AlertType.Danger,
+                            dismissable: true
+                        }
+                    }
+                }
+            );}
     }
 
     onSubmit(event: Event){
@@ -43,9 +71,19 @@ export class PaintingEdit{
             artistId: this._artistId!
         }
 
-        this.paintingService.updatePainting(painting).then((response) => {
-            console.log('redirect?', response);
-            this.router.navigateToRoute('paintings');
+        this.paintingService.updatePainting(painting)
+        .then((response) => {
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+                this._alert = null;
+                this.router.navigateToRoute('paintings', {});
+            } else {
+                this._alert = {
+                    message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                    type: AlertType.Danger,
+                    dismissable: true,
+
+                }
+            }
         });
         event.preventDefault();
     }

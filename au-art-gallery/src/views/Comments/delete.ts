@@ -1,29 +1,29 @@
 import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
 import {autoinject} from 'aurelia-framework';
-import { ArtistService } from 'service/artist-service';
-import { IArtist } from 'domain/IArtist';
+import { CommentService } from 'service/comment-service';
+import { IComment } from 'domain/IComment';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
 
 @autoinject
-export class ArtistDelete{
+export class CommentDelete{
 
-    private _artist: IArtist | null = null;
+    private _comment: IComment | null = null;
     private _id = ""
     private _alert: IAlertData | null = null;
 
 
-    constructor(private artistService: ArtistService, private router: Router){
+    constructor(private commentService: CommentService, private router: Router){
 
     }
     
     activate(params: any, routeConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
         if (params.id && typeof(params.id) == "string"){
-            this.artistService.getArtist(params.id).then(
+            this.commentService.getComment(params.id).then(
                 response => {
                     if (response.statusCode >= 200 && response.statusCode < 300) {
                         this._alert = null;
-                        this._artist = response.data!;
+                        this._comment = response.data!;
                     } else {
                         // show error message
                         this._alert = {
@@ -38,11 +38,11 @@ export class ArtistDelete{
     }
 
     onSubmit(event: Event) {
-        this.artistService.deleteArtist(this._artist!.id)
+        this.commentService.deleteComment(this._comment!.id)
         .then((response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 this._alert = null;
-                this.router.navigateToRoute('artists', {});
+                this.router.navigateToRoute('comments', {});
             } else {
                 this._alert = {
                     message: response.statusCode.toString() + ' - ' + response.errorMessage,

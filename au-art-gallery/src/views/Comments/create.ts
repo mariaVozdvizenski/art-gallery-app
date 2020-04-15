@@ -1,31 +1,32 @@
 import {autoinject} from 'aurelia-framework';
-import { PaintingService } from 'service/painting-service';
-import { IPaintingCreate } from 'domain/IPaintingCreate';
+import { CommentService } from 'service/comment-service';
+import { ICommentCreate } from 'domain/ICommentCreate';
 import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
-import { ArtistService } from 'service/artist-service';
-import { IArtist } from 'domain/IArtist';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
+import { IPainting } from 'domain/IPainting';
+import { PaintingService } from 'service/painting-service';
+
 
 @autoinject
-export class PaintingCreate{
+export class CommentCreate{
 
-    private _painting: IPaintingCreate | null =null;
-    private _artists: IArtist[] = [];
-    private _artistId = null;
+    private _commentBody = "";
+    private _paintingId = "";
+    private _paintings: IPainting[] | null = null;
+
     private _alert: IAlertData | null = null;
 
-
-    constructor (private paintingService: PaintingService, private router: Router, private artistService: ArtistService) {
-
+    constructor(private commentService: CommentService, private router: Router, private paintingService: PaintingService){
     }
 
-    attached() {
-        this.artistService.getArtists().then(
+    attached(){
+        this.paintingService.getPaintings()
+        .then(
             response => {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
-                    this._artists = response.data!;
+                    this._paintings = response.data!;
                 } else {
                     // show error message
                     this._alert = {
@@ -34,29 +35,31 @@ export class PaintingCreate{
                         dismissable: true,
                     }
                 }
-            }
-        );
+            });
+
     }
 
     onSubmit(event: Event){
-        this._painting!.artistId = this._artistId!
-        this._painting!.price = Number(this._painting!.price)
-
-        this.paintingService.createPainting(this._painting!)
-        .then((response) => {
+        
+        this.commentService
+        .createComment({
+            commentBody: this._commentBody, paintingId: this._paintingId})
+        .then(response => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
-                this._alert = null;
-                this.router.navigateToRoute('paintings', {});
+                this._alert = null,
+                this.router.navigateToRoute('comments', {});
             } else {
+
                 this._alert = {
                     message: response.statusCode.toString() + ' - ' + response.errorMessage,
                     type: AlertType.Danger,
                     dismissable: true,
 
                 }
+                console.log(this._alert);
             }
         });
+
         event.preventDefault();
     }
-
 }

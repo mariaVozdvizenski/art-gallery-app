@@ -57,6 +57,7 @@ namespace DAL.App.EF.Repositories
             }
             /**/
 
+           // TODO: Fix this, DTOs shouldn't be so complicated
            return await query
                 .Select(o => new PaintingDTO()
                 {

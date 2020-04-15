@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Domain;
 using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
@@ -13,6 +15,7 @@ namespace WebApp.ApiControllers._1._0
     [ApiController]
     [ApiVersion( "1.0" )]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     
     public class PaintingsController : ControllerBase
     {
@@ -34,7 +37,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}")]
         public async Task<ActionResult<PaintingDTO>> GetPainting(Guid id)
         {
-            var painting = await _uow.Paintings.DTOFirstOrDefaultAsync(id);
+            var painting = await _uow.Paintings.DTOFirstOrDefaultAsync(id, User.UserGuidId());
 
             if (painting == null)
             {
@@ -114,7 +117,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Painting>> DeletePainting(Guid id)
         {
-            await _uow.Paintings.DeleteAsync(id, User.UserGuidId());
+            await _uow.Paintings.DeleteAsync(id);
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

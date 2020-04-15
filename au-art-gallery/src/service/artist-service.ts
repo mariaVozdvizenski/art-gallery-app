@@ -4,6 +4,7 @@ import {IArtistCreate} from 'domain/IArtistCreate';
 import {IArtistEdit } from 'domain/IArtistEdit';
 import {IArtist} from 'domain/IArtist';
 import { AppState } from 'state/app-state';
+import { IFetchResponse } from 'types/IFetchResponse';
 
 
 
@@ -15,72 +16,162 @@ export class ArtistService {
 
     private readonly _baseUrl = 'Artists';
   
-
-
-    getArtists(): Promise<IArtist []>{
-        return this.httpClient
-        .fetch(this._baseUrl)
-        .then(response => response.json())
-        .then((data: IArtist[]) => data)
-        .catch(reason => {
-            console.log(reason); 
-            return [];
-        });
-    }
-
-    getArtist(id: string): Promise<IArtist | null> {
-        return this.httpClient
-        .fetch(this._baseUrl + '/' + id)
-        .then(response => response.json())
-        .then((data: IArtist) => data)
-        .catch(reason => {
-            console.log(reason); 
-            return null;
-        });
-
-    }
-
-    getCreateArtist(id: string): Promise<IArtistCreate | null> {
-        return this.httpClient
-        .fetch(this._baseUrl + '/' + id)
-        .then(response => response.json())
-        .then((data: IArtistCreate) => data)
-        .catch(reason => {
-            console.log(reason); 
-            return null;
-        });
-    }
-
-    updateArtist(artist: IArtistEdit): Promise<string>{
-        return this.httpClient.put(this._baseUrl + '/' + artist.id, JSON.stringify(artist), {
-            cache: 'no-store'
-        }).then (
-            response => {
-                console.log('updateArtist response', response);
-                return response.statusText;
+    async getArtists(): Promise<IFetchResponse<IArtist[]>> {
+        try {
+            const response = await this.httpClient
+                .fetch(this._baseUrl, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                const data = (await response.json()) as IArtist[];
+                console.log(data);
+                return {
+                    statusCode: response.status,
+                    data: data
+                }
             }
-        )
+
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 
-    createArtist(artist: IArtistCreate): Promise<string> {
-        return this.httpClient.post(this._baseUrl, JSON.stringify(artist),{
-            cache: 'no-store'
-        }).then(
-            response => {
-                console.log('createArtist response', response);
-                return response.statusText;
+
+    async getArtist(id: string): Promise<IFetchResponse<IArtist>> {
+        try {
+            const response = await this.httpClient
+                .fetch(this._baseUrl + '/' + id, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                const data = (await response.json()) as IArtist;
+                console.log(data);
+                return {
+                    statusCode: response.status,
+                    data: data
+                }
             }
-        );
+
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 
-    deleteArtist(id: string): Promise<string> {
-        return this.httpClient.delete(this._baseUrl + '/' + id)
-        .then(
-            response => {
-                console.log('createArtist response', response);
-                return response.statusText;
+    async updateArtist(artist: IArtistEdit): Promise<IFetchResponse<string>>{
+        try {
+            const response = await this.httpClient
+                .put(this._baseUrl + '/' + artist.id, JSON.stringify(artist), {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
             }
-        )
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
+    }
+
+    async createArtist(artist: IArtistCreate): Promise<IFetchResponse<string>> {
+        try{
+            const response = await this.httpClient
+            .post(this._baseUrl, JSON.stringify(artist), {
+                cache: 'no-store',
+                headers: {
+                    authorization: "Bearer " + this.appState.jwt
+
+                }
+            })
+
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
+            }
+
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+        }
+        catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
+    }
+
+    async deleteArtist(id: string): Promise<IFetchResponse<string>> {
+        try {
+            const response = await this.httpClient
+                .delete(this._baseUrl + '/' + id, null, {
+                    cache: "no-store",
+                    headers: {
+                        authorization: "Bearer " + this.appState.jwt
+                    }
+                });
+            // happy case
+            if (response.status >= 200 && response.status < 300) {
+                return {
+                    statusCode: response.status
+                    // no data
+                }
+            }
+            // something went wrong
+            return {
+                statusCode: response.status,
+                errorMessage: response.statusText
+            }
+
+        } catch (reason) {
+            return {
+                statusCode: 0,
+                errorMessage: JSON.stringify(reason)
+            }
+        }
     }
 
 }

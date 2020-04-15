@@ -26,6 +26,11 @@ export class App {
       {route: ['artists/delete/:id'], name: 'artistDelete', moduleId: PLATFORM.moduleName('views/artists/delete'), nav: false, title:'Artist Delete'},
 
       {route: ['comments', 'comments/index'], name: 'comments', moduleId: PLATFORM.moduleName('views/comments/index'), nav: true, title:'Comments'},
+      {route: ['comments/edit/:id'], name: 'commentEdit', moduleId: PLATFORM.moduleName('views/comments/edit'), nav: false, title:'Comment Edit'},
+      {route: ['comments/delete/:id'], name: 'commentDelete', moduleId: PLATFORM.moduleName('views/comments/delete'), nav: false, title:'Comment Delete'},
+      {route: ['comments/create'], name: 'commentCreate', moduleId: PLATFORM.moduleName('views/comments/create'), nav: false, title:'Comment Create'},
+      {route: ['comments/details/:id'], name: 'commentDetails', moduleId: PLATFORM.moduleName('views/comments/details'), nav: false, title:'Comment Details'},
+
 
       {route: ['orders', 'orders/index'], name: 'orders', moduleId: PLATFORM.moduleName('views/orders/index'), nav: true, title:'Orders'},
 
