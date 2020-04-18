@@ -4,7 +4,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class BasketItem: DomainEntityBaseMetadata
+    public class BasketItem: DomainEntityEntityBaseMetadata
     {
         public int Quantity { get; set; }
         public DateTime DateCreated { get; set; }

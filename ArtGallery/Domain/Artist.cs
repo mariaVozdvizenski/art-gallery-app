@@ -6,7 +6,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Artist: DomainEntityBaseMetadata
+    public class Artist: DomainEntityEntityBaseMetadata
     {
         [MaxLength(128)] 
         [MinLength(1)] 

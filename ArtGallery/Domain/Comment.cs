@@ -5,7 +5,7 @@ using Domain.Identity;
 
 namespace Domain
 {
-    public class Comment: DomainEntityBaseMetadata
+    public class Comment: DomainEntityEntityBaseMetadata
     {
         [MaxLength(4096)]
         [MinLength(1)]

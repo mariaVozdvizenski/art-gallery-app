@@ -10,7 +10,7 @@ namespace Contracts.BLL.Base.Services
     }
 
     public interface IBaseEntityService<TBLLEntity> : IBaseService, IBaseRepository<TBLLEntity>
-        where TBLLEntity : class, IDomainEntityBaseMetadata<Guid>, new()
+        where TBLLEntity : class, IDomainEntityEntityBaseMetadata<Guid>, new()
     {
     }
 }

@@ -5,7 +5,7 @@ using Domain.Identity;
 
 namespace Domain
 {
-    public class UserPaymentMethod: DomainEntityBaseMetadata
+    public class UserPaymentMethod: DomainEntityEntityBaseMetadata
     {
         public Guid AppUserId { get; set; } = default!;
         public AppUser? AppUser { get; set; }

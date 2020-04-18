@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BLL.App;
 using Contracts.BLL.App;
 using Contracts.DAL.App;
+using Contracts.DAL.Base;
 using DAL.App.EF;
 using Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,13 +45,21 @@ namespace WebApp
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MsSqlConnection")));
+            
             services.AddIdentity<AppUser, AppRole>()
                 .AddDefaultUI()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
             //AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
+            services.AddScoped<IUserNameProvider, UserNameProvider>();
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
+            
+            services.AddHttpContextAccessor();
+
             services.AddScoped<IAppBLL, AppBLL>();
 
             services.AddCors(options =>

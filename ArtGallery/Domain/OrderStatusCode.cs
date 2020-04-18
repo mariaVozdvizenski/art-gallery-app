@@ -5,7 +5,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class OrderStatusCode: DomainEntityBaseMetadata
+    public class OrderStatusCode: DomainEntityEntityBaseMetadata
     {
         [MaxLength(128)] 
         [MinLength(1)] 

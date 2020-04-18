@@ -2,7 +2,7 @@
 
 namespace Contracts.DAL.Base
 {
-    public interface IDomainMetadata 
+    public interface IDomainEntityMetadata 
     {
         string? CreatedBy { get; set; }
         DateTime CreatedAt { get; set; }

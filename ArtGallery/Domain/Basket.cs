@@ -7,7 +7,7 @@ using Domain.Identity;
 
 namespace Domain
 {
-    public class Basket: DomainEntityBaseMetadata
+    public class Basket: DomainEntityEntityBaseMetadata
     {
         public DateTime DateCreated { get; set; }
         public Guid AppUserId { get; set; } = default!;
