@@ -11,8 +11,8 @@ namespace BLL.Base.Services
 {
     public class BaseEntityService<TServiceRepository, TUnitOfWork, TDALEntity, TBLLEntity> : BaseService,
         IBaseEntityService<TBLLEntity>
-        where TBLLEntity : class, IDomainEntity<Guid>, new()
-        where TDALEntity : class, IDomainEntity<Guid>, new()
+        where TBLLEntity : class, IDomainEntityBaseMetadata<Guid>, new()
+        where TDALEntity : class, IDomainEntityBaseMetadata<Guid>, new()
         where TUnitOfWork : IBaseUnitOfWork
         where TServiceRepository : IBaseRepository<TDALEntity>
     {

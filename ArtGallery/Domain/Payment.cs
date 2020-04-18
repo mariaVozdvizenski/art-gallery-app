@@ -4,7 +4,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Payment: DomainEntity
+    public class Payment: DomainEntityBaseMetadata
     {
         public Guid InvoiceId { get; set; } = default!;
         public Invoice? Invoice { get; set; }

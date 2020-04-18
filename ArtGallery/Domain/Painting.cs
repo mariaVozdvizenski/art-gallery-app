@@ -6,7 +6,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Painting: DomainEntity
+    public class Painting: DomainEntityBaseMetadata
     {
         [MaxLength(4096)] 
         [MinLength(1)] 

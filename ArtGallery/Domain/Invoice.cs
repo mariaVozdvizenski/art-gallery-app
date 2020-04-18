@@ -6,7 +6,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class Invoice: DomainEntity
+    public class Invoice: DomainEntityBaseMetadata
     {
         public int InvoiceNumber { get; set; }
         

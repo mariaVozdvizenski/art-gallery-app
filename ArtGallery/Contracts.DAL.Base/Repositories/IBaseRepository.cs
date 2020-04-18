@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 namespace Contracts.DAL.Base.Repositories
 {
     public interface IBaseRepository<TEntity> : IBaseRepository<TEntity, Guid>
-        where TEntity : class, IDomainEntity<Guid>, new()
+        where TEntity : class, IDomainEntityBaseMetadata<Guid>, new()
     {
     }
 
     public interface IBaseRepository<TEntity, TKey>
-        where TEntity : class, IDomainEntity<TKey>, new()
+        where TEntity : class, IDomainEntityBaseMetadata<TKey>, new()
         where TKey : struct, IComparable
     {
         // crud

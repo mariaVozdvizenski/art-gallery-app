@@ -6,7 +6,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class OrderItem: DomainEntity
+    public class OrderItem: DomainEntityBaseMetadata
     {
         public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }

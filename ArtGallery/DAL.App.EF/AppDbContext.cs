@@ -37,6 +37,8 @@ namespace DAL.App.EF
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            
+            // disable cascade delete
             foreach (var relationship in builder.Model
                 .GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

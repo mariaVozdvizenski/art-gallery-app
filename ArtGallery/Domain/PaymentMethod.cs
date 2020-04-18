@@ -5,7 +5,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class PaymentMethod: DomainEntity
+    public class PaymentMethod: DomainEntityBaseMetadata
     {
         [MaxLength(128)]
         [MinLength(1)]

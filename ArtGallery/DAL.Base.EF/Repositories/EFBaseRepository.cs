@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DAL.Base.EF.Repositories
 {
     public class EFBaseRepository<TEntity, TDbContext> : BaseRepository<TEntity, Guid, TDbContext>
-        where TEntity : class, IDomainEntity<Guid>, new()
+        where TEntity : class, IDomainEntityBaseMetadata<Guid>, new()
         where TDbContext : DbContext
     {
         public EFBaseRepository(TDbContext dbContext) : base(dbContext)
@@ -18,7 +18,7 @@ namespace DAL.Base.EF.Repositories
     }
     
     public class BaseRepository<TEntity, TKey, TDbContext> : IBaseRepository<TEntity, TKey>
-        where TEntity : class, IDomainEntity<TKey>, new()
+        where TEntity : class, IDomainEntityBaseMetadata<TKey>, new()
         where TKey : struct, IComparable
         where TDbContext : DbContext
     {

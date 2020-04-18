@@ -5,7 +5,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class InvoiceStatusCode: DomainEntity
+    public class InvoiceStatusCode: DomainEntityBaseMetadata
     {
         [MaxLength(128)]
         [MinLength(1)]

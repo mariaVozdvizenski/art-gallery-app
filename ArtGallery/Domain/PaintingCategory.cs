@@ -4,7 +4,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class PaintingCategory: DomainEntity
+    public class PaintingCategory: DomainEntityBaseMetadata
     {
         public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }

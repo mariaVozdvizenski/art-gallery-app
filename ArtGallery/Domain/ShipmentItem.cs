@@ -4,7 +4,7 @@ using DAL.Base;
 
 namespace Domain
 {
-    public class ShipmentItem: DomainEntity
+    public class ShipmentItem: DomainEntityBaseMetadata
     {
         public Guid OrderItemId { get; set; } = default!;
         public OrderItem? OrderItem { get; set; }
