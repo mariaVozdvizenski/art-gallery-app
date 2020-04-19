@@ -3,7 +3,7 @@ using Contracts.DAL.Base;
 
 namespace DAL.Base
 {
-    public abstract class DomainEntityEntityMetadata : IDomainEntityMetadata
+    public abstract class DomainEntityMetadata : IDomainEntityMetadata
     {
         public virtual string? CreatedBy { get; set; }
         public virtual DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using DAL.Base;
 
 namespace Domain
 {
-    public class InvoiceStatusCode: DomainEntityEntityBaseMetadata
+    public class InvoiceStatusCode : InvoiceStatusCode<Guid>, IDomainEntityBaseMetadata
+    {
+        
+    }
+    public class InvoiceStatusCode<TKey>: DomainEntityBaseMetadata<TKey> 
+        where TKey : IEquatable<TKey>
     {
         [MaxLength(128)]
         [MinLength(1)]

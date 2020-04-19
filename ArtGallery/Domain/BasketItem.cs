@@ -1,17 +1,23 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using DAL.Base;
 
 namespace Domain
 {
-    public class BasketItem: DomainEntityEntityBaseMetadata
+    public class BasketItem : BasketItem<Guid>, IDomainEntityBaseMetadata
+    {
+        
+    }
+    public class BasketItem<TKey>: DomainEntityBaseMetadata<TKey> 
+        where TKey : IEquatable<TKey>
     {
         public int Quantity { get; set; }
         public DateTime DateCreated { get; set; }
-        public Guid BasketId { get; set; } = default!;
+        public TKey BasketId { get; set; } = default!;
         public Basket? Basket { get; set; }
         
-        public Guid PaintingId { get; set; } = default!;
+        public TKey PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
     }
 }

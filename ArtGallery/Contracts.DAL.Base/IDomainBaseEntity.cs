@@ -6,7 +6,7 @@ namespace Contracts.DAL.Base
     {
     }
     public interface IDomainBaseEntity<TKey>
-    where TKey : struct, IComparable
+    where TKey : IEquatable<TKey>
     {
          TKey Id { get; set; }
     }

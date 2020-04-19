@@ -2,16 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using DAL.Base;
 
 namespace Domain
 {
-    public class Shipment: DomainEntityEntityBaseMetadata
+    public class Shipment : Shipment<Guid>, IDomainEntityBaseMetadata
     {
-        public Guid OrderId { get; set; } = default!;
+        
+    }
+    public class Shipment<TKey>: DomainEntityBaseMetadata<TKey> 
+        where TKey : IEquatable<TKey>
+    {
+        public TKey OrderId { get; set; } = default!;
         public Order? Order { get; set; }
         
-        public Guid InvoiceId { get; set; } = default!;
+        public TKey InvoiceId { get; set; } = default!;
         public Invoice? Invoice { get; set; }
         
         public DateTime ShipmentDate { get; set; }

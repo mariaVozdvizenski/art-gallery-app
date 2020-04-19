@@ -2,11 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using DAL.Base;
 
 namespace Domain
 {
-    public class Artist: DomainEntityEntityBaseMetadata
+    public class Artist : Artist<Guid>, IDomainEntityBaseMetadata
+    {
+        
+    }
+    public class Artist<TKey>: DomainEntityBaseMetadata<TKey> 
+        where TKey : IEquatable<TKey>
     {
         [MaxLength(128)] 
         [MinLength(1)] 

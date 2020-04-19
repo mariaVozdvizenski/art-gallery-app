@@ -6,7 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class AppUser: IdentityUser<Guid>
+    public class AppUser : AppUser<Guid>
+    {
+        
+    }
+    public class AppUser<TKey>: IdentityUser<TKey> 
+        where TKey : IEquatable<TKey>
     {
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<UserPaymentMethod>? UserPaymentMethods { get; set; }

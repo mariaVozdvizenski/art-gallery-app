@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF.Repositories
 {
-    public class EFBaseRepository<TEntity, TDbContext> : BaseRepository<TEntity, Guid, TDbContext>
-        where TEntity : class, IDomainEntityEntityBaseMetadata<Guid>, new()
+    public class EFBaseRepository<TEntity, TDbContext> : BaseRepository<TEntity, Guid, TDbContext>, IBaseRepository<TEntity>
+        where TEntity : class, IDomainEntityBaseMetadata<Guid>, new()
         where TDbContext : DbContext
     {
         public EFBaseRepository(TDbContext dbContext) : base(dbContext)
@@ -18,8 +18,8 @@ namespace DAL.Base.EF.Repositories
     }
     
     public class BaseRepository<TEntity, TKey, TDbContext> : IBaseRepository<TEntity, TKey>
-        where TEntity : class, IDomainEntityEntityBaseMetadata<TKey>, new()
-        where TKey : struct, IComparable
+        where TEntity : class, IDomainEntityBaseMetadata<TKey>, new()
+        where TKey : IEquatable<TKey>
         where TDbContext : DbContext
     {
         protected TDbContext RepoDbContext;
