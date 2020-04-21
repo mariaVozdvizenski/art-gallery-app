@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.Base;
+using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Domain.Identity;
@@ -11,12 +13,12 @@ using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
-    public class BasketRepository : EFBaseRepository<Basket, AppDbContext>, IBasketRepository
+    public class BasketRepository : EFBaseRepository<AppDbContext, Domain.Basket, DAL.App.DTO.Basket>, IBasketRepository
     {
-        public BasketRepository(AppDbContext dbContext) : base(dbContext)
+        public BasketRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Domain.Basket, DAL.App.DTO.Basket>())
         {
         }
-        public async Task<Basket> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<DAL.App.DTO.Basket> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet.Where(a => a.Id == id)
                 .Include(a => a.AppUser)
@@ -27,7 +29,7 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(a => a.AppUserId == userId);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return Mapper.Map(await query.FirstOrDefaultAsync());
         }
 
         public async Task<bool> ExistsAsync(Guid? id, Guid? userId = null)
@@ -40,7 +42,7 @@ namespace DAL.App.EF.Repositories
             return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
 
-        public async Task<IEnumerable<Basket>> AllAsync(Guid? userId = null)
+        public async Task<IEnumerable<DAL.App.DTO.Basket>> AllAsync(Guid? userId = null)
         {
             var query = RepoDbSet
                 .Include(up => up.AppUser)
@@ -51,7 +53,7 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(up => up.AppUserId == userId);
             }
 
-            return await query.ToListAsync();
+            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
         }
         
         public async Task DeleteAsync(Guid id, Guid? userId = null)
@@ -60,6 +62,7 @@ namespace DAL.App.EF.Repositories
             base.Remove(basket);
         }
         
+        /*
         public async Task<IEnumerable<BasketDTO>> DTOAllAsync(Guid? userId = null)
         {
             var query = RepoDbSet.AsQueryable();
@@ -95,5 +98,6 @@ namespace DAL.App.EF.Repositories
 
             return await basketDTO;
         }
+        */
     }
 }

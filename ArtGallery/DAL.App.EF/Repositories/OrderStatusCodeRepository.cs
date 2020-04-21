@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class OrderStatusCodeRepository : EFBaseRepository<OrderStatusCode, AppDbContext>, IOrderStatusCodeRepository
+    public class OrderStatusCodeRepository : EFBaseRepository<AppDbContext, Domain.OrderStatusCode, DTO.OrderStatusCode>, IOrderStatusCodeRepository
     {
-        public OrderStatusCodeRepository(AppDbContext dbContext) : base(dbContext)
+        public OrderStatusCodeRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<OrderStatusCode, DTO.OrderStatusCode>())
         {
         }
 
-        public async Task<IEnumerable<OrderStatusCode>> AllAsync(Guid? userId = null)
+        public async Task<IEnumerable<DTO.OrderStatusCode>> AllAsync(Guid? userId = null)
         {
             var query = RepoDbSet.AsQueryable();
 
@@ -23,10 +24,11 @@ namespace DAL.App.EF.Repositories
             {
                 //query = query.Where(up => up.AppUserId == userId);
             }
-            return await query.ToListAsync();
+            
+            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
         }
 
-        public Task<OrderStatusCode> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<DTO.OrderStatusCode> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet.Where(c => c.Id == id).AsQueryable();
 
@@ -34,7 +36,8 @@ namespace DAL.App.EF.Repositories
             {
                 //query = query.Where(up => up.AppUserId == userId);
             }
-            return query.FirstOrDefaultAsync();
+            
+            return Mapper.Map(await query.FirstOrDefaultAsync());
         }
 
         public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)

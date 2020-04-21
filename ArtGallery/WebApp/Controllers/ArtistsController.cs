@@ -2,28 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
-using Domain;
+using Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class ArtistsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public ArtistsController(IAppUnitOfWork uow)
+        public ArtistsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Artists
         public async Task<IActionResult> Index()
         {
-            return View(await _uow.Artists.AllAsync());
+            var artists = await _bll.Artists.AllAsync(User.UserGuidId());
+            
+            return View(artists);
         }
 
         // GET: Artists/Details/5
@@ -34,7 +39,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            
             if (artist == null)
             {
                 return NotFound();
@@ -54,13 +60,13 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Bio,PlaceOfBirth,Country,DateOfBirth,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Artist artist)
+        public async Task<IActionResult> Create(BLL.App.DTO.Artist artist)
         {
             if (ModelState.IsValid)
             {
-                artist.Id = Guid.NewGuid();
-                _uow.Artists.Add(artist);
-                await _uow.SaveChangesAsync();
+                //artist.Id = Guid.NewGuid();
+                _bll.Artists.Add(artist);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(artist);
@@ -74,11 +80,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            
             if (artist == null)
             {
                 return NotFound();
             }
+            
             return View(artist);
         }
 
@@ -87,7 +95,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("FirstName,LastName,Bio,PlaceOfBirth,Country,DateOfBirth,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt")] Artist artist)
+        public async Task<IActionResult> Edit(Guid id, BLL.App.DTO.Artist artist)
         {
             if (id != artist.Id)
             {
@@ -98,8 +106,8 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _uow.Artists.Update(artist);
-                    await _uow.SaveChangesAsync();
+                    _bll.Artists.Update(artist);
+                    await _bll.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +126,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var artist = await _uow.Artists.FirstOrDefaultAsync(id);
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            
             if (artist == null)
             {
                 return NotFound();
@@ -132,8 +141,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var artist = _uow.Artists.Remove(id);
-            await _uow.SaveChangesAsync();
+            await _bll.Artists.DeleteAsync(id, User.UserGuidId());
+            await _bll.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
     }

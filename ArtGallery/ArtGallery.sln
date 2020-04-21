@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.App", "BLL.App\BLL.App.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts.BLL.App", "Contracts.BLL.App\Contracts.BLL.App.csproj", "{71C44D22-3E2C-4F31-A0A8-292B381E1552}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.App.DTO", "DAL.App.DTO\DAL.App.DTO.csproj", "{2CA3246A-19FD-4431-9018-7977AE319628}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.App.DTO", "BLL.App.DTO\BLL.App.DTO.csproj", "{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,5 +93,13 @@ Global
 		{71C44D22-3E2C-4F31-A0A8-292B381E1552}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71C44D22-3E2C-4F31-A0A8-292B381E1552}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71C44D22-3E2C-4F31-A0A8-292B381E1552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CA3246A-19FD-4431-9018-7977AE319628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CA3246A-19FD-4431-9018-7977AE319628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CA3246A-19FD-4431-9018-7977AE319628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CA3246A-19FD-4431-9018-7977AE319628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

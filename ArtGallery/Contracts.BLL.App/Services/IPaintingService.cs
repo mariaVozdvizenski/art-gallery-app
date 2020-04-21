@@ -1,10 +1,12 @@
-﻿using Contracts.BLL.Base.Services;
+﻿using System;
+using BLL.App.DTO;
+using Contracts.BLL.Base.Services;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using Artist = BLL.App.DTO.Artist;
 
 namespace Contracts.BLL.App.Services
 {
-    public interface IPaintingService : IPaintingRepository
+    public interface IPaintingService : IPaintingRepository<Guid, Painting>
     {
         
     }

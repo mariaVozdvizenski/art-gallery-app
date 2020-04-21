@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +11,13 @@ using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
-    public class CommentRepository : EFBaseRepository<Comment, AppDbContext>, ICommentRepository
+    public class CommentRepository : EFBaseRepository<AppDbContext, Domain.Comment , DAL.App.DTO.Comment>, ICommentRepository
     {
-        public CommentRepository(AppDbContext dbContext) : base(dbContext)
+        public CommentRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Comment, DTO.Comment>())
         {
             
         }
-        public async Task<IEnumerable<Comment>> AllAsync(Guid? userId = null)
+        public async Task<IEnumerable<DAL.App.DTO.Comment>> AllAsync(Guid? userId = null)
         {
             var query = RepoDbSet
                 .Include(c => c.Painting)
@@ -28,10 +29,10 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(c => c.AppUserId == userId);
             }
 
-            return await query.ToListAsync();
+            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
         }
 
-        public async Task<Comment> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<DAL.App.DTO.Comment> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet
                 .Include(c => c.Painting)
@@ -44,7 +45,7 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(c => c.AppUserId == userId);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return Mapper.Map(await query.FirstOrDefaultAsync());
         }
 
         public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
@@ -62,6 +63,7 @@ namespace DAL.App.EF.Repositories
             base.Remove(comment);
         }
 
+        /*
         public async Task<IEnumerable<CommentDTO>> DTOAllAsync(Guid? userId = null)
         {
             var query = RepoDbSet.AsQueryable();
@@ -97,5 +99,6 @@ namespace DAL.App.EF.Repositories
 
             return await commentDTO;
         }
+        */
     }
 }

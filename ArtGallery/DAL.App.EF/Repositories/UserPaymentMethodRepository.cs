@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,14 @@ using PublicApi.DTO.v1;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserPaymentMethodRepository : EFBaseRepository<UserPaymentMethod, AppDbContext>,
+    public class UserPaymentMethodRepository : EFBaseRepository<AppDbContext, Domain.UserPaymentMethod, DTO.UserPaymentMethod>,
         IUserPaymentMethodRepository
     {
-        public UserPaymentMethodRepository(AppDbContext dbContext) : base(dbContext)
+        public UserPaymentMethodRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<UserPaymentMethod, DTO.UserPaymentMethod>())
         {
         }
-        public async Task<IEnumerable<UserPaymentMethod>> AllAsync(Guid? userId = null)
+        
+        public async Task<IEnumerable<DTO.UserPaymentMethod>> AllAsync(Guid? userId = null)
         {
             var query = RepoDbSet
                 .Include(up => up.AppUser)
@@ -29,10 +31,10 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(up => up.AppUserId == userId);
             }
 
-            return await query.ToListAsync();
+            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
         }
 
-        public async Task<UserPaymentMethod> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<DTO.UserPaymentMethod> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet
                 .Include(up => up.AppUser)
@@ -45,7 +47,7 @@ namespace DAL.App.EF.Repositories
                 query = query.Where(up => up.AppUserId == userId);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return Mapper.Map(await query.FirstOrDefaultAsync());
         }
 
         public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
@@ -61,10 +63,10 @@ namespace DAL.App.EF.Repositories
 
         public async Task DeleteAsync(Guid id, Guid? userId = null)
         {
-            var owner = await FirstOrDefaultAsync(id, userId);
-            base.Remove(owner);
+            var userPaymentMethod = await FirstOrDefaultAsync(id, userId);
+            base.Remove(userPaymentMethod);
         }
-
+        /*
         public async Task<IEnumerable<UserPaymentMethodDTO>> DTOAllAsync(Guid? userId = null)
         {
             var query =  RepoDbSet.AsQueryable();
@@ -98,5 +100,6 @@ namespace DAL.App.EF.Repositories
 
             return userPaymentDTO;
         }
+        */
     }
 }

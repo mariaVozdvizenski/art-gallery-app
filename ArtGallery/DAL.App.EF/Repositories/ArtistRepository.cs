@@ -3,29 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using DAL.App.DTO;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ArtistRepository : EFBaseRepository<Artist, AppDbContext>, IArtistRepository
+    public class ArtistRepository : EFBaseRepository<AppDbContext, Domain.Artist, DAL.App.DTO.Artist>, IArtistRepository
     {
-        public ArtistRepository(AppDbContext dbContext) : base(dbContext)
+        //TODO: Create DAL.App.DTO thingies
+        public ArtistRepository(AppDbContext dbContext) : base(dbContext, 
+            new BaseDALMapper<Domain.Artist, DAL.App.DTO.Artist>())
         {
         }
-        public async Task<IEnumerable<Artist>> AllAsync(Guid? userId = null)
+        public async Task<IEnumerable<DAL.App.DTO.Artist>> AllAsync(Guid? userId = null)
         {
-            if (userId == null)
+            if (userId != null)
             {
-                return await base.AllAsync(); // base is not actually needed, using it for clarity
+                /*return (await RepoDbSet.Where(o => o.AppUserId == userId)
+                    .Select(dbEntity => new ArtistDisplay()
+                {
+                    Bio = dbEntity.Bio,
+                    Id = dbEntity.Id,
+                    Country = dbEntity.Country,
+                    DateOfBirth = dbEntity.DateOfBirth,
+                    FirstName = dbEntity.FirstName,
+                    LastName = dbEntity.LastName,
+                    PlaceOfBirth = dbEntity.PlaceOfBirth,
+                    PaintingCount = dbEntity.Paintings.Count
+                    
+                }).ToListAsync()).Select(dbEntity => Mapper.Map<ArtistDisplay, DAL.App.DTO.Artist>(dbEntity));
+                */
             }
-            return await base.AllAsync(); // at first
-            //return await RepoDbSet.Where(o => a.AppUserId == userId).ToListAsync();
+            return (await RepoDbSet.ToListAsync())
+                .Select(domainEntity => Mapper.Map(domainEntity));
         }
 
-        public async Task<Artist> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<DAL.App.DTO.Artist> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
         {
             var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
             
@@ -34,26 +51,32 @@ namespace DAL.App.EF.Repositories
                 //query = query.Where(a => a.AppUserId == userId);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return Mapper.Map(await query.FirstOrDefaultAsync());
         }
 
         public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
         {
-            if (userId == null)
+            if (userId != null)
             {
-                return await RepoDbSet.AnyAsync(a => a.Id == id);
+                //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
             }
             return await RepoDbSet.AnyAsync(a => a.Id == id);
-            //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
         }
 
         public async Task DeleteAsync(Guid id, Guid? userId = null)
         {
-            var owner = await FirstOrDefaultAsync(id, userId);
-            base.Remove(owner);
+            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
+            
+            if (userId != null)
+            {
+                //query = query.Where(a => a.AppUserId == userId);
+            }
+
+            var artist = await query.AsNoTracking().FirstOrDefaultAsync();
+            base.Remove(artist.Id);
         }
 
-        // we need to do it on database level, to avoid unnecessary queries to db 
+        /*
         public async Task<IEnumerable<ArtistDTO>> DTOAllAsync(Guid? userId = null)
         {
             var query = RepoDbSet.AsQueryable();
@@ -92,5 +115,6 @@ namespace DAL.App.EF.Repositories
 
             return artistDto;
         }
+        */
     }
 }

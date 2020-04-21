@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
-using Domain;
+using DAL.App.DTO;
 using PublicApi.DTO.v1;
 
 namespace Contracts.DAL.App.Repositories
@@ -13,8 +13,7 @@ namespace Contracts.DAL.App.Repositories
         Task<UserPaymentMethod> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
         Task<bool> ExistsAsync(Guid id, Guid? userId = null);
         Task DeleteAsync(Guid id, Guid? userId = null);
-        Task<IEnumerable<UserPaymentMethodDTO>> DTOAllAsync(Guid? userId = null);
-        Task<UserPaymentMethodDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null);
-        
+        //Task<IEnumerable<UserPaymentMethodDTO>> DTOAllAsync(Guid? userId = null);
+        //Task<UserPaymentMethodDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null);
     }
 }

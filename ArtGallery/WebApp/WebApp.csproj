@@ -167,6 +167,8 @@
       <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Artists\_CreateEdit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Artists\_DetailsDelete.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -280,5 +282,44 @@
     <ItemGroup>
       <Folder Include="Areas" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="ApiControllers\1.1\**" />
+      <Compile Remove="ApiControllers\1.0\BasketsController.cs" />
+      <Compile Remove="ApiControllers\1.0\CategoriesController.cs" />
+      <Compile Remove="ApiControllers\1.0\CommentsController.cs" />
+      <Compile Remove="ApiControllers\1.0\OrdersController.cs" />
+      <Compile Remove="ApiControllers\1.0\PaintingsController.cs" />
+      <Compile Remove="ApiControllers\1.0\UserPaymentMethodsController.cs" />
+      <Compile Remove="Controllers\BasketItemsController.cs" />
+      <Compile Remove="Controllers\BasketsController.cs" />
+      <Compile Remove="Controllers\CategoriesController.cs" />
+      <Compile Remove="Controllers\CommentsController.cs" />
+      <Compile Remove="Controllers\InvoicesController.cs" />
+      <Compile Remove="Controllers\InvoiceStatusCodesController.cs" />
+      <Compile Remove="Controllers\OrderItemsController.cs" />
+      <Compile Remove="Controllers\OrdersController.cs" />
+      <Compile Remove="Controllers\OrderStatusCodesController.cs" />
+      <Compile Remove="Controllers\PaintingCategoriesController.cs" />
+      <Compile Remove="Controllers\PaintingsController.cs" />
+      <Compile Remove="Controllers\PaymentMethodsController.cs" />
+      <Compile Remove="Controllers\PaymentsController.cs" />
+      <Compile Remove="Controllers\ShipmentItemsController.cs" />
+      <Compile Remove="Controllers\ShipmentsController.cs" />
+      <Compile Remove="Controllers\UserPaymentMethodsController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ApiControllers\1.1\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="ApiControllers\1.1\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="ApiControllers\1.1\**" />
+    </ItemGroup>
+  
 
 </Project>

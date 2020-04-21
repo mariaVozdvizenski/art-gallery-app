@@ -31,7 +31,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
         {
-            return Ok(await _bll.Artists.DTOAllAsync(User.UserGuidId())); // need this to not get a SyntaxError: Unexpected end of JSON
+            return Ok(await _bll.Artists.AllAsync(User.UserGuidId())); // need this to not get a SyntaxError: Unexpected end of JSON
         }
 
         /// <summary>
@@ -48,14 +48,14 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}")]
         public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
         {
-            var artist = await _bll.Artists.DTOFirstOrDefaultAsync(id, User.UserGuidId());
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
             
             if (artist == null)
             {
                 return NotFound();
             }
 
-            return artist;
+            return Ok(artist);
         }
 
         // PUT: api/Artists/5
@@ -107,7 +107,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpPost]
         public async Task<ActionResult<Artist>> PostArtist(ArtistCreateDTO artistCreateDTO)
         {
-            var artist = new Artist()
+            var artist = new BLL.App.DTO.Artist
             {
                 FirstName = artistCreateDTO.FirstName,
                 LastName = artistCreateDTO.LastName,
@@ -126,9 +126,16 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{id}")]
         public async Task<ActionResult<Artist>> DeleteArtist(Guid id)
         {
-            await _bll.Artists.DeleteAsync(id);
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            if (artist == null)
+            {
+                return NotFound();
+            }
+
+            _bll.Artists.Remove(artist);
             await _bll.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return Ok(artist);
         }
     }
 }
