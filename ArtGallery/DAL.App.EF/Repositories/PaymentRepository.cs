@@ -3,62 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using DAL.Base.Mappers;
+using Domain.App;
+using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PaymentRepository : EFBaseRepository<AppDbContext, Domain.Payment, DTO.Payment>, IPaymentRepository
+    public class PaymentRepository : EFBaseRepository<AppDbContext, AppUser, Payment, DTO.Payment>, IPaymentRepository
     {
-        public PaymentRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Payment, DTO.Payment>())
+        public PaymentRepository(AppDbContext dbContext) : base(dbContext, new BaseMapper<Payment, DTO.Payment>())
         {
         }
 
-        public async Task<bool> ExistsAsync(Guid? id, Guid? userId = null)
+        public override async Task<IEnumerable<DTO.Payment>> GetAllAsync(object? userId = null, bool noTracking = true)
         {
-            if (userId != null)
-            {
-                // return await RepoDbSet.AnyAsync(p => p.Id == id && p.AppUserId == userId)
-            }
-            
-            return await RepoDbSet.AnyAsync(p => p.Id == id);
-        }
+            var query = PrepareQuery(userId, noTracking);
 
-        public async Task<IEnumerable<DTO.Payment>> AllAsync(Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(p => p.Invoice)
-                .AsQueryable();
+            query = query
+                .Include(e => e.Invoice);
 
-            if (userId != null)
-            {
-                //query = query.Where(p => p.AppUserId == userId);
-            }
-            
-            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
-        }
+            var domainEntities = await query.ToListAsync();
+            var result = domainEntities.Select(e => Mapper.Map(e));
 
-        public async Task<DTO.Payment> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(p => p.Invoice)
-                .Where(p => p.Id == id)
-                .AsQueryable();
-
-            if (userId != null)
-            {
-                //query = query.Where(p => p.AppUserId == userId);
-            }
-            
-            return Mapper.Map(await query.FirstOrDefaultAsync());
-        }
-        
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            var payment = await FirstOrDefaultAsync(id, userId);
-            base.Remove(payment);
+            return result;
         }
     }
 }

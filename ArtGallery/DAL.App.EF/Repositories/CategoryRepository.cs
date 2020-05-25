@@ -3,94 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using DAL.Base.Mappers;
+using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using Category = Domain.App.Category;
 
 namespace DAL.App.EF.Repositories
 {
-    public class CategoryRepository : EFBaseRepository<AppDbContext, Domain.Category, DAL.App.DTO.Category>, ICategoryRepository
+    public class CategoryRepository : EFBaseRepository<AppDbContext, AppUser, Category, DAL.App.DTO.Category>, ICategoryRepository
     {
-        public CategoryRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Domain.Category, DAL.App.DTO.Category>())
+        public CategoryRepository(AppDbContext dbContext) : base(dbContext, new BaseMapper<Category, DTO.Category>())
         {
-            
         }
-        public async Task<IEnumerable<DAL.App.DTO.Category>> AllAsync(Guid? userId = null)
-        {
-            if (userId != null)
-            {
-                //return (await RepoDbSet.Where(o => o.AppUserId == userId)
-                //.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));            
-            }
-            return (await RepoDbSet.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
-        }
-
-        public async Task<DAL.App.DTO.Category> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
-        {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(a => a.AppUserId == userId);
-            }
-
-            return Mapper.Map(await query.FirstOrDefaultAsync());
-        }
-
-        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
-        {
-            if (userId != null)
-            {
-                //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
-            }
-            return await RepoDbSet.AnyAsync(a => a.Id == id);
-        }
-        
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            var category = await FirstOrDefaultAsync(id, userId);
-            base.Remove(category);
-        }
-        
-        /*
-        
-        public async Task<IEnumerable<CategoryDTO>> DTOAllAsync(Guid? userId = null)
-        {
-            var query = RepoDbSet.AsQueryable();
-            if (userId != null)
-            {
-                //query = query.Where(o => o.AppUserId == userId);
-            }
-            return await query
-                .Select(c => new CategoryDTO()
-                {
-                    Id = c.Id,
-                    CategoryName = c.CategoryName,
-                    PaintingCount = c.CategoryPaintings.Count,
-                })
-                .ToListAsync();
-        }
-
-        public async Task<CategoryDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
-        {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
-            if (userId != null)
-            {
-                //query = query.Where(a => a.AppUserId == userId);
-            }
-            
-            var categoryDTO = await query.Select(o => new CategoryDTO()
-            {
-                Id = o.Id,
-                CategoryName = o.CategoryName,
-                PaintingCount = o.CategoryPaintings.Count
-                
-            }).FirstOrDefaultAsync();
-            
-            return categoryDTO;
-        }
-        */
     }
 }

@@ -7,7 +7,7 @@ ProjectSection(SolutionItems) = preProject
 	..\..\..\..\Directory.Build.props = ..\..\..\..\Directory.Build.props
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C3566FB6-FCA0-4BB6-9ADB-8ADA73550F72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.App", "Domain.App\Domain.App.csproj", "{C3566FB6-FCA0-4BB6-9ADB-8ADA73550F72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.App.EF", "DAL.App.EF\DAL.App.EF.csproj", "{90CB59DA-1C0C-4CEC-8B0C-3683F9F5413E}"
 EndProject
@@ -34,6 +34,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.App.DTO", "DAL.App.DTO\DAL.App.DTO.csproj", "{2CA3246A-19FD-4431-9018-7977AE319628}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.App.DTO", "BLL.App.DTO\BLL.App.DTO.csproj", "{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts.Domain", "Contracts.Domain\Contracts.Domain.csproj", "{EEF86E3E-B6CE-42AC-9115-695095F7A1DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Base", "Domain.Base\Domain.Base.csproj", "{1F566A73-E4AE-41B5-A802-F97CB58AA1BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,5 +105,13 @@ Global
 		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3BD1F95-5CBC-4EDA-A308-B523A7DCA67B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF86E3E-B6CE-42AC-9115-695095F7A1DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF86E3E-B6CE-42AC-9115-695095F7A1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF86E3E-B6CE-42AC-9115-695095F7A1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF86E3E-B6CE-42AC-9115-695095F7A1DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F566A73-E4AE-41B5-A802-F97CB58AA1BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F566A73-E4AE-41B5-A802-F97CB58AA1BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F566A73-E4AE-41B5-A802-F97CB58AA1BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F566A73-E4AE-41B5-A802-F97CB58AA1BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -4,16 +4,11 @@ using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
 using DAL.App.DTO;
 using PublicApi.DTO.v1;
+using Comment = DAL.App.DTO.Comment;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface ICommentRepository: IBaseRepository<Comment>
+    public interface ICommentRepository: IBaseRepository<Comment>, ICommentRepositoryCustom
     {
-        Task<IEnumerable<Comment>> AllAsync(Guid? userId = null);
-        Task<Comment> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
-        Task<bool> ExistsAsync(Guid id, Guid? userId = null);
-        Task DeleteAsync(Guid id, Guid? userId = null);
-        //Task<IEnumerable<CommentDTO>> DTOAllAsync(Guid? userId = null);
-        //Task<CommentDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null);
     }
 }

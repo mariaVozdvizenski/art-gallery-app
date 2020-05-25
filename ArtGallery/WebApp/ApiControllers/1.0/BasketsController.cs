@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using Domain;
 using Extensions;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using PublicApi.DTO.v1.Mappers;
 
 namespace WebApp.ApiControllers._1._0
 {
@@ -18,73 +21,54 @@ namespace WebApp.ApiControllers._1._0
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BasketsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
+        private readonly BasketMapper _basketMapper = new BasketMapper();
 
-        public BasketsController(IAppUnitOfWork uow)
+        public BasketsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: api/Baskets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BasketDTO>>> GetBaskets()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<IEnumerable<BasketView>>> GetBaskets()
         {
-            var basketList = _uow.Baskets.DTOAllAsync(User.UserGuidId());
-            
-            return Ok(await basketList);
+            var basketList = await _bll.Baskets.GetAllAsync();
+            return Ok(basketList.Select(e => _basketMapper.MapBasketView(e)));
         }
 
         // GET: api/Baskets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BasketDTO>> GetBasket(Guid id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<BasketView>> GetBasket(Guid id)
         {
-            var basket = _uow.Baskets.DTOFirstOrDefaultAsync(id, User.UserGuidId());
+            var basket = await _bll.Baskets.FirstOrDefaultAsync(id);
             
             if (basket == null)
             {
                 return NotFound();
             }
             
-            return Ok(await basket);
+            return _basketMapper.MapBasketView(basket);
         }
 
         // PUT: api/Baskets/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
         public async Task<IActionResult> PutBasket(Guid id, Basket basket)
         {
+            basket.DateCreated = DateTime.Now;
             if (id != basket.Id)
             {
                 return BadRequest();
             }
 
-            var basketUpdate = await _uow.Baskets.FirstOrDefaultAsync(basket.Id, User.UserGuidId());
-            
-            if (basketUpdate == null)
-            {
-                return BadRequest();
-            }
-
-            basketUpdate.DateCreated = basket.DateCreated;
-
-            _uow.Baskets.Update(basketUpdate);
-                
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await _uow.Baskets.ExistsAsync(id, User.UserGuidId()))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var bllEntity = _basketMapper.Map(basket);
+            await _bll.Baskets.UpdateAsync(bllEntity);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -93,21 +77,37 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
         public async Task<ActionResult<Basket>> PostBasket(Basket basket)
         {
-            _uow.Baskets.Add(basket);
-            await _uow.SaveChangesAsync();
+            basket.DateCreated = DateTime.Now;
+            
+            var bllEntity = _basketMapper.Map(basket);
+            
+            _bll.Baskets.Add(bllEntity);
+            await _bll.SaveChangesAsync();
+
+            basket.Id = bllEntity.Id;
 
             return CreatedAtAction("GetBasket", new { id = basket.Id }, basket);
         }
 
         // DELETE: api/Baskets/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Basket>> DeleteBasket(Guid id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<Domain.App.Basket>> DeleteBasket(Guid id)
         {
-            await _uow.Baskets.DeleteAsync(id, User.UserGuidId());
-            await _uow.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var basket = await _bll.Baskets.FirstOrDefaultAsync(id);
+            
+            if (basket == null)
+            {
+                return NotFound();
+            }
+
+            await _bll.Baskets.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
+
+            return Ok(basket);
         }
     }
 }

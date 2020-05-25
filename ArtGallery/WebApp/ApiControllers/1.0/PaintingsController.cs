@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using Domain;
 using Extensions;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using PublicApi.DTO.v1.Mappers;
 
 namespace WebApp.ApiControllers._1._0
 {
@@ -19,75 +22,53 @@ namespace WebApp.ApiControllers._1._0
     
     public class PaintingsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
+        private PaintingMapper _paintingMapper = new PaintingMapper();
 
-        public PaintingsController(IAppUnitOfWork uow)
+        public PaintingsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: api/Paintings
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaintingDTO>>> GetPaintings()
+        public async Task<ActionResult<IEnumerable<PaintingView>>> GetPaintings()
         {
-            return Ok(await _uow.Paintings.DTOAllAsync());
+            var query = await _bll.Paintings.GetAllForViewAsync();
+            return Ok(query.Select(e => _paintingMapper.MapPaintingView(e)).ToList());
         }
 
         // GET: api/Paintings/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<PaintingDTO>> GetPainting(Guid id)
+        public async Task<ActionResult<PaintingView>> GetPainting(Guid id)
         {
-            var painting = await _uow.Paintings.DTOFirstOrDefaultAsync(id, User.UserGuidId());
+            var painting = await _bll.Paintings.GetFirstOrDefaultForViewAsync(id);
 
             if (painting == null)
             {
                 return NotFound();
             }
 
-            return painting;
+            return Ok(_paintingMapper.MapPaintingView(painting));
         }
 
         // PUT: api/Paintings/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPainting(Guid id, PaintingEditDTO paintingEditDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<IActionResult> PutPainting(Guid id, Painting paintingDTO)
         {
-            if (id != paintingEditDTO.Id)
+            if (id != paintingDTO.Id)
             {
                 return BadRequest();
             }
-            
-            var painting = await _uow.Paintings.FirstOrDefaultAsync(paintingEditDTO.Id);
-            
-            if (painting == null)
-            {
-                return BadRequest();
-            }
-            
-            painting.Title = paintingEditDTO.Title;
-            painting.Price = paintingEditDTO.Price;
-            painting.Size = paintingEditDTO.Size;
-            painting.ArtistId = paintingEditDTO.ArtistId;
-            painting.Artist = await _uow.Artists.FirstOrDefaultAsync(paintingEditDTO.ArtistId);
-            
-            _uow.Paintings.Update(painting);
 
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _uow.Paintings.ExistsAsync(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var bllEntity = _paintingMapper.Map(paintingDTO);
+            await _bll.Paintings.UpdateAsync(bllEntity);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -96,30 +77,34 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Painting>> PostPainting(PaintingCreateDTO paintingCreateDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<Domain.App.Painting>> PostPainting(Painting paintingCreateDTO)
         {
-            var painting = new Painting
-            {
-                Description = paintingCreateDTO.Description,
-                Price = paintingCreateDTO.Price,
-                ArtistId = paintingCreateDTO.ArtistId,
-                Size = paintingCreateDTO.Size,
-                Title = paintingCreateDTO.Title
-            };
-            
-            _uow.Paintings.Add(painting);
-            await _uow.SaveChangesAsync();
+            var bllEntity = _paintingMapper.Map(paintingCreateDTO);
+            _bll.Paintings.Add(bllEntity);
+            await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetPainting", new { id = painting.Id }, painting);
+            paintingCreateDTO.Id = bllEntity.Id;
+
+            return CreatedAtAction("GetPainting", new { id = paintingCreateDTO.Id }, paintingCreateDTO);
         }
 
         // DELETE: api/Paintings/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Painting>> DeletePainting(Guid id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<Domain.App.Painting>> DeletePainting(Guid id)
         {
-            await _uow.Paintings.DeleteAsync(id);
-            await _uow.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var painting = await _bll.Paintings.FirstOrDefaultAsync(id, User.UserGuidId());
+            
+            if (painting == null)
+            {
+                return NotFound();
+            }
+
+            await _bll.Paintings.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
+
+            return Ok(painting);
         }
     }
 }

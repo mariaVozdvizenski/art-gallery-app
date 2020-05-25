@@ -44,16 +44,19 @@ export class CommentEdit{
     onSubmit(event: Event){
         console.log(this._id);
 
-        let comment: ICommentEdit = <ICommentEdit> {
+        let comment: IComment = <IComment> {
             commentBody: this._comment!.commentBody,
-            id: this._comment!.id
+            id: this._comment!.id,
+            createdAt: this._comment!.createdAt,
+            createdBy: this._comment!.createdBy,
+            paintingId: this._comment!.paintingId
         }
 
         this.commentService.updateComment(comment)
         .then((response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 this._alert = null;
-                this.router.navigateToRoute('comments', {});
+                this.router.navigateToRoute('paintingDetails', {id: this._comment!.paintingId});
             } else {
                 this._alert = {
                     message: response.statusCode.toString() + ' - ' + response.errorMessage,

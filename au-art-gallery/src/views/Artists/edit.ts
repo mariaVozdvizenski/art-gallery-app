@@ -2,7 +2,6 @@ import {autoinject} from 'aurelia-framework';
 import { ArtistService } from 'service/artist-service';
 import { IArtist } from 'domain/IArtist';
 import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
-import { IArtistEdit } from 'domain/IArtistEdit';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
 
@@ -44,12 +43,17 @@ export class ArtistEdit{
     onSubmit(event: Event){
         console.log(this._id);
 
-        let artist: IArtistEdit = <IArtistEdit> {
+        let artist: IArtist = <IArtist> {
             firstName: this._artist!.firstName,
             lastName: this._artist!.lastName,
             country: this._artist!.country,
-            id: this._artist!.id
+            id: this._artist!.id,
+            dateOfBirth: this._artist!.dateOfBirth,
+            bio: this._artist!.bio,
+            paintings: this._artist!.paintings
         }
+
+        console.log(artist.dateOfBirth)
 
         this.artistService.updateArtist(artist)
         .then((response) => {

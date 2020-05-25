@@ -1,11 +1,11 @@
 ﻿using System;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
-using Domain;
+using Domain.App.Identity;
 
 namespace Contracts.DAL.App
 {
-    public interface IAppUnitOfWork : IBaseUnitOfWork
+    public interface IAppUnitOfWork : IBaseUnitOfWork, IBaseEntityTracker
     {
          IArtistRepository Artists { get; }
          IBasketRepository Baskets { get; }

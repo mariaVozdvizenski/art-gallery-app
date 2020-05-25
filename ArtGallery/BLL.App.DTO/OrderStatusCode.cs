@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class OrderStatusCode : OrderStatusCode<Guid>, IDomainBaseEntity
+    public class OrderStatusCode : IDomainEntityId
     {
-    }
-
-    public class OrderStatusCode<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-       
+        public Guid Id { get; set; }
+        
+        [MaxLength(128)] 
+        [MinLength(1)] 
         public string OrderStatusDescription { get; set; } = default!;
 
+        [MaxLength(128)]
+        [MinLength(1)]
         public string Code { get; set; } = default!;
 
         public ICollection<Order>? Orders { get; set; }
     }
-    
 }

@@ -1,6 +1,5 @@
 import {autoinject} from 'aurelia-framework';
 import { ArtistService } from 'service/artist-service';
-import { IArtistCreate } from 'domain/IArtistCreate';
 import {RouteConfig, NavigationInstruction, Router} from 'aurelia-router';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';

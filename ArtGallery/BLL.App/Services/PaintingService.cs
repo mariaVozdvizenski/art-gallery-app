@@ -2,52 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.DTO;
+using BLL.App.Mappers;
 using BLL.Base.Mappers;
 using BLL.Base.Services;
+using Contracts.BLL.App.Mappers;
 using Contracts.BLL.App.Services;
 using Contracts.BLL.Base.Mappers;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using Domain.App.Identity;
 using PublicApi.DTO.v1;
+using Painting = DAL.App.DTO.Painting;
 
 namespace BLL.App.Services
 {
-    public class PaintingService : BaseEntityService<IPaintingRepository, IAppUnitOfWork, DAL.App.DTO.Painting, BLL.App.DTO.Painting>, IPaintingService
+    public class PaintingService : 
+        BaseEntityService<IAppUnitOfWork, IPaintingRepository, IPaintingServiceMapper, Painting, DTO.Painting>, IPaintingService
     {
         public PaintingService(IAppUnitOfWork unitOfWork) 
-            : base(unitOfWork, new BaseBLLMapper<DAL.App.DTO.Painting, DTO.Painting>(), unitOfWork.Paintings)
+            : base(unitOfWork, unitOfWork.Paintings, new PaintingServiceMapper())
         {
         }
 
-        public async Task<bool> ExistsAsync(Guid? id, Guid? userId = null) =>
-            await ServiceRepository.ExistsAsync(id, userId);
-
-        public async Task<IEnumerable<BLL.App.DTO.Painting>> AllAsync(Guid? userId = null)
+        public async Task<IEnumerable<BLLPaintingView>> GetAllForViewAsync()
         {
-            return (await ServiceRepository.AllAsync(userId)).Select( dalEntity => Mapper.Map(dalEntity));
+            var query = await Repository.GetAllForViewAsync();
+            var result = query.Select(e => Mapper.MapPaintingView(e));
+            return result;
         }
 
-        public async Task<BLL.App.DTO.Painting> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public async Task<BLLPaintingView> GetFirstOrDefaultForViewAsync(Guid id, Guid? userId = null)
         {
-            return Mapper.Map(await ServiceRepository.FirstOrDefaultAsync(id, userId));
+            var dalPaintingView = await Repository.GetFirstOrDefaultForViewAsync(id, userId);
+            return Mapper.MapPaintingView(dalPaintingView);
         }
-
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            await ServiceRepository.DeleteAsync(id, userId);
-        }
-
-        /*
-        public async Task<IEnumerable<PaintingDTO>> DTOAllAsync(Guid? userId = null)
-        {
-            return await ServiceRepository.DTOAllAsync(userId);
-        }
-
-        public async Task<PaintingDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
-        {
-            return await ServiceRepository.DTOFirstOrDefaultAsync(id, userId);
-        }
-        */
     }
 }

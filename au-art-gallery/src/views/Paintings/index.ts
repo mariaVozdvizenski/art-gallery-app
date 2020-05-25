@@ -4,14 +4,16 @@ import { IPainting } from 'domain/IPainting';
 import { PaintingService } from 'service/painting-service';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
+import { AppState } from 'state/app-state';
 
 @autoinject
 export class PaintingsIndex {
 
     private _paintings: IPainting[] | null = null;
     private _alert: IAlertData | null = null;
+    private imageURL: string = "tangerines.jpg";
 
-    constructor(private paintingService: PaintingService) {
+    constructor(private paintingService: PaintingService, private appState: AppState) {
 
     }
 

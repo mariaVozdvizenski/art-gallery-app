@@ -1,4 +1,5 @@
 export interface ICommentCreate {
     commentBody: string;
-    paintingId: string
+    paintingId: string;
+    
 }

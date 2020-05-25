@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace DAL.App.DTO
 {
-    public class Shipment : Shipment<Guid>, IDomainBaseEntity
+    public class Shipment : IDomainEntityId
     {
-    }
-    
-    public class Shipment<TKey>: IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
+        public Guid Id { get; set; } = default!;
         
-        public TKey OrderId { get; set; } = default!;
+        public Guid OrderId { get; set; } = default!;
         public Order? Order { get; set; }
         
-        public TKey InvoiceId { get; set; } = default!;
+        public Guid InvoiceId { get; set; } = default!;
         public Invoice? Invoice { get; set; }
         
         public DateTime ShipmentDate { get; set; }

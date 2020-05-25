@@ -1,24 +1,25 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using BLL.App.DTO.Identity;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class Comment : Comment<Guid>, IDomainBaseEntity
+    public class Comment : IDomainEntityId
     {
-    }
-
-    public class Comment<TKey> : IDomainBaseEntity<TKey>
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-
+        public Guid Id { get; set; }
+        
+        [MaxLength(4096)]
+        [MinLength(1)]
         public string CommentBody { get; set; } = default!;
         
-        public TKey AppUserId { get; set; } = default!;
-        public AppUser<TKey>? AppUser { get; set; }
-        
-        public TKey PaintingId { get; set; } = default!;
+        public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
+        
+        public Guid AppUserId { get; set; }
+        public AppUser? AppUser { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

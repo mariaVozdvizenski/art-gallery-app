@@ -4,16 +4,11 @@ using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
 using DAL.App.DTO;
 using PublicApi.DTO.v1;
+using UserPaymentMethod = DAL.App.DTO.UserPaymentMethod;
 
 namespace Contracts.DAL.App.Repositories
 {
     public interface IUserPaymentMethodRepository: IBaseRepository<UserPaymentMethod>
     {
-        Task<IEnumerable<UserPaymentMethod>> AllAsync(Guid? userId = null);
-        Task<UserPaymentMethod> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
-        Task<bool> ExistsAsync(Guid id, Guid? userId = null);
-        Task DeleteAsync(Guid id, Guid? userId = null);
-        //Task<IEnumerable<UserPaymentMethodDTO>> DTOAllAsync(Guid? userId = null);
-        //Task<UserPaymentMethodDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null);
     }
 }

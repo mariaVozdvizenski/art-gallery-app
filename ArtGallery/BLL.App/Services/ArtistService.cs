@@ -2,49 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Mappers;
 using BLL.Base.Services;
+using Contracts.BLL.App.Mappers;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using DAL.App.EF;
-using Domain;
+using Domain.App.Identity;
 using PublicApi.DTO.v1;
+using Artist = DAL.App.DTO.Artist;
 
 namespace BLL.App.Services
 {
-    public class ArtistService : BaseEntityService<IArtistRepository, IAppUnitOfWork, DAL.App.DTO.Artist, BLL.App.DTO.Artist>, IArtistService
+    public class ArtistService :
+        BaseEntityService<IAppUnitOfWork, IArtistRepository, IArtistServiceMapper, Artist, DTO.Artist>, IArtistService
     {
-        public ArtistService(IAppUnitOfWork unitOfWork) 
-            : base(unitOfWork, new BaseBLLMapper<DAL.App.DTO.Artist, DTO.Artist>(), unitOfWork.Artists)
+        public ArtistService(IAppUnitOfWork unitOfWork)
+            : base(unitOfWork, unitOfWork.Artists, new ArtistServiceMapper())
         {
         }
 
-        public async Task<IEnumerable<BLL.App.DTO.Artist>> AllAsync(Guid? userId = null)
+        public override Task<IEnumerable<DTO.Artist>> GetAllAsync(object? userId = null, bool noTracking = true)
         {
-            return (await ServiceRepository.AllAsync(userId)).Select( dalEntity => Mapper.Map(dalEntity));
+            return base.GetAllAsync(userId, noTracking);
         }
-        
-        public async Task<BLL.App.DTO.Artist> FirstOrDefaultAsync(Guid? id, Guid? userId = null) =>
-            Mapper.Map(await ServiceRepository.FirstOrDefaultAsync(id, userId));
-
-        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null) =>
-            await ServiceRepository.ExistsAsync(id, userId);
-
-        public async Task DeleteAsync(Guid id, Guid? userId = null) =>
-            await ServiceRepository.DeleteAsync(id, userId);
-        }
-
-        /*
-        public async Task<IEnumerable<ArtistDTO>> DTOAllAsync(Guid? userId = null)
-        {
-           return await ServiceRepository.DTOAllAsync(userId);
-        }
-
-        public async Task<ArtistDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
-        {
-            return await ServiceRepository.DTOFirstOrDefaultAsync(id, userId);
-        }
-        */
     }
+}
     

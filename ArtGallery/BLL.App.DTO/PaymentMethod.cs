@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class PaymentMethod : PaymentMethod<Guid>, IDomainBaseEntity
+    public class PaymentMethod : IDomainEntityId
     {
-    }
-
-    public class PaymentMethod<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
+        public Guid Id { get; set; }
         
+        [MaxLength(128)]
+        [MinLength(1)]
         public string PaymentMethodDescription { get; set; } = default!;
-        
+
+        [MaxLength(36)]
+        [MinLength(1)]
         public string PaymentMethodCode { get; set; } = default!;
 
         public ICollection<UserPaymentMethod>? UserPaymentMethods { get; set; }

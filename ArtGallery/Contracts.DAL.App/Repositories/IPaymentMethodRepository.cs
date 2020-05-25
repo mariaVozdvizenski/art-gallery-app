@@ -6,10 +6,7 @@ using DAL.App.DTO;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IPaymentMethodRepository: IBaseRepository<PaymentMethod>
+    public interface IPaymentMethodRepository : IBaseRepository<PaymentMethod>
     {
-        Task<PaymentMethod> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
-        Task<bool> ExistsAsync(Guid? id, Guid? userId = null);
-        Task<IEnumerable<PaymentMethod>> AllAsync(Guid? userId = null);
-        Task DeleteAsync(Guid id, Guid? userId = null);    }
+    }
 }

@@ -83,7 +83,7 @@ export class CommentService {
         }
     }
 
-    async updateComment(comment: ICommentEdit): Promise<IFetchResponse<string>>{
+    async updateComment(comment: IComment): Promise<IFetchResponse<string>>{
         try {
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + comment.id, JSON.stringify(comment), {
@@ -149,7 +149,7 @@ export class CommentService {
                     authorization: "Bearer " + this.appState.jwt
 
                 }
-            })
+            });
 
             if (response.status >= 200 && response.status < 300) {
                 return {

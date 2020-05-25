@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Domain.Identity;
+using Contracts.Domain;
+using Domain.App;
+using Domain.App.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,54 +16,186 @@ namespace DAL.App.EF.Helpers
             context.Database.Migrate();
         }
 
-        public static bool DeleteDatabase(AppDbContext context)
+        public static void DeleteDatabase(AppDbContext context)
         {
-            return context.Database.EnsureDeleted();
+            context.Database.EnsureDeleted();
         }
 
-        public static void SeedIdentity(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public static void SeedIdentity(UserManager<AppUser> userManager, RoleManager<Domain.App.Identity.AppRole> roleManager)
         {
-            var roleNames = new string[] {"User", "Admin"};
-            foreach (var roleName in roleNames)
+            var roles = new (string roleName, string roleDisplayName)[]
+            {
+                ("user", "User"),
+                ("admin", "Admin")
+            };
+
+            foreach (var (roleName, roleDisplayName) in roles)
             {
                 var role = roleManager.FindByNameAsync(roleName).Result;
+                
                 if (role == null)
                 {
-                    role = new AppRole();
-                    role.Name = roleName;
+                    role = new AppRole()
+                    {
+                        Name = roleName,
+                        DisplayName = roleDisplayName
+                    };
+
                     var result = roleManager.CreateAsync(role).Result;
-                
                     if (!result.Succeeded)
                     {
                         throw new ApplicationException("Role creation failed!");
                     }
                 }
             }
-            
-            var userName = "mavozd@mavozd.com";
-            var password = "Fake.pass123";
 
-            var user = userManager.FindByNameAsync(userName).Result;
-            if (user == null)
+
+            var users = new (string name, string password, Guid Id)[]
             {
-                user = new AppUser();
-                user.Email = userName;
-                user.UserName = userName;
-                var result = userManager.CreateAsync(user, password).Result;
-                if (!result.Succeeded)
+                ("mavozd@mavozd.com", "Fake.pass123", new Guid("00000000-0000-0000-0000-000000000001")),
+            };
+
+            foreach (var userInfo in users)
+            {
+                var user = userManager.FindByEmailAsync(userInfo.name).Result;
+                if (user == null)
                 {
-                    throw new ApplicationException("User creation failed!");
+                    user = new AppUser()
+                    {
+                        Id = userInfo.Id,
+                        Email = userInfo.name,
+                        UserName = userInfo.name,
+                        EmailConfirmed = true
+                    };
+                    var result = userManager.CreateAsync(user, userInfo.password).Result;
+                    if (!result.Succeeded)
+                    {
+                        throw new ApplicationException("User creation failed!");
+                    }
+                }
+
+                var roleResult = userManager.AddToRoleAsync(user, "admin").Result;
+                roleResult = userManager.AddToRoleAsync(user, "user").Result;
+            }
+        }
+        
+        private static void AddDataToDb<TEntity> (TEntity[] entities, AppDbContext context)
+        where TEntity : class, IDomainEntityId
+        {
+            DbSet<TEntity> entityDbSet = context.Set<TEntity>();
+            
+            foreach (var entity in entities)
+            {
+                if (!entityDbSet.Any(l => l.Id == entity.Id))
+                {
+                    entityDbSet.Add(entity);
                 }
             }
-
-            var roleResult = userManager.AddToRoleAsync(user, "Admin").Result;
-            roleResult = userManager.AddToRoleAsync(user, "User").Result;
+            context.SaveChanges();
         }
         
         public static void SeedData(AppDbContext context)
         {
+            var categories = new Category[]
+            {
+                new Category()
+                {
+                    CategoryName = "Oil painting",
+                    Id = new Guid("00000000-0000-0000-0000-000000000001")
+                },
+                new Category()
+                {
+                    CategoryName = "Watercolor painting",
+                    Id = new Guid("00000000-0000-0000-0000-000000000002")
+                },
+                new Category()
+                {
+                    CategoryName = "Pastel painting",
+                    Id = new Guid("00000000-0000-0000-0000-000000000003")
+                },
+                new Category()
+                {
+                    CategoryName = "Acrylic painting",
+                    Id = new Guid("00000000-0000-0000-0000-000000000004")
+                },
+                new Category()
+                {
+                    CategoryName = "Digital painting",
+                    Id = new Guid("00000000-0000-0000-0000-000000000005")
+                }
+            };
             
+            AddDataToDb(categories, context);
+            
+            var paymentMethods = new PaymentMethod[]
+            {
+                new PaymentMethod()
+                {
+                    PaymentMethodCode = "PayPal",
+                    PaymentMethodDescription = 
+                        "With PayPal, customers can send payments securely online using a stored value account " +
+                        "that is linked to a credit card, Signature (PINless) debit card or bank account.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000001")
+                },
+                new PaymentMethod()
+                {
+                    PaymentMethodCode = "Credit Card",
+                    PaymentMethodDescription = 
+                        "Purchasers can use credit cards to buy goods based on the card holder’s " +
+                        "promise to pay for these goods and services.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000002")
+                },
+            };
+            
+            AddDataToDb(paymentMethods, context);
+
+            var orderStatusCodes = new OrderStatusCode[]
+            {
+                new OrderStatusCode()
+                {
+                    Code = "Shipped",
+                    OrderStatusDescription = "The order has been successfully paid for and shipped.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000001")
+                },
+                new OrderStatusCode()
+                {
+                    Code = "Processing",
+                    OrderStatusDescription = "The order has been successfully paid for and is waiting to be shipped.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000002")
+                },
+                new OrderStatusCode()
+                {
+                    Code = "Delivered",
+                    OrderStatusDescription = "The customer has received the ordered product.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000003")
+                },
+                new OrderStatusCode()
+                {
+                    Code = "Cancelled",
+                    OrderStatusDescription = "The order has been cancelled.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000004")
+                },
+            };
+            
+            AddDataToDb(orderStatusCodes, context);
+            
+            var invoiceStatusCodes = new InvoiceStatusCode[]
+            {
+                new InvoiceStatusCode()
+                {
+                    Code = "Sent",
+                    InvoiceStatusDescription = "The invoice has been sent to the user.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000001")
+                },
+                new InvoiceStatusCode()
+                {
+                    Code = "Paid",
+                    InvoiceStatusDescription = "The invoice has been paid for.",
+                    Id = new Guid("00000000-0000-0000-0000-000000000002")
+                },
+            };
+            
+            AddDataToDb(invoiceStatusCodes, context);
         }
-        
     }
 }

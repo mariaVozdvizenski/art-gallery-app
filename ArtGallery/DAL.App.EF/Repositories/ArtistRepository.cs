@@ -3,118 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers;
+using DAL.Base.Mappers;
+using Artist = Domain.App.Artist;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ArtistRepository : EFBaseRepository<AppDbContext, Domain.Artist, DAL.App.DTO.Artist>, IArtistRepository
+    public class ArtistRepository : EFBaseRepository<AppDbContext, AppUser, Artist, DAL.App.DTO.Artist>, IArtistRepository
     {
-        //TODO: Create DAL.App.DTO thingies
         public ArtistRepository(AppDbContext dbContext) : base(dbContext, 
-            new BaseDALMapper<Domain.Artist, DAL.App.DTO.Artist>())
+            new ArtistRepositoryMapper())
         {
         }
-        public async Task<IEnumerable<DAL.App.DTO.Artist>> AllAsync(Guid? userId = null)
+
+        public override async Task<IEnumerable<DTO.Artist>> GetAllAsync(object? userId = null, bool noTracking = true)
         {
-            if (userId != null)
-            {
-                /*return (await RepoDbSet.Where(o => o.AppUserId == userId)
-                    .Select(dbEntity => new ArtistDisplay()
-                {
-                    Bio = dbEntity.Bio,
-                    Id = dbEntity.Id,
-                    Country = dbEntity.Country,
-                    DateOfBirth = dbEntity.DateOfBirth,
-                    FirstName = dbEntity.FirstName,
-                    LastName = dbEntity.LastName,
-                    PlaceOfBirth = dbEntity.PlaceOfBirth,
-                    PaintingCount = dbEntity.Paintings.Count
-                    
-                }).ToListAsync()).Select(dbEntity => Mapper.Map<ArtistDisplay, DAL.App.DTO.Artist>(dbEntity));
-                */
-            }
-            return (await RepoDbSet.ToListAsync())
-                .Select(domainEntity => Mapper.Map(domainEntity));
+            var query = PrepareQuery(userId, noTracking);
+            query = query.Include(e => e.Paintings);
+            return await query.Select(e => Mapper.Map(e)).ToListAsync();
         }
 
-        public async Task<DAL.App.DTO.Artist> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
+        public override async Task<DTO.Artist> FirstOrDefaultAsync(Guid id, object? userId = null, bool noTracking = true)
         {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(a => a.AppUserId == userId);
-            }
-
-            return Mapper.Map(await query.FirstOrDefaultAsync());
+            var query = PrepareQuery(userId, noTracking);
+            query = query.Include(e => e.Paintings);
+            var domainEntity = await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return Mapper.Map(domainEntity);
         }
-
-        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
-        {
-            if (userId != null)
-            {
-                //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUserId == userId);
-            }
-            return await RepoDbSet.AnyAsync(a => a.Id == id);
-        }
-
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(a => a.AppUserId == userId);
-            }
-
-            var artist = await query.AsNoTracking().FirstOrDefaultAsync();
-            base.Remove(artist.Id);
-        }
-
-        /*
-        public async Task<IEnumerable<ArtistDTO>> DTOAllAsync(Guid? userId = null)
-        {
-            var query = RepoDbSet.AsQueryable();
-            if (userId != null)
-            {
-                //query = query.Where(o => o.AppUserId == userId);
-            }
-            return await query
-                .Select(o => new ArtistDTO()
-                {
-                    Id = o.Id,
-                    FirstName = o.FirstName,
-                    LastName = o.LastName,
-                    Country = o.Country,
-                    PaintingCount = o.Paintings.Count
-                })
-                .ToListAsync();
-        }
-
-        public async Task<ArtistDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
-        {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
-            if (userId != null)
-            {
-                //query = query.Where(a => a.AppUserId == userId);
-            }
-
-            var artistDto = await query.Select(o => new ArtistDTO()
-            {
-                Id = o.Id,
-                FirstName = o.FirstName,
-                LastName = o.LastName,
-                Country = o.Country,
-                PaintingCount = o.Paintings.Count
-            }).FirstOrDefaultAsync();
-
-            return artistDto;
-        }
-        */
     }
 }

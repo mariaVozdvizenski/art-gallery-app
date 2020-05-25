@@ -1,33 +1,68 @@
 <template>
-    <h1>Details</h1>
+    <h1> ${_painting.title}</h1>
 
     <div>
-        <h4>Painting</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                Title
-            </dt>
-            <dd class="col-sm-10">
-                ${_painting.title}
-            </dd>
-            <dt class="col-sm-2">
-                Size
-            </dt>
-            <dd class="col-sm-10">
-                ${_painting.size}
-            </dd>
-            <dt class="col-sm-2">
-                Price
-            </dt>
-            <dd class="col-sm-10">
-                ${_painting.price}
-            </dd>
-        </dl>
+        <a route-href="route: paintings">Back to Gallery</a>
+        <a if.bind="appState.jwt !== null && appState.UserIsAdmin()"
+            route-href="route: paintingEdit; params.bind: {id: _painting.id}">| Edit</a>
     </div>
-    <div>
-        <a route-href="route: paintingEdit; params.bind: {id: _painting.id}">Edit</a> |
-        <a route-href="route: paintings">Back to List</a>
+
+    <div class="card mb-3">
+        <img class="card-img-top" src=${imageURL} alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">${_painting.price} €</h5>
+            <p class="card-text">Artist:
+                <a route-href="route: artistDetails; params.bind: {id: _painting.artistId}">${_painting.artistName}
+                </a></p>
+            <p class="card-text">${_painting.description}</p>
+            <p class="card-text">Size: ${_painting.size} cm</p>
+            <div if.bind="appState.jwt === null">
+                Please <a route-href="route: account-login">log in</a> to make a purchase.
+            </div>
+            <input class="btn btn-primary" value="Buy Now" disabled.bind="appState.jwt != null ? false : true"/>
+            <input class="btn btn-primary" value="Add to Cart" disabled.bind="appState.jwt != null ? false : true"/>
+        </div>
     </div>
+
+    <form>
+
+        <textarea placeholder="What do you think about this painting?" maxlength="4096" rows="4" cols="50" ,
+            value.bind="_comment.commentBody"></textarea>
+
+        <div class="form-group">
+            <div if.bind="appState.jwt === null">
+                Please <a route-href="route: account-login">log in</a> to leave a comment.
+            </div>
+
+            <input type="submit" value="Post" class="btn btn-primary" click.trigger="onSubmit($event)"
+                disabled.bind="appState.jwt != null ? false : true" />
+        </div>
+
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Comments
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="comment of _painting.comments">
+                <td>
+                    <p>
+                    <div>${comment.createdBy} ${comment.createdAt}</div> <b>${comment.commentBody}</b></p>
+                    <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
+                        <a route-href="route: commentDelete; params.bind: {id: comment.id}">Delete</a>
+                    </div>
+                    <div if.bind="appState.jwt != null && appState.userName == comment.createdBy">
+                        <a route-href="route: commentEdit; params.bind: {id: comment.id}">Edit</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 </template>

@@ -28,7 +28,7 @@
       <ProjectReference Include="..\BLL.App\BLL.App.csproj" />
       <ProjectReference Include="..\Contracts.BLL.App\Contracts.BLL.App.csproj" />
       <ProjectReference Include="..\DAL.App.EF\DAL.App.EF.csproj" />
-      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\Domain.App\Domain.App.csproj" />
       <ProjectReference Include="..\Extensions\Extensions.csproj" />
       <ProjectReference Include="..\PublicApi.DTO.v1\PublicApi.DTO.v1.csproj" />
     </ItemGroup>
@@ -277,36 +277,183 @@
       <UpToDateCheckInput Remove="Views\Payments\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\Payments\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\Payments\Index.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Areas" />
+      <UpToDateCheckInput Remove="Views\Artists\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\_CreateEdit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Artists\_DetailsDelete.cshtml" />
+      <UpToDateCheckInput Remove="Views\BasketItems\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\BasketItems\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\BasketItems\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\BasketItems\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\BasketItems\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Home\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Home\Privacy.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shared\Error.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shared\_Layout.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shared\_LoginPartial.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\_ViewImports.cshtml" />
+      <UpToDateCheckInput Remove="Views\_ViewStart.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Baskets\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Categories\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Comments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Invoices\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceStatusCodes\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderItems\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Orders\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\OrderStatusCodes\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaintingCategories\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Paintings\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Payments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\PaymentMethods\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\ShipmentItems\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shipments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserPaymentMethods\Index.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="ApiControllers\1.1\**" />
-      <Compile Remove="ApiControllers\1.0\BasketsController.cs" />
       <Compile Remove="ApiControllers\1.0\CategoriesController.cs" />
-      <Compile Remove="ApiControllers\1.0\CommentsController.cs" />
       <Compile Remove="ApiControllers\1.0\OrdersController.cs" />
-      <Compile Remove="ApiControllers\1.0\PaintingsController.cs" />
       <Compile Remove="ApiControllers\1.0\UserPaymentMethodsController.cs" />
-      <Compile Remove="Controllers\BasketItemsController.cs" />
-      <Compile Remove="Controllers\BasketsController.cs" />
-      <Compile Remove="Controllers\CategoriesController.cs" />
-      <Compile Remove="Controllers\CommentsController.cs" />
-      <Compile Remove="Controllers\InvoicesController.cs" />
-      <Compile Remove="Controllers\InvoiceStatusCodesController.cs" />
-      <Compile Remove="Controllers\OrderItemsController.cs" />
-      <Compile Remove="Controllers\OrdersController.cs" />
-      <Compile Remove="Controllers\OrderStatusCodesController.cs" />
-      <Compile Remove="Controllers\PaintingCategoriesController.cs" />
-      <Compile Remove="Controllers\PaintingsController.cs" />
-      <Compile Remove="Controllers\PaymentMethodsController.cs" />
-      <Compile Remove="Controllers\PaymentsController.cs" />
-      <Compile Remove="Controllers\ShipmentItemsController.cs" />
-      <Compile Remove="Controllers\ShipmentsController.cs" />
-      <Compile Remove="Controllers\UserPaymentMethodsController.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -319,6 +466,50 @@
 
     <ItemGroup>
       <Content Remove="ApiControllers\1.1\**" />
+      <Content Update="Views\Home\Index.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Home\Privacy.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Shared\_Layout.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Shared\_LoginPartial.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Shared\_ValidationScriptsPartial.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Shared\Error.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\_ViewImports.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\_ViewStart.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Areas\Admin\Views\_ViewImports.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Areas\Admin\Views\_ViewStart.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Areas\Admin\Controllers" />
     </ItemGroup>
   
 

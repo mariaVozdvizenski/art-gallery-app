@@ -15,11 +15,7 @@
       <ProjectReference Include="..\Contracts.DAL.App\Contracts.DAL.App.csproj" />
       <ProjectReference Include="..\DAL.App.DTO\DAL.App.DTO.csproj" />
       <ProjectReference Include="..\DAL.Base.EF\DAL.Base.EF.csproj" />
-      <ProjectReference Include="..\Domain\Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Mappers" />
+      <ProjectReference Include="..\Domain.App\Domain.App.csproj" />
     </ItemGroup>
 
 </Project>

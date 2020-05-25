@@ -4,4 +4,5 @@ export interface IPaintingEdit {
     size: string;
     price: number;
     artistId: string;
+    description: string;
 }

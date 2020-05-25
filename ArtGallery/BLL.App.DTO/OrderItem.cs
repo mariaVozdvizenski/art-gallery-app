@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class OrderItem : OrderItem<Guid>, IDomainBaseEntity
+    public class OrderItem : IDomainEntityId
     {
-    }
-
-    public class OrderItem<TKey> : IDomainBaseEntity<TKey>
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-
-        public TKey PaintingId { get; set; } = default!;
+        public Guid Id { get; set; }
+        
+        public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
         
-        public TKey OrderId { get; set; } = default!;
+        public Guid OrderId { get; set; } = default!;
         public Order? Order { get; set; }
 
         public ICollection<ShipmentItem>? ItemShipments { get; set; }

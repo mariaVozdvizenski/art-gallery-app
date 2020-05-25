@@ -5,14 +5,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Contracts.DAL.Base;
-using Domain;
-using Domain.Identity;
+using Contracts.Domain;
+using Domain.App;
+using Domain.App.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF
 {
-    public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid>
+    public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid>, IBaseEntityTracker
     {
         public DbSet<Artist> Artists { get; set; } = default!;
         public DbSet<Basket> Baskets { get; set; } = default!;
@@ -33,12 +34,15 @@ namespace DAL.App.EF
         public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; } = default!;
 
         private IUserNameProvider _userNameProvider;
+        private readonly Dictionary<IDomainEntityId<Guid>, IDomainEntityId<Guid>> _entityTracker =
+            new Dictionary<IDomainEntityId<Guid>, IDomainEntityId<Guid>>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options, IUserNameProvider userNameProvider)
             : base(options)  
         {
             _userNameProvider = userNameProvider;
         }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -50,11 +54,17 @@ namespace DAL.App.EF
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
         }
+        
+        public void AddToEntityTracker(IDomainEntityId<Guid> internalEntity, IDomainEntityId<Guid> externalEntity)
+        {
+            _entityTracker.Add(internalEntity, externalEntity);
+        }
+        
         private void SaveChangesMetadataUpdate()
         {
             // update the state of ef tracked objects
             ChangeTracker.DetectChanges();
-            
+
             var markedAsAdded = ChangeTracker.Entries().Where(x => x.State == EntityState.Added);
             foreach (var entityEntry in markedAsAdded)
             {
@@ -80,16 +90,29 @@ namespace DAL.App.EF
                 entityEntry.Property(nameof(entityWithMetaData.CreatedBy)).IsModified = false;
             }
         }
+
+        private void UpdateTrackedEntities()
+        {
+            foreach (var (key, value) in _entityTracker)
+            {
+                value.Id = key.Id;
+            }
+        }
+
         public override int SaveChanges()
         {
             SaveChangesMetadataUpdate();
-            return base.SaveChanges();
+            var result = base.SaveChanges();
+            UpdateTrackedEntities();
+            return result;
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             SaveChangesMetadataUpdate();
-            return base.SaveChangesAsync(cancellationToken);
+            var result = base.SaveChangesAsync(cancellationToken);
+            UpdateTrackedEntities();
+            return result;
         }
     }
 }

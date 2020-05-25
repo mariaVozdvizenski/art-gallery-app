@@ -1,11 +1,9 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {IArtistCreate} from 'domain/IArtistCreate';
-import {IArtistEdit } from 'domain/IArtistEdit';
 import {IArtist} from 'domain/IArtist';
 import { AppState } from 'state/app-state';
 import { IFetchResponse } from 'types/IFetchResponse';
-
 
 
 @autoinject
@@ -83,7 +81,7 @@ export class ArtistService {
         }
     }
 
-    async updateArtist(artist: IArtistEdit): Promise<IFetchResponse<string>>{
+    async updateArtist(artist: IArtist): Promise<IFetchResponse<string>>{
         try {
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + artist.id, JSON.stringify(artist), {

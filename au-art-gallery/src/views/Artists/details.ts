@@ -22,6 +22,7 @@ export class ArtistsDetails{
 
     }
 
+
     activate(params: any, routeConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
         if (params.id && typeof(params.id) == "string"){
             this.artistService.getArtist(params.id).then(

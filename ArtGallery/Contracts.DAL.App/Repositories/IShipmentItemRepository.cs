@@ -8,9 +8,5 @@ namespace Contracts.DAL.App.Repositories
 {
     public interface IShipmentItemRepository: IBaseRepository<ShipmentItem>
     {
-        Task<ShipmentItem> FirstOrDefaultAsync(Guid? id, Guid? userId = null);
-        Task<bool> ExistsAsync(Guid? id, Guid? userId = null);
-        Task<IEnumerable<ShipmentItem>> AllAsync(Guid? userId = null);
-        Task DeleteAsync(Guid id, Guid? userId = null);
     }
 }

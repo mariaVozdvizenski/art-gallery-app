@@ -1,17 +1,13 @@
 ﻿using System;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class ShipmentItem : ShipmentItem<Guid>, IDomainBaseEntity
+    public class ShipmentItem : IDomainEntityId
     {
+        public Guid Id { get; set; }
         
-    }
-    public class ShipmentItem<TKey>: IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-
         public Guid OrderItemId { get; set; } = default!;
         public OrderItem? OrderItem { get; set; }
         

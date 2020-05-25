@@ -45,7 +45,7 @@ export class AccountService {
             }
         }
     }
-    async register (email: string, password: string): Promise<IResponse<IRegisterResponse>> {
+    async register (email: string, password: string): Promise<IResponse<ILoginResponse>> {
         
         try {
             const response = await this.httpClient.post('account/register', JSON.stringify({
@@ -56,10 +56,10 @@ export class AccountService {
 
             // happy case
             if (response.status >= 200 && response.status < 300){
-                const data = (await response.json()) as IRegisterResponse;
+                const data = (await response.json()) as ILoginResponse;
                 return {
                     statusCode: response.status,
-                    data: data as IRegisterResponse
+                    data: data as ILoginResponse
                 }
             } 
 

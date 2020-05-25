@@ -1,24 +1,20 @@
 
 <template>
-    <h1>Index</h1>
+    <h1>Artists</h1>
 
     <p>
-        <a route-href="route: artistCreate">Create New</a>
+        Here we have the talented artists whose artworks have, at some point been sold on our site.
     </p>
+
+    <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
+        <a route-href="route: artistCreate">Create New</a>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    FirstName
-                </th>
-                <th>
-                    LastName
-                </th>
-                <th>
-                    Country
-                </th>
-                <th>
-                    PaintingCount
+                    Name
                 </th>
                 <th></th>
             </tr>
@@ -26,21 +22,13 @@
         <tbody>
             <tr repeat.for="artist of _artists">
                 <td>
-                    ${artist.firstName}
+                    <a route-href="route: artistDetails; params.bind: {id: artist.id}"> ${artist.firstName} ${artist.lastName}</a>
                 </td>
                 <td>
-                    ${artist.lastName}
-                </td>
-                <td>
-                    ${artist.country}
-                </td>
-                <td>
-                    ${artist.paintingCount}
-                </td>
-                <td>
-                    <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
-                    <a route-href="route: artistDetails; params.bind: {id: artist.id}">Details</a> |
-                    <a route-href="route: artistDelete; params.bind: {id: artist.id}">Delete</a>
+                    <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
+                        <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
+                        <a route-href="route: artistDelete; params.bind: {id: artist.id}">Delete</a>
+                    </div>
                 </td>
             </tr>
         </tbody>

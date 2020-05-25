@@ -2,37 +2,48 @@
     <h1>Details</h1>
 
     <div>
-        <h4>Artist</h4>
+        <h4>${_artist.firstName} ${_artist.lastName}</h4>
         <hr />
         <dl class="row">
             <dt class = "col-sm-2">
-                FirstName
+                Name
             </dt>
             <dd class = "col-sm-10">
-                ${_artist.firstName}
+                ${_artist.firstName} ${_artist.lastName}
             </dd>
             <dt class = "col-sm-2">
-                LastName
+                Paintings
             </dt>
-            <dd class = "col-sm-10">
-                ${_artist.lastName}
-            </dd>
-            <dt class = "col-sm-2">
-                PaintingCount
-            </dt>
-            <dd class = "col-sm-10">
-                ${_artist.paintingCount}
-            </dd>
+            <div, repeat.for="painting of _artist.paintings">
+                <div class = "col-sm-12">
+                <a route-href="route: paintingDetails; params.bind: {id: painting.id}">${painting.title}</a>
+                </div>   
+            </div> 
+          
             <dt class = "col-sm-2">
                 Country
             </dt>
             <dd class = "col-sm-10">
                 ${_artist.country}
+            </dd>
+            <dt class = "col-sm-2">
+                Bio
+            </dt>
+            <dd class = "col-sm-10">
+                ${_artist.bio}
             </dd>  
+            <dt class = "col-sm-2">
+                Date of Birth
+            </dt>
+            <dd class = "col-sm-10">
+                ${_artist.dateOfBirth}
+            </dd>    
         </dl>
     </div>
     <div>
-        <a route-href="route: artistEdit; params.bind: {id: _artist.id}">Edit</a> |
+        <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
+            <a route-href="route: artistEdit; params.bind: {id: _artist.id}">Edit</a> |
+        </div>
         <a route-href="route: artists">Back to List</a>
     </div>
     

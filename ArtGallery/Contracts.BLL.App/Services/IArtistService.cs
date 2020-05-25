@@ -6,8 +6,7 @@ using Contracts.DAL.Base.Repositories;
 
 namespace Contracts.BLL.App.Services
 {
-    public interface IArtistService: IArtistRepository<Guid, Artist>
+    public interface IArtistService : IBaseEntityService<Artist>
     {
-            // TODO: add custom methods
     }
 }

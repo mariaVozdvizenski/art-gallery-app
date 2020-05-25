@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace DAL.App.DTO
 {
-    public class OrderStatusCode : OrderStatusCode<Guid>, IDomainBaseEntity
+    public class OrderStatusCode : IDomainEntityId
     {
-    }
-
-    public class OrderStatusCode<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
+        public Guid Id { get; set; } = default!;
        
         public string OrderStatusDescription { get; set; } = default!;
 
@@ -20,5 +16,4 @@ namespace DAL.App.DTO
 
         public ICollection<Order>? Orders { get; set; }
     }
-    
 }

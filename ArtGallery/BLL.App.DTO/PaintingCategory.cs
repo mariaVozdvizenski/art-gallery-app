@@ -1,21 +1,17 @@
 ﻿using System;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class PaintingCategory : PaintingCategory<Guid>, IDomainBaseEntity
+    public class PaintingCategory : IDomainEntityId
     {
-    }
-
-    public class PaintingCategory<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-
-        public TKey PaintingId { get; set; } = default!;
+        public Guid Id { get; set; }
+        
+        public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
         
-        public TKey CategoryId { get; set; } = default!;
+        public Guid CategoryId { get; set; } = default!;
         public Category? Category { get; set; }
     }
 }

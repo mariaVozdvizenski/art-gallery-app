@@ -1,5 +1,8 @@
 export interface IComment {
     id: string;
+    appUserId: string;
     commentBody: string;
-    paintingTitle: string;  
+    createdAt: Date;
+    createdBy: string;
+    paintingId: string;
 }

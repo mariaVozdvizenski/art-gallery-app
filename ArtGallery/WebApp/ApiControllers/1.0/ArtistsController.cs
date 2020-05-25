@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using Domain;
+using Domain.App.Identity;
 using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using PublicApi.DTO.v1.Mappers;
 
 namespace WebApp.ApiControllers._1._0
 {
@@ -16,22 +18,24 @@ namespace WebApp.ApiControllers._1._0
     [ApiVersion( "1.0" )]
     [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
     public class ArtistsController : ControllerBase
     {
         //private readonly IAppUnitOfWork _uow;
         private readonly IAppBLL _bll;
+        private readonly ArtistMapper _artistMapper = new ArtistMapper();
 
         public ArtistsController(IAppBLL bll)
         {
             _bll = bll;
         }
-
+        
         // GET: api/Artists
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ArtistDTO>>> GetArtists()
+        public async Task<ActionResult<IEnumerable<ArtistView>>> GetArtists()
         {
-            return Ok(await _bll.Artists.AllAsync(User.UserGuidId())); // need this to not get a SyntaxError: Unexpected end of JSON
+            var query = await _bll.Artists.GetAllAsync();
+            return Ok(query.Select(e => _artistMapper.MapForViewAsync(e)).ToList());
         }
 
         /// <summary>
@@ -43,60 +47,37 @@ namespace WebApp.ApiControllers._1._0
         /// <response code="404">The artist does not exist.</response>
 
         // GET: api/Artists/5
-        [ProducesResponseType( typeof( Artist ), 200 )]
+        [AllowAnonymous]
+        [ProducesResponseType( typeof( Domain.App.Artist ), 200 )]
         [ProducesResponseType( 404 )]
         [HttpGet("{id}")]
-        public async Task<ActionResult<ArtistDTO>> GetArtist(Guid id)
+        public async Task<ActionResult<ArtistView>> GetArtist(Guid id)
         {
-            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id);
             
             if (artist == null)
             {
                 return NotFound();
             }
 
-            return Ok(artist);
+            return Ok(_artistMapper.MapForViewAsync(artist));
         }
 
         // PUT: api/Artists/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutArtist(Guid id, ArtistEditDTO artistEditDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<IActionResult> PutArtist(Guid id, Artist artistDTO)
         {
-            if (id != artistEditDTO.Id)
+            if (id != artistDTO.Id)
             {
                 return BadRequest();
             }
             
-            var artist = await _bll.Artists.FirstOrDefaultAsync(artistEditDTO.Id);
-
-            if (artist == null)
-            {
-                return BadRequest();
-            }
-
-            artist.Country = artistEditDTO.Country;
-            artist.FirstName = artistEditDTO.FirstName;
-            artist.LastName = artistEditDTO.LastName;
-
-            _bll.Artists.Update(artist);
-            
-            try
-            {
-                await _bll.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _bll.Artists.ExistsAsync(id, User.UserGuidId()))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var bllEntity = _artistMapper.Map(artistDTO);
+            await _bll.Artists.UpdateAsync(bllEntity);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -105,34 +86,34 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Artist>> PostArtist(ArtistCreateDTO artistCreateDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+
+        public async Task<ActionResult<Domain.App.Artist>> PostArtist(Artist artistCreateDTO)
         {
-            var artist = new BLL.App.DTO.Artist
-            {
-                FirstName = artistCreateDTO.FirstName,
-                LastName = artistCreateDTO.LastName,
-                Country = artistCreateDTO.Country,
-                PlaceOfBirth = artistCreateDTO.PlaceOfBirth,
-                Bio = artistCreateDTO.Bio,
-                DateOfBirth = artistCreateDTO.DateOfBirth,
-            };
-            _bll.Artists.Add(artist);
+            var bllEntity = _artistMapper.Map(artistCreateDTO);
+            
+            _bll.Artists.Add(bllEntity);
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
+            artistCreateDTO.Id = bllEntity.Id;
+
+            return CreatedAtAction("GetArtist", new { id = artistCreateDTO.Id }, artistCreateDTO);
         }
 
         // DELETE: api/Artists/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Artist>> DeleteArtist(Guid id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+
+        public async Task<ActionResult<Domain.App.Artist>> DeleteArtist(Guid id)
         {
-            var artist = await _bll.Artists.FirstOrDefaultAsync(id, User.UserGuidId());
+            var artist = await _bll.Artists.FirstOrDefaultAsync(id);
+            
             if (artist == null)
             {
                 return NotFound();
             }
 
-            _bll.Artists.Remove(artist);
+            await _bll.Artists.RemoveAsync(id);
             await _bll.SaveChangesAsync();
 
             return Ok(artist);

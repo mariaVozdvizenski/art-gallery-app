@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.App;
+using BLL.App.Mappers;
 using Contracts.BLL.App;
+using Contracts.BLL.App.Mappers;
 using Contracts.DAL.App;
 using Contracts.DAL.Base;
 using DAL.App.EF;
-using Domain.Identity;
+using DAL.App.EF.Helpers;
+using Domain.App.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +26,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -46,22 +50,22 @@ namespace WebApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MsSqlConnection")));
             
-            services.AddIdentity<AppUser, AppRole>()
+            services.AddIdentity<Domain.App.Identity.AppUser, Domain.App.Identity.AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            //AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
             services.AddScoped<IUserNameProvider, UserNameProvider>();
+            services.AddScoped<IAppBLL, AppBLL>();
+            services.AddScoped<IPaintingServiceMapper, PaintingServiceMapper>();
+
             
             services.AddControllersWithViews();
             services.AddRazorPages();
             
             services.AddHttpContextAccessor();
-
-            services.AddScoped<IAppBLL, AppBLL>();
-
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsAllowAll", builder =>
@@ -71,6 +75,7 @@ namespace WebApp
                     builder.AllowAnyMethod();
                 });
             });
+            
             
             // =============== JWT support ===============
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -145,44 +150,52 @@ namespace WebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "area",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
                 endpoints.MapRazorPages();
             });
         }
 
         private static void UpdateDatabase(IApplicationBuilder app, IWebHostEnvironment env,
-            IConfiguration Configuration)
+            IConfiguration configuration)
         {
             // give me the scoped services (everyhting created by it will be closed at the end of service scope life).
             using var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope();
-
-            using var ctx = serviceScope.ServiceProvider.GetService<AppDbContext>();
-
+            
+            using var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
             using var userManager = serviceScope.ServiceProvider.GetService<UserManager<AppUser>>();
             using var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<AppRole>>();
-             
-            if (Configuration["AppDataInitialization:DropDatabase"] == "True")
+            var logger = serviceScope.ServiceProvider.GetService<ILogger<Startup>>();
+
+            if (configuration.GetValue<bool>("DataInitialization:DropDatabase"))
             {
-                Console.WriteLine("DropDatabase");
-                DAL.App.EF.Helpers.DataInitializers.DeleteDatabase(ctx);
+                logger.LogInformation("DropDatabase");
+                DataInitializers.DeleteDatabase(context);
             }
-            if (Configuration["AppDataInitialization:MigrateDatabase"] == "True")
+
+            if (configuration.GetValue<bool>("DataInitialization:MigrateDatabase"))
             {
-                Console.WriteLine("MigrateDatabase");
-                DAL.App.EF.Helpers.DataInitializers.MigrateDatabase(ctx);
+                logger.LogInformation("MigrateDatabase");
+                DataInitializers.MigrateDatabase(context);
             }
-            if (Configuration["AppDataInitialization:SeedIdentity"] == "True")
+
+            if (configuration.GetValue<bool>("DataInitialization:SeedIdentity"))
             {
-                Console.WriteLine("SeedIdentity");
-                DAL.App.EF.Helpers.DataInitializers.SeedIdentity(userManager, roleManager);
+                logger.LogInformation("SeedIdentity");
+                DataInitializers.SeedIdentity(userManager, roleManager);
             }
-            if (Configuration["AppDataInitialization:SeedData"] == "True")
+
+            if (configuration.GetValue<bool>("DataInitialization:SeedData"))
             {
-                Console.WriteLine("SeedData");
-                DAL.App.EF.Helpers.DataInitializers.SeedData(ctx);
+                logger.LogInformation("SeedData");
+                DataInitializers.SeedData(context);
             }
         }
     }

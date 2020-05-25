@@ -3,6 +3,7 @@ import { ArtistService } from 'service/artist-service';
 import { IArtist } from 'domain/IArtist';
 import { IAlertData } from 'types/IAlertData';
 import { AlertType } from 'types/AlertType';
+import { AppState } from 'state/app-state';
 
 
 @autoinject
@@ -10,7 +11,7 @@ export class ArtistsIndex {
     private _artists: IArtist[] = []
     private _alert: IAlertData | null = null
 
-    constructor(private artistService: ArtistService) {
+    constructor(private artistService: ArtistService, private appState: AppState) {
 
     }
 
@@ -20,6 +21,7 @@ export class ArtistsIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._artists = response.data!;
+                    console.log(this.appState.jwt)
                 } else {
                     // show error message
                     this._alert = {

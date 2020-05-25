@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace DAL.App.DTO
 {
-    public class Invoice : Invoice<Guid>, IDomainBaseEntity
+    public class Invoice : IDomainEntityId
     {
-    }
-
-    public class Invoice<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
+        public Guid Id { get; set; } = default!;
         
         public int InvoiceNumber { get; set; }
         
@@ -20,14 +16,14 @@ namespace DAL.App.DTO
 
         public string InvoiceDetails { get; set; } = default!;
         
-        public TKey OrderId { get; set; } = default!;
+        public Guid OrderId { get; set; } = default!;
         public Order? Order { get; set; }
         
-        public TKey InvoiceStatusCodeId { get; set; } = default!;
+        public Guid InvoiceStatusCodeId { get; set; } = default!;
         public InvoiceStatusCode? InvoiceStatusCode { get; set; }
 
         public ICollection<Payment>? Payments { get; set; }
         public ICollection<Shipment>? Shipments { get; set; }
-
     }
+
 }

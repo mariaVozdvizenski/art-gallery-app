@@ -1,26 +1,20 @@
 ﻿using System;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace BLL.App.DTO
 {
-    public class BasketItem : BasketItem<Guid>, IDomainBaseEntity
+    public class BasketItem : IDomainEntityId
     {
-        
-    }
-
-    public class BasketItem<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
-
         public int Quantity { get; set; }
         
         public DateTime DateCreated { get; set; }
         
-        public TKey BasketId { get; set; } = default!;
+        public Guid BasketId { get; set; } = default!;
         public Basket? Basket { get; set; }
-        
-        public TKey PaintingId { get; set; } = default!;
+
+        public Guid PaintingId { get; set; } = default!;
         public Painting? Painting { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -1,41 +1,37 @@
 <template>
-    <h1>Index</h1>
+    <h1>Gallery</h1>
 
     <p>
-        <a route-href="route: paintingCreate">Create New</a>
+    <div if.bind="appState.jwt !== null && appState.UserIsAdmin()">
+        <a route-href="route: paintingCreate">Create a New Painting</a>
+    </div>
     </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Size
-                </th>
-                <th>
-                    Price
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr repeat.for="painting of _paintings">
-                <td>
-                    ${painting.title}
-                </td>
-                <td>
-                    ${painting.size}
-                </td>
-                <td>
-                    ${painting.price}
-                </td>
-                <td>
-                    <a route-href="route: paintingEdit; params.bind: {id: painting.id}">Edit</a> |
-                    <a route-href="route: paintingDetails; params.bind: {id: painting.id}">Details</a> |
-                    <a route-href="route: paintingDelete; params.bind: {id: painting.id}">Delete</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+
+    <label for="cars">Filter: </label>
+
+    <select name="cars" id="cars">
+        <option value="volvo">Price ascending</option>
+        <option value="saab">Price descending</option>
+        <option value="saab">Date added</option>
+    </select>
+
+    <div class="card-deck">
+        <div repeat.for="painting of _paintings">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src=${imageURL} alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">${painting.title}</h5>
+                    <h6 class="card-subtitle">${painting.price} €</h6>
+                    <h6 class="card-subtitle">${painting.artistName}</h6>
+                    <a route-href="route: paintingDetails; params.bind: {id: painting.id}"
+                        class="btn btn-primary">Details</a>
+                    <div if.bind="appState.jwt !== null && appState.UserIsAdmin()">
+                        <a route-href="route: paintingEdit; params.bind: {id: painting.id}">Edit</a> |
+                        <a route-href="route: paintingDelete; params.bind: {id: painting.id}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>

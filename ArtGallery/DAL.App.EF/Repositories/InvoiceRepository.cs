@@ -3,62 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using DAL.Base.Mappers;
+using Domain.App;
+using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class InvoiceRepository :  EFBaseRepository<AppDbContext, Domain.Invoice, DAL.App.DTO.Invoice>, IInvoiceRepository
+    public class InvoiceRepository :  EFBaseRepository<AppDbContext, AppUser, Invoice, DAL.App.DTO.Invoice>, IInvoiceRepository
     {
-        public InvoiceRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Invoice, DTO.Invoice>())
+        public InvoiceRepository(AppDbContext dbContext) : base(dbContext, new BaseMapper<Invoice, DTO.Invoice>())
         {
-        }
-        public async Task<bool> ExistsAsync(Guid id, Guid? userId = null)
-        {
-            if (userId != null)
-            {
-                //return await RepoDbSet.AnyAsync(a => a.Id == id && a.AppUser == userId);
-            }
-            return await RepoDbSet.AnyAsync(a => a.Id == id); 
         }
         
-        public async Task<IEnumerable<DAL.App.DTO.Invoice>> AllAsync(Guid? userId = null)
+        public override async Task<IEnumerable<DTO.Invoice>> GetAllAsync(object? userId = null, bool noTracking = true)
         {
-            var query = RepoDbSet
-                .Include(b => b.InvoiceStatusCode)
-                .Include(b => b.Order)
-                .AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(o => o.Owner!.AppUserId == userId && o.Animal!.AppUserId == userId);
-            }
-            
-            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
-        }
-
-        public async Task<DAL.App.DTO.Invoice> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(b => b.InvoiceStatusCode)
-                .Include(b => b.Order)
-                .Where(a => a.Id == id)
-                .AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(a => a.Owner!.AppUserId == userId && a.Animal!.AppUserId == userId);
-            }
-
-            return Mapper.Map(await query.FirstOrDefaultAsync());
+            var query = PrepareQuery(userId, noTracking);
+            query = query
+                .Include(b => b.Order);
+            var domainItems = await query.ToListAsync();
+            var result = domainItems.Select(b => Mapper.Map(b));
+            return result;
         }
         
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            var owner = await FirstOrDefaultAsync(id, userId);
-            base.Remove(owner);
-        }
     }
 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
 using Domain;
 using Extensions;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
+using PublicApi.DTO.v1.Mappers;
 
 namespace WebApp.ApiControllers._1._0
 {
@@ -17,74 +21,57 @@ namespace WebApp.ApiControllers._1._0
     [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
-    
     public class CommentsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
+        private CommentMapper _commentMapper = new CommentMapper();
 
-        public CommentsController(IAppUnitOfWork uow)
+        public CommentsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: api/Comments
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
+        public async Task<ActionResult<IEnumerable<CommentView>>> GetComments()
         {
-            return Ok(await _uow.Comments.DTOAllAsync(User.UserGuidId()));
+            var bllCommentViews = await _bll.Comments.GetAllForViewAsync();
+            var apiCommentViews = bllCommentViews.Select(e => _commentMapper.MapCommentView(e));
+            return apiCommentViews.ToList();
         }
 
         // GET: api/Comments/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<CommentDTO>> GetComment(Guid id)
+        public async Task<ActionResult<Comment>> GetComment(Guid id)
         {
-            var comment = await _uow.Comments.DTOFirstOrDefaultAsync(id, User.UserGuidId());
+            var comment = await _bll.Comments.FirstOrDefaultAsync(id);
 
             if (comment == null)
             {
                 return NotFound();
             }
 
-            return comment;
+            return _commentMapper.MapComment(comment);
         }
 
         // PUT: api/Comments/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-
-        public async Task<IActionResult> PutComment(Guid id, CommentEditDTO commentEditDTO)
+        public async Task<IActionResult> PutComment(Guid id, Comment commentEditDTO)
         {
+            commentEditDTO.AppUserId = User.UserGuidId();
+            
             if (id != commentEditDTO.Id)
             {
                 return BadRequest();
             }
 
-            var comment = await _uow.Comments.FirstOrDefaultAsync(commentEditDTO.Id, User.UserGuidId());
-
-            if (comment == null)
-            {
-                return BadRequest();
-            }
-
-            comment.CommentBody = commentEditDTO.CommentBody;
-            _uow.Comments.Update(comment);
-            
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _uow.Comments.ExistsAsync(id, User.UserGuidId()))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var bllEntity = _commentMapper.Map(commentEditDTO);
+            await _bll.Comments.UpdateAsync(bllEntity, User.UserGuidId());
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -93,30 +80,36 @@ namespace WebApp.ApiControllers._1._0
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-
-        public async Task<ActionResult<CommentCreateDTO>> PostComment(CommentCreateDTO commentCreateDTO)
+        public async Task<ActionResult<Domain.App.Comment>> PostComment(Comment comment)
         {
-            var comment = new Comment()
-            {
-                CommentBody = commentCreateDTO.CommentBody,
-                AppUserId = User.UserGuidId(),
-                PaintingId = commentCreateDTO.PaintingId
-            };
+            comment.AppUserId = User.UserGuidId();
+            comment.CreatedAt = DateTime.Now;
             
-            _uow.Comments.Add(comment);
-            await _uow.SaveChangesAsync();
+            var bllEntity = _commentMapper.Map(comment);
+            
+            _bll.Comments.Add(bllEntity);
+            await _bll.SaveChangesAsync();
+            comment.Id = bllEntity.Id;
 
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Comment>> DeleteComment(Guid id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        public async Task<ActionResult<Domain.App.Comment>> DeleteComment(Guid id)
         {
-            await _uow.Comments.DeleteAsync(id, User.UserGuidId());
-            await _uow.SaveChangesAsync();
+            var comment = await _bll.Comments.FirstOrDefaultAsync(id);
+            
+            if (comment == null)
+            {
+                return NotFound();
+            }
 
-            return RedirectToAction(nameof(Index));
+            await _bll.Comments.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
+
+            return Ok(comment);
         }
 
     }

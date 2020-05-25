@@ -2,127 +2,101 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Mappers;
+using DAL.App.DTO;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using DAL.Base.Mappers;
+using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
-using PublicApi.DTO.v1;
+using Painting = Domain.App.Painting;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PaintingRepository : EFBaseRepository<AppDbContext ,Domain.Painting, DTO.Painting>, IPaintingRepository
+    public class PaintingRepository : EFBaseRepository<AppDbContext, AppUser ,Painting, DTO.Painting>, IPaintingRepository
     {
-        public PaintingRepository(AppDbContext dbContext) : base(dbContext, new BaseDALMapper<Painting, DTO.Painting>())
+        public PaintingRepository(AppDbContext dbContext) : base(dbContext, new PaintingRepositoryMapper())
         {
         }
 
-        public async Task<bool> ExistsAsync(Guid? id, Guid? userId = null)
+        public override async Task<IEnumerable<DTO.Painting>> GetAllAsync(object? userId = null, bool noTracking = true)
         {
-            if (userId != null)
-            {
-                // return await RepoDbSet.AnyAsync(p => p.Id == id && p.AppUserId == userId);
-            }
-            
-            return await RepoDbSet.AnyAsync(p => p.Id == id);
+            var query = PrepareQuery(userId, noTracking);
+
+            query = query
+                .Include(e => e.Artist);
+
+            var domainEntities = await query.ToListAsync();
+            var result = domainEntities.Select(e => Mapper.Map(e));
+
+            return result;
         }
 
-        public async Task<IEnumerable<DTO.Painting>> AllAsync(Guid? userId = null)
+        public override async Task<DTO.Painting> FirstOrDefaultAsync(Guid id, object? userId = null, bool noTracking = true)
+        {
+            var query = PrepareQuery(userId, noTracking);
+
+            var domainPainting = await query.FirstOrDefaultAsync(e => e.Id == id);
+            var result = Mapper.Map(domainPainting);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DALPaintingView>> GetAllForViewAsync()
         {
             var query = RepoDbSet
-                .Include(p => p.Artist)
-                .AsQueryable();
+                .Include(e => e.Artist)
+                .Include(e => e.Comments);
 
-            if (userId != null)
+            var result =  await query.Select(e => new DALPaintingView()
             {
-                //query = query.Where(p => p.AppUserId == userId);
-            }
-            
-            return (await query.ToListAsync()).Select(domainEntity => Mapper.Map(domainEntity));
-        }
-
-        public async Task<DTO.Painting> FirstOrDefaultAsync(Guid? id, Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(p => p.Artist)
-                .Where(p => p.Id == id)
-                .AsQueryable();
-
-            if (userId != null)
-            {
-                //query = query.Where(p => p.AppUserId == userId);
-            }
-
-            return Mapper.Map(await query.FirstOrDefaultAsync());
-        }
-
-        public async Task DeleteAsync(Guid id, Guid? userId = null)
-        {
-            var painting = await FirstOrDefaultAsync(id, userId);
-            base.Remove(painting);
-        }
-
-        /*
-        public async Task<IEnumerable<PaintingDTO>> DTOAllAsync(Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(o => o.Artist)
-                .AsQueryable();
-            
-            if (userId != null)
-            {
-                //query = query.Where(o => o.Animal!.AppUserId == userId && o.Owner!.AppUserId == userId);
-            }
-           return await query
-                .Select(o => new PaintingDTO()
+                Id = e.Id,
+                ArtistId = e.ArtistId,
+                ArtistName = e.Artist!.FirstName + " " + e.Artist.LastName,
+                Description = e.Description,
+                Price = e.Price,
+                Size = e.Size,
+                Title = e.Title,
+                Quantity = e.Quantity,
+                Comments = e.Comments.Select(e => new DALCommentView()
                 {
-                    Id = o.Id,
-                    Title = o.Title,
-                    Size = o.Size,
-                    Price = o.Price,
-                    ArtistId = o.ArtistId,
-                    Artist = new ArtistDTO()
+                    CommentBody = e.CommentBody,
+                    CreatedAt = e.CreatedAt,
+                    CreatedBy = e.AppUser!.Email,
+                    Id = e.Id
+                }).ToList()
+                
+            }).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<DALPaintingView> GetFirstOrDefaultForViewAsync(Guid id, Guid? userId = null)
+        {
+            return await RepoDbSet
+                .Include(e => e.Artist)
+                .Include(e => e.Comments)
+                .Where(e => e.Id == id)
+                .Select(e => new DALPaintingView()
+                {
+                    Id = e.Id,
+                    ArtistId = e.ArtistId,
+                    ArtistName = e.Artist!.FirstName + " " + e.Artist.LastName,
+                    Description = e.Description,
+                    Price = e.Price,
+                    Size = e.Size,
+                    Title = e.Title,
+                    Quantity = e.Quantity,
+                    Comments = e.Comments.Select(e => new DALCommentView()
                     {
-                        Id = o.Artist!.Id,
-                        Country = o.Artist!.Country,
-                        FirstName = o.Artist!.FirstName,
-                        LastName = o.Artist!.LastName,
-                        PaintingCount = o.Artist.Paintings.Count
-                    },
-                }).ToListAsync();
+                        CommentBody = e.CommentBody,
+                        CreatedAt = e.CreatedAt,
+                        CreatedBy = e.AppUser!.Email,
+                        Id = e.Id
+                    }).ToList()
+                    
+                }).FirstOrDefaultAsync();
         }
-
-        public async Task<PaintingDTO> DTOFirstOrDefaultAsync(Guid id, Guid? userId = null)
-        {
-            var query = RepoDbSet
-                .Include(o => o.Artist)
-                .Where(o => o.Id == id)
-                .AsQueryable();
-            
-             if (userId != null)
-             {
-                 //query = query.Where(o => o.Animal!.AppUserId == userId && o.Owner!.AppUserId == userId);
-             }
-             
-            var paintingDTO = await query.Select(o => new PaintingDTO()
-            {
-                Id = o.Id,
-                Title = o.Title,
-                Size = o.Size,
-                Price = o.Price,
-                Artist = new ArtistDTO()
-                {
-                    Id = o.Artist!.Id,
-                    Country = o.Artist!.Country,
-                    FirstName = o.Artist!.FirstName,
-                    LastName = o.Artist!.LastName,
-                    PaintingCount = o.Artist.Paintings.Count,
-                },
-            }).FirstOrDefaultAsync();
-            
-            return paintingDTO;
-        }
-        */
-    
     }
 }

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Contracts.DAL.Base;
+using Contracts.Domain;
 
 namespace DAL.App.DTO
 {
-    public class PaymentMethod : PaymentMethod<Guid>, IDomainBaseEntity
+    public class PaymentMethod : IDomainEntityId
     {
-    }
-
-    public class PaymentMethod<TKey> : IDomainBaseEntity<TKey> 
-        where TKey : IEquatable<TKey>
-    {
-        public TKey Id { get; set; } = default!;
+        public Guid Id { get; set; } = default!;
         
         public string PaymentMethodDescription { get; set; } = default!;
         

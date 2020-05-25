@@ -42,7 +42,7 @@ export class CommentDelete{
         .then((response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 this._alert = null;
-                this.router.navigateToRoute('comments', {});
+                this.router.navigateToRoute('paintingDetails', {id: this._comment!.paintingId});
             } else {
                 this._alert = {
                     message: response.statusCode.toString() + ' - ' + response.errorMessage,

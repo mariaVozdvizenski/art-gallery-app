@@ -8,27 +8,27 @@
         <form submit.trigger="onSubmit($event)">
             <div class="form-group">
                 <label class="control-label" for="FirstName">FirstName</label>
-                <input class="form-control" type="text" maxlength="128" id="FirstName" value.bind="_firstName"/>
+                <input class="form-control" type="text" maxlength="128" id="FirstName" value.bind="_firstName" required/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="LastName">LastName</label>
-                <input class="form-control" type="text" maxlength="128" id="LastName" value.bind="_lastName"/>
+                <input class="form-control" type="text" maxlength="128" id="LastName" value.bind="_lastName" required/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="Bio">Bio</label>
-                <input class="form-control" type="text" maxlength="4096" id="Bio" value.bind="_bio"/>
+                <input class="form-control" type="text" maxlength="4096" id="Bio" value.bind="_bio" required/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="PlaceOfBirth">PlaceOfBirth</label>
-                <input class="form-control" type="text" maxlength="128" id="PlaceOfBirth" value.bind="_placeOfBirth"/>
+                <input class="form-control" type="text" maxlength="128" id="PlaceOfBirth" value.bind="_placeOfBirth" required/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="Country">Country</label>
-                <input class="form-control" type="text" maxlength="128" id="Country" value.bind="_country"/>
+                <input class="form-control" type="text" maxlength="128" id="Country" value.bind="_country" required/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="DateOfBirth">DateOfBirth</label>
-                <input class="form-control" type="datetime-local" id="DateOfBirth" value.bind="_dateOfBirth"/>
+                <input class="form-control" type="datetime-local" id="DateOfBirth" value.bind="_dateOfBirth" required/>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

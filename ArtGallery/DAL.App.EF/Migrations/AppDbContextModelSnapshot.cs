@@ -19,7 +19,7 @@ namespace DAL.App.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Domain.Artist", b =>
+            modelBuilder.Entity("Domain.App.Artist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +34,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -45,7 +46,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -70,7 +72,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Artists");
                 });
 
-            modelBuilder.Entity("Domain.Basket", b =>
+            modelBuilder.Entity("Domain.App.Basket", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,13 +85,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -101,7 +105,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Baskets");
                 });
 
-            modelBuilder.Entity("Domain.BasketItem", b =>
+            modelBuilder.Entity("Domain.App.BasketItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,13 +118,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -140,7 +146,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("BasketItems");
                 });
 
-            modelBuilder.Entity("Domain.Category", b =>
+            modelBuilder.Entity("Domain.App.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -155,20 +161,22 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
+            modelBuilder.Entity("Domain.App.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +189,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("CommentBody")
                         .IsRequired()
@@ -192,7 +201,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("PaintingId")
                         .HasColumnType("uniqueidentifier");
@@ -206,7 +216,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Domain.Identity.AppRole", b =>
+            modelBuilder.Entity("Domain.App.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,6 +225,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(256)")
@@ -234,7 +249,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Domain.Identity.AppUser", b =>
+            modelBuilder.Entity("Domain.App.Identity.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -300,7 +315,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Domain.Invoice", b =>
+            modelBuilder.Entity("Domain.App.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -310,13 +325,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
@@ -344,7 +361,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("Domain.InvoiceStatusCode", b =>
+            modelBuilder.Entity("Domain.App.InvoiceStatusCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -354,7 +371,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -365,7 +383,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("InvoiceStatusDescription")
                         .IsRequired()
@@ -377,7 +396,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("InvoiceStatusCodes");
                 });
 
-            modelBuilder.Entity("Domain.Order", b =>
+            modelBuilder.Entity("Domain.App.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,13 +409,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -417,7 +438,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Domain.OrderItem", b =>
+            modelBuilder.Entity("Domain.App.OrderItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -427,13 +448,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
@@ -450,7 +473,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Domain.OrderStatusCode", b =>
+            modelBuilder.Entity("Domain.App.OrderStatusCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -460,7 +483,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -471,7 +495,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("OrderStatusDescription")
                         .IsRequired()
@@ -483,7 +508,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("OrderStatusCodes");
                 });
 
-            modelBuilder.Entity("Domain.Painting", b =>
+            modelBuilder.Entity("Domain.App.Painting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -496,13 +521,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -529,7 +556,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Paintings");
                 });
 
-            modelBuilder.Entity("Domain.PaintingCategory", b =>
+            modelBuilder.Entity("Domain.App.PaintingCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -542,13 +569,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("PaintingId")
                         .HasColumnType("uniqueidentifier");
@@ -562,7 +591,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("PaintingCategories");
                 });
 
-            modelBuilder.Entity("Domain.Payment", b =>
+            modelBuilder.Entity("Domain.App.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -572,13 +601,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
@@ -596,7 +627,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Domain.PaymentMethod", b =>
+            modelBuilder.Entity("Domain.App.PaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -606,13 +637,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("PaymentMethodCode")
                         .IsRequired()
@@ -621,15 +654,15 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<string>("PaymentMethodDescription")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(4096);
 
                     b.HasKey("Id");
 
                     b.ToTable("PaymentMethods");
                 });
 
-            modelBuilder.Entity("Domain.Shipment", b =>
+            modelBuilder.Entity("Domain.App.Shipment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -639,13 +672,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
@@ -665,7 +700,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Shipments");
                 });
 
-            modelBuilder.Entity("Domain.ShipmentItem", b =>
+            modelBuilder.Entity("Domain.App.ShipmentItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -675,13 +710,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("OrderItemId")
                         .HasColumnType("uniqueidentifier");
@@ -698,7 +735,7 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("ShipmentItems");
                 });
 
-            modelBuilder.Entity("Domain.UserPaymentMethod", b =>
+            modelBuilder.Entity("Domain.App.UserPaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -711,13 +748,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<Guid>("PaymentMethodId")
                         .HasColumnType("uniqueidentifier");
@@ -832,162 +871,162 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Basket", b =>
+            modelBuilder.Entity("Domain.App.Basket", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("Baskets")
+                    b.HasOne("Domain.App.Identity.AppUser", "AppUser")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.BasketItem", b =>
+            modelBuilder.Entity("Domain.App.BasketItem", b =>
                 {
-                    b.HasOne("Domain.Basket", "Basket")
+                    b.HasOne("Domain.App.Basket", "Basket")
                         .WithMany("BasketItems")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Painting", "Painting")
+                    b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("ItemBaskets")
                         .HasForeignKey("PaintingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
+            modelBuilder.Entity("Domain.App.Comment", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("Comments")
+                    b.HasOne("Domain.App.Identity.AppUser", "AppUser")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Painting", "Painting")
+                    b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("Comments")
                         .HasForeignKey("PaintingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Invoice", b =>
+            modelBuilder.Entity("Domain.App.Invoice", b =>
                 {
-                    b.HasOne("Domain.InvoiceStatusCode", "InvoiceStatusCode")
+                    b.HasOne("Domain.App.InvoiceStatusCode", "InvoiceStatusCode")
                         .WithMany("Invoices")
                         .HasForeignKey("InvoiceStatusCodeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Order", "Order")
+                    b.HasOne("Domain.App.Order", "Order")
                         .WithMany("Invoices")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Order", b =>
+            modelBuilder.Entity("Domain.App.Order", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("Orders")
+                    b.HasOne("Domain.App.Identity.AppUser", "AppUser")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.OrderStatusCode", "OrderStatusCode")
+                    b.HasOne("Domain.App.OrderStatusCode", "OrderStatusCode")
                         .WithMany("Orders")
                         .HasForeignKey("OrderStatusCodeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.OrderItem", b =>
+            modelBuilder.Entity("Domain.App.OrderItem", b =>
                 {
-                    b.HasOne("Domain.Order", "Order")
+                    b.HasOne("Domain.App.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Painting", "Painting")
+                    b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("ItemOrders")
                         .HasForeignKey("PaintingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Painting", b =>
+            modelBuilder.Entity("Domain.App.Painting", b =>
                 {
-                    b.HasOne("Domain.Artist", "Artist")
+                    b.HasOne("Domain.App.Artist", "Artist")
                         .WithMany("Paintings")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.PaintingCategory", b =>
+            modelBuilder.Entity("Domain.App.PaintingCategory", b =>
                 {
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("Domain.App.Category", "Category")
                         .WithMany("CategoryPaintings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Painting", "Painting")
+                    b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("PaintingCategories")
                         .HasForeignKey("PaintingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Payment", b =>
+            modelBuilder.Entity("Domain.App.Payment", b =>
                 {
-                    b.HasOne("Domain.Invoice", "Invoice")
+                    b.HasOne("Domain.App.Invoice", "Invoice")
                         .WithMany("Payments")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Shipment", b =>
+            modelBuilder.Entity("Domain.App.Shipment", b =>
                 {
-                    b.HasOne("Domain.Invoice", "Invoice")
+                    b.HasOne("Domain.App.Invoice", "Invoice")
                         .WithMany("Shipments")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Order", "Order")
+                    b.HasOne("Domain.App.Order", "Order")
                         .WithMany("Shipments")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.ShipmentItem", b =>
+            modelBuilder.Entity("Domain.App.ShipmentItem", b =>
                 {
-                    b.HasOne("Domain.OrderItem", "OrderItem")
+                    b.HasOne("Domain.App.OrderItem", "OrderItem")
                         .WithMany("ItemShipments")
                         .HasForeignKey("OrderItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Shipment", "Shipment")
+                    b.HasOne("Domain.App.Shipment", "Shipment")
                         .WithMany("ShipmentItems")
                         .HasForeignKey("ShipmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.UserPaymentMethod", b =>
+            modelBuilder.Entity("Domain.App.UserPaymentMethod", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("UserPaymentMethods")
+                    b.HasOne("Domain.App.Identity.AppUser", "AppUser")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.PaymentMethod", "PaymentMethod")
+                    b.HasOne("Domain.App.PaymentMethod", "PaymentMethod")
                         .WithMany("UserPaymentMethods")
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -996,7 +1035,7 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.AppRole", null)
+                    b.HasOne("Domain.App.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1005,7 +1044,7 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", null)
+                    b.HasOne("Domain.App.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1014,7 +1053,7 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", null)
+                    b.HasOne("Domain.App.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1023,13 +1062,13 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.AppRole", null)
+                    b.HasOne("Domain.App.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Identity.AppUser", null)
+                    b.HasOne("Domain.App.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1038,7 +1077,7 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", null)
+                    b.HasOne("Domain.App.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
