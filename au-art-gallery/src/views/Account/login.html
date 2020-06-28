@@ -5,8 +5,8 @@
             <section>
                 <form id="account" method="post" submit.trigger="onSubmit($event)">
                     <h4>Use a local account to log in.</h4>
-                    <h4 if.bind="_errorMessage != null" style="color: red">${_errorMessage}</h4>
                     <hr />
+                    <h6 if.bind="_errorMessage != null">${_errorMessage}</h6>
                     <div class="form-group">
                         <label for="Input_Email">Email</label>
                         <input class="form-control" type="email" value.bind="_email"/>
@@ -14,15 +14,6 @@
                     <div class="form-group">
                         <label for="Input_Password">Password</label>
                         <input class="form-control" type="password" value.bind="_password" />
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="Input_RememberMe">
-                                <input type="checkbox" id="Input_RememberMe"
-                                    name="Input.RememberMe" value="true" />
-                                Remember me?
-                            </label>
-                        </div>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Log in</button>

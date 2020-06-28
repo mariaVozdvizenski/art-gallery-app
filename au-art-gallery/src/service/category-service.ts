@@ -108,7 +108,7 @@ export class CategoryService {
         }
     }
 
-    async updateCategory(category: ICategoryEdit): Promise<IFetchResponse<ICategory>> {
+    async updateCategory(category: ICategory): Promise<IFetchResponse<ICategory>> {
 
         try {
             const response = await this.httpClient.put(this._baseUrl + '/' + category.id, JSON.stringify(category), {

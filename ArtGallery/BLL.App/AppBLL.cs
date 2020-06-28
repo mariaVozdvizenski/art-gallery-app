@@ -13,7 +13,8 @@ namespace BLL.App
         public AppBLL(IAppUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
-
+        public IAddressService Addresses => 
+            GetService<IAddressService>(() => new AddressService(UOW));
         public IArtistService Artists => 
             GetService<IArtistService>(() => new ArtistService(UOW));
         public IBasketItemService BasketItems => 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using DAL.Base.Mappers;
 using Domain.App.Identity;
@@ -14,7 +15,7 @@ namespace DAL.App.EF.Repositories
 {
     public class OrderRepository : EFBaseRepository<AppDbContext, AppUser, Order, DTO.Order>, IOrderRepository
     {
-        public OrderRepository(AppDbContext dbContext) : base(dbContext, new BaseMapper<Order, DTO.Order>())
+        public OrderRepository(AppDbContext dbContext) : base(dbContext, new OrderRepositoryMapper())
         {
         }
 
@@ -23,11 +24,32 @@ namespace DAL.App.EF.Repositories
             var query = PrepareQuery(userId, noTracking);
 
             query = query
-                .Include(o => o.AppUser);
+                .Include(o => o.AppUser)
+                .Include(e => e.OrderStatusCode)
+                .Include(e => e.Address)
+                .Include(e => e.OrderItems)
+                .ThenInclude(e => e.Painting);
+
             var domainItems = await query.ToListAsync();
             var result = domainItems.Select(o => Mapper.Map(o));
 
             return result;
+        }
+
+        public override async Task<DTO.Order> FirstOrDefaultAsync(Guid id, object? userId = null, bool noTracking = true)
+        {
+            var query = PrepareQuery(userId, noTracking);
+
+            var domainEntity = await query
+                .Include(o => o.AppUser)
+                .Include(e => e.OrderStatusCode)
+                .Include(e => e.Address)
+                .Include(e => e.OrderItems)
+                .ThenInclude(e => e.Painting)
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+            
+            return Mapper.Map(domainEntity);
         }
     }
 }

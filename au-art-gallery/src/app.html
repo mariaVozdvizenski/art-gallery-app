@@ -2,7 +2,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" href="/">ArtGallery</a>
+                <a class="navbar-brand" route-href="home">ArtGallery</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,7 +41,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownAdmin">
                                     <div repeat.for="nav of router.navigation">
-                                        <a href.bind="nav.href" class="dropdown-item text-dark">${nav.title}</a>
+                                        <a href.bind="nav.href" class="dropdown-item text-dark" if.bind="nav.title != 'Orders'">${nav.title}</a>
                                     </div>
                                 </div>
                              </li>

@@ -15,6 +15,7 @@ namespace DAL.App.EF
 {
     public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid>, IBaseEntityTracker
     {
+        public DbSet<Address> Addresses { get; set; } = default!;
         public DbSet<Artist> Artists { get; set; } = default!;
         public DbSet<Basket> Baskets { get; set; } = default!;
         public DbSet<BasketItem> BasketItems { get; set; } = default!;
@@ -53,6 +54,21 @@ namespace DAL.App.EF
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder.Entity<Painting>()
+                .HasMany(p => p.PaintingCategories)
+                .WithOne(pc => pc.Painting!)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Entity<Painting>()
+                .HasMany(p => p.Comments)
+                .WithOne(c => c.Painting!)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Entity<Painting>()
+                .HasMany(p => p.ItemBaskets)
+                .WithOne(bi => bi.Painting!)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         
         public void AddToEntityTracker(IDomainEntityId<Guid> internalEntity, IDomainEntityId<Guid> externalEntity)

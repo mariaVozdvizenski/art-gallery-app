@@ -1,0 +1,32 @@
+<template>
+
+    <div class="container">
+        <h1>Addresses</h1>
+
+        <button class="btn btn-primary" click.delegate="toCreateAddress()"
+            disabled.bind="_addresses.length < 3 ? false : true">Add a new Address</button>
+            <p if.bind="_addresses.length > 2">No more than three addresses allowed per account.</p>
+    </div>
+
+    <div if.bind="_addresses.length == 0">
+        No addresses added yet.
+    </div>
+
+    <div class="card-deck">
+        <div repeat.for="address of _addresses">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title"> ${address.shippingAddress}</h5>
+                    First name: ${address.firstName}
+                    <br>First name: ${address.lastName}
+                    <br>Country: ${address.country}
+                    <br>City: ${address.city}
+                    <br>Zip: ${address.zip}
+                </div>
+                <div class="card-body">
+                    <a route-href="route: accountSettingsEdit; params.bind: {id: address.id}" class="card-link">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

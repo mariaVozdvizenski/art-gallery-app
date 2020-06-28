@@ -10,6 +10,6 @@ namespace Contracts.DAL.App.Repositories
 {
     public interface IBasketRepository: IBaseRepository<Basket>
     {
-        
+        Task<Basket> GetRightBasketForUserAsync(Guid userId, bool noTracking = true);
     }
 }

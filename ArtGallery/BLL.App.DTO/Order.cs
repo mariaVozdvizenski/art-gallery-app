@@ -25,5 +25,8 @@ namespace BLL.App.DTO
 
         public Guid AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
+
+        public Guid AddressId { get; set; }
+        public Address? Address { get; set; }
     }
 }

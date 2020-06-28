@@ -1,0 +1,110 @@
+<template>
+    <h1>Orders</h1>
+
+
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Sort by Date</label>
+        <select class="form-control" id="exampleFormControlSelect1" value.bind="_condition" change.delegate="filter()">
+            <option model.bind="null">Choose...</option>
+            <option model.bind="'ascending'">Oldest first</option>
+            <option model.bind="'descending'">Newest first</option>
+        </select>
+    </div>
+
+
+    <div>
+        <div class="form-check form-check-inline" repeat.for="orderStatus of _orderStatusCodes">
+            <input class="form-check-input" type="checkbox" id="${orderStatus.code}" value="${orderStatus.code}"
+                checked.bind="_orderStatusCodesString" change.delegate="filter()">
+            <label class="form-check-label" for="${orderStatus.code}"> ${orderStatus.code}</label>
+        </div>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Order Details
+                    </th>
+                    <th>
+                        Order Date
+                    </th>
+                    <th>
+                        Order Status
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                    <th>
+                        Items
+                    </th>
+                    <th if.bind="_showDetails == true">
+                        Address
+                    </th>
+                    <th if.bind="_showDetails == true">
+                        Name
+                    </th>
+                    <th if.bind="_showDetails == true">
+                        Country, City, Zip
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="order of _orders">
+                    <td>
+                        ${order.orderDetails}
+                    </td>
+                    <td>
+                        ${order.orderDateString}
+                    </td>
+                    <td>
+                        <b>${order.orderStatusCode}</b> - ${order.orderStatusDescription}
+                        <br>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-secondary" click.delegate="changeStatus(order)"
+                                disabled.bind="order.orderStatusCode == orderStatus.code ? true : false">Mark as
+                                'Delivered'</button>
+                        </div>
+                    </td>
+                    <td>
+                        ${order.total}€
+                    </td>
+                    <td>
+                        <div class="card-group">
+                            <div class="card text-center" style="width: 15rem;" repeat.for="orderItem of order.orderItems">
+                                <img class="card-img-top" src="${orderItem.imageUrl}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <a
+                                            route-href="route: paintingDetails; params.bind: {id: orderItem.paintingId}">${orderItem.paintingTitle}</a>
+                                    </h6>
+                                    <p class="card-text">${orderItem.paintingPrice}€</p>
+                                    <p class="card-text">Quantity: ${orderItem.quantity}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td if.bind="_showDetails == true">
+                        ${order.address.shippingAddress}
+                    </td>
+                    <td if.bind="_showDetails == true">
+                        ${order.address.firstName} ${order.address.lastName}
+                    </td>
+                    <td if.bind="_showDetails == true">
+                        ${order.address.country},
+                        ${order.address.city},
+                        ${order.address.zip}
+                    </td>
+                    <td if.bind="_showDetails == true || _showItemDetails == true">
+                        <button click.delegate="hide()" class="btn btn-primary">Hide details</button>
+                    </td>
+                    <td if.bind="_showDetails == false">
+                        <button click.delegate="changeShowDetails()" class="btn btn-primary">Show shipping
+                            details</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>

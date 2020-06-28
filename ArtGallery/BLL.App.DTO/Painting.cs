@@ -14,6 +14,8 @@ namespace BLL.App.DTO
         [MinLength(1)] 
         public string Description { get; set; } = default!;
         
+        public string ImageName { get; set; } = default!;
+        
         public decimal Price { get; set; }
         
         [MaxLength(36)] 

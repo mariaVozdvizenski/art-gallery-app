@@ -59,28 +59,28 @@ export class AccountRegister {
                     return true;
                 }
                 return false;
-            }).withMessage('The password should contain an uppercase letter!')
+            }).withMessage('The password should contain an uppercase letter.')
 
             .satisfies((value: string, o: unknown) => {
                 if (value.match(/\s/g)) {
                     return false;
                 }
                 return true;
-            }).withMessage('The password shouldnt contain spaces!')
+            }).withMessage('The password shouldnt contain spaces.')
 
             .satisfies((value: string, o: unknown) => {
                 if (value.match(/\d/g)) {
                     return true;
                 }
                 return false;
-            }).withMessage('The password should contain atleast one number!')
+            }).withMessage('The password should contain atleast one number.')
 
             .satisfies((value: string, o: unknown) => {
                 if (value.match(/\W/)) {
                     return true;
                 }
                 return false;
-            }).withMessage('The password should contain atleast one non alphanumeric character!')
+            }).withMessage('The password should contain atleast one non alphanumeric character.')
 
 
             .ensure(p => this._confirmPassword).displayName('Confirm password')

@@ -5,4 +5,6 @@ export interface IComment {
     createdAt: Date;
     createdBy: string;
     paintingId: string;
+    createdAtString?: string;
+    edit?: boolean;
 }

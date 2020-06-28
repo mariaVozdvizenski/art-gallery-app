@@ -1,35 +1,31 @@
-
 <template>
-    <h1>Artists</h1>
 
-    <p>
-        Here we have the talented artists whose artworks have, at some point been sold on our site.
-    </p>
+    <div class="container text-center">
+        <h1>Artists</h1>
+        <p>
+            Here we have the talented artists whose artworks have, at some point been sold on our site.
+        </p>
+    </div>
 
     <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
         <a route-href="route: artistCreate">Create New</a>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr repeat.for="artist of _artists">
-                <td>
-                    <a route-href="route: artistDetails; params.bind: {id: artist.id}"> ${artist.firstName} ${artist.lastName}</a>
-                </td>
-                <td>
-                    <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
-                        <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
-                        <a route-href="route: artistDelete; params.bind: {id: artist.id}">Delete</a>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+
+    <div repeat.for="artist of _artists">
+        <div class="jumbotron jumbotron-fluid jumbotron-artist">
+            <div class="container">
+                <h1 class="display-4 text-white">${artist.firstName}
+                    ${artist.lastName}</h1>
+                <div>
+                    <a class="btn btn-outline-light btn-lg"
+                        route-href="route: artistDetails; params.bind: {id: artist.id}">Learn more</a>
+                </div>
+                <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
+                    <a route-href="route: artistEdit; params.bind: {id: artist.id}">Edit</a> |
+                    <a route-href="route: artistDelete; params.bind: {id: artist.id}">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

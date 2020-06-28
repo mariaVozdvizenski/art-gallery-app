@@ -9,4 +9,5 @@ export interface IArtist {
     dateOfBirth: string;
     placeOfBirth: string;
     bio: string;
+    dateOfBirthString: string;
 }

@@ -16,5 +16,7 @@ namespace DAL.App.DTO
         public Order? Order { get; set; }
 
         public ICollection<ShipmentItem>? ItemShipments { get; set; }
+
+        public int Quantity { get; set; }
     }
 }

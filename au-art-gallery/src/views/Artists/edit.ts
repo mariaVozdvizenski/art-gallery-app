@@ -50,8 +50,8 @@ export class ArtistEdit{
             id: this._artist!.id,
             dateOfBirth: this._artist!.dateOfBirth,
             bio: this._artist!.bio,
-            paintings: this._artist!.paintings
-        }
+            placeOfBirth: this._artist!.placeOfBirth
+        };
 
         console.log(artist.dateOfBirth)
 

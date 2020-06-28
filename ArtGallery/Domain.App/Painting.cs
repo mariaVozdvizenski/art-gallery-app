@@ -12,6 +12,8 @@ namespace Domain.App
         public string Description { get; set; } = default!;
         
         public decimal Price { get; set; }
+
+        public string ImageName { get; set; } = default!;
         
         [MaxLength(36)] 
         [MinLength(1)] 

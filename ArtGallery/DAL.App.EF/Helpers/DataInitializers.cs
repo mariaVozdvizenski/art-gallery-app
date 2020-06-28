@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.Domain;
@@ -6,6 +7,7 @@ using Domain.App;
 using Domain.App.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DAL.App.EF.Helpers
 {
@@ -21,7 +23,8 @@ namespace DAL.App.EF.Helpers
             context.Database.EnsureDeleted();
         }
 
-        public static void SeedIdentity(UserManager<AppUser> userManager, RoleManager<Domain.App.Identity.AppRole> roleManager)
+        public static void SeedIdentity(UserManager<AppUser> userManager, RoleManager<Domain.App.Identity.AppRole> roleManager,
+            AppDbContext context)
         {
             var roles = new (string roleName, string roleDisplayName)[]
             {
@@ -76,10 +79,11 @@ namespace DAL.App.EF.Helpers
 
                 var roleResult = userManager.AddToRoleAsync(user, "admin").Result;
                 roleResult = userManager.AddToRoleAsync(user, "user").Result;
+                AddDefaultBasket(user, context);
             }
         }
         
-        private static void AddDataToDb<TEntity> (TEntity[] entities, AppDbContext context)
+        private static async void AddDataToDb<TEntity> (TEntity[] entities, AppDbContext context)
         where TEntity : class, IDomainEntityId
         {
             DbSet<TEntity> entityDbSet = context.Set<TEntity>();
@@ -88,10 +92,10 @@ namespace DAL.App.EF.Helpers
             {
                 if (!entityDbSet.Any(l => l.Id == entity.Id))
                 {
-                    entityDbSet.Add(entity);
+                    await entityDbSet.AddAsync(entity);
                 }
             }
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
         
         public static void SeedData(AppDbContext context)
@@ -196,6 +200,29 @@ namespace DAL.App.EF.Helpers
             };
             
             AddDataToDb(invoiceStatusCodes, context);
+        }
+
+        private static async void AddDefaultBasket(AppUser appUser, AppDbContext context)
+        {
+            var basket = new Basket()
+            {
+                AppUser = appUser,
+                AppUserId = appUser.Id,
+                ChangedAt = DateTime.Now,
+                ChangedBy = appUser.Email,
+                CreatedAt = DateTime.Now,
+                CreatedBy = appUser.Email,
+                Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                DateCreated = DateTime.Now,
+            };
+            
+            var baskets = context.Set<Basket>();
+
+            if (!baskets.Any(b => b.Id == basket.Id))
+            {
+               await baskets.AddAsync(basket);
+            }
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -7,24 +7,46 @@
     </div>
     </p>
 
-    <label for="cars">Filter: </label>
+    <div>
+        <label for="options">Sort by Price</label>
+        <select name="options" id="options" value.bind="_filterOption" class="form-control" change.delegate="filter()">
+            <option value="ascending">Price ascending</option>
+            <option value="descending">Price descending</option>
+        </select>
 
-    <select name="cars" id="cars">
-        <option value="volvo">Price ascending</option>
-        <option value="saab">Price descending</option>
-        <option value="saab">Date added</option>
-    </select>
+        <input id="inStock" type="checkbox" checked.bind="_inStock" change.delegate="filter()">
+        <label for="inStock">In stock</label>
+        
+        <div repeat.for="category of _categories" class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="${category.categoryName}"
+                value.bind="category.categoryName" checked.bind="_categoryNames" change.delegate="filter()">
+            <label class="form-check-label" for="${category.categoryName}">${category.categoryName}</label>
+        </div>
+    </div>
 
-    <div class="card-deck">
+    <div class="card-group">
         <div repeat.for="painting of _paintings">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src=${imageURL} alt="Card image cap">
+            <div class="card text-center" style="width: 22rem;">
+                <a route-href="route: paintingDetails; params.bind: {id: painting.id}">
+                    <img class="card-img-top" src="${painting.imageUrl}" alt="Card image cap">
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">${painting.title}</h5>
                     <h6 class="card-subtitle">${painting.price} €</h6>
-                    <h6 class="card-subtitle">${painting.artistName}</h6>
+                    <br>
+
+                    <h6 class="card-subtitle">
+                        <a route-href="route: artistDetails; params.bind: {id: painting.artistId}">
+                            ${painting.artistName}</a>
+                    </h6>
+                    <div class="card-subtitle">
+                        <ul class="list-inline">
+                            <li class="list-inline-item" repeat.for="category of painting.paintingCategories">
+                                ${category.categoryName}</li>
+                        </ul>
+                    </div>
                     <a route-href="route: paintingDetails; params.bind: {id: painting.id}"
-                        class="btn btn-primary">Details</a>
+                        class="btn btn-outline-dark" role="button">Details</a>
                     <div if.bind="appState.jwt !== null && appState.UserIsAdmin()">
                         <a route-href="route: paintingEdit; params.bind: {id: painting.id}">Edit</a> |
                         <a route-href="route: paintingDelete; params.bind: {id: painting.id}">Delete</a>

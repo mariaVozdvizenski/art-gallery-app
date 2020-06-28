@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BLL.App.DTO;
 using Contracts.BLL.App;
-using Domain.App.Identity;
 using Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PublicApi.DTO.v1;
 using PublicApi.DTO.v1.Identity;
-using AppRole = Domain.App.Identity.AppRole;
-using AppUser = Domain.App.Identity.AppUser;
-using Basket = BLL.App.DTO.Basket;
 
 namespace WebApp.ApiControllers._1._0.Identity
 {

@@ -7,9 +7,9 @@
                 <h4>Create a new account.</h4>
                 <ul if.bind="validationController.errors">
                     <li repeat.for="error of validationController.errors">
-                      ${error.message}
+                        ${error.message}
                     </li>
-                  </ul>
+                </ul>
                 <div if.bind="_errorMessage">
                     ${_errorMessage}
                 </div>
@@ -21,21 +21,27 @@
                 </div>
                 <div class="form-group">
                     <label for="Input_Email">Email</label>
-                    <input class="form-control" type="email" data-val="true"
-                         id="Input_Email" name="Input.Email" value.bind="_email & validate"/>
+                    <input class="form-control" type="email" data-val="true" id="Input_Email" name="Input.Email"
+                        value.bind="_email & validate" />
                 </div>
                 <div class="form-group">
                     <label for="Input_Password">Password</label>
-                    <input class="form-control" type="password" value.bind="_password & validate"
-                         id="Input_Password" maxlength="100"
-                        name="Input.Password" />
+                    <input class="form-control" type="password" value.bind="_password & validate" id="Input_Password"
+                        maxlength="100" name="Input.Password" />
                 </div>
                 <div class="form-group">
                     <label for="Input_ConfirmPassword">Confirm password</label>
-                    <input class="form-control" type="password" 
-                        id="Input_ConfirmPassword" value.bind ="_confirmPassword & validate" name="Input.ConfirmPassword" />
+                    <input class="form-control" type="password" id="Input_ConfirmPassword"
+                        value.bind="_confirmPassword & validate" name="Input.ConfirmPassword" />
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a route-href="route: account-login">Login</a>
+                    </p>
+                </div>
             </form>
         </div>
         <div class="col-md-6 col-md-offset-2">

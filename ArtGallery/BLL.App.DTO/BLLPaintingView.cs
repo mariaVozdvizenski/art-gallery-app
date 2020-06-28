@@ -11,6 +11,8 @@ namespace BLL.App.DTO
 
         public decimal Price { get; set; }
         
+        public string ImageName { get; set; } = default!;
+
         [MaxLength(4096)] 
         [MinLength(1)] 
         public string Description { get; set; } = default!;
@@ -29,5 +31,6 @@ namespace BLL.App.DTO
         public string ArtistName { get; set; } = default!;
 
         public ICollection<BLLCommentView>? Comments { get; set; }
+        public ICollection<PaintingCategory>? PaintingCategories { get; set; }
     }
 }

@@ -1,27 +1,57 @@
 <template>
-    <h1>Index</h1>
+    <h1>Your Cart</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Date Created
-            </th>
-            <th>
-                Username
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr repeat.for="basket of _baskets">
-            <td>
-                ${basket.dateCreated}
-            </td>
-            <td>
-                ${basket.userName}
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <div if.bind="_baskets[0].basketItems.length < 1">
+        Your cart is empty!
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Size
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="basketItem of _baskets[0].basketItems">
+                <td><a route-href="route: paintingDetails; params.bind: {id: basketItem.paintingId}">${basketItem.paintingTitle}</a>
+                        <p><img src="${basketItem.imageUrl}" class="img-thumbnail" style="height:200px"></p>
+                </td>
+                <td>${basketItem.paintingPrice} €</td>
+                <td>${basketItem.paintingSize} cm</td>
+                <form>
+                    <td><select value.bind="basketItem.quantity" if.bind="basketItem.paintingQuantity > 0" change.delegate="onUpdate(basketItem.id, basketItem.quantity)">
+                            <option model.bind="i" repeat.for="i of basketItem.paintingQuantity + 1" if.bind="i != 0">
+                                ${i}
+                            </option>
+                        </select>
+                        <div class="form-group">
+                            <input type="submit" value="Delete from Cart" class="btn btn-primary"
+                                click.trigger="onDelete(basketItem.id)" />
+                            <div if.bind="basketItem.paintingQuantity === 0">
+                                <b>Painting is out of stock</b>
+                            </div>
+                        </div>
+                    </td>
+                </form>
+            </tr>
+            <div if.bind="_total !== 0">
+                <h2>Total: ${_total} € </h2>
+            </div>
+        </tbody>
+    </table>
+    <div if.bind="_total !== 0 && isInStock() == true">
+        <button class="btn btn-primary" click.delegate="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
 </template>

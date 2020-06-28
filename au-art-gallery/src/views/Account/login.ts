@@ -30,6 +30,9 @@ export class AccountLogin{
                     console.log(this.appState);
                 } else {
                     this._errorMessage = response.statusCode.toString() + ' ' + response.errorMessage!
+                    if (response.statusCode == 404 || response.statusCode == 400){
+                        this._errorMessage = "Incorrect email or password."
+                    }
                 }
             }
         )

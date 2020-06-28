@@ -13,6 +13,8 @@ namespace DAL.App.DTO
         
         public decimal Price { get; set; }
         
+        public string ImageName { get; set; } = default!;
+
         public string Title { get; set; } = default!;
         
         public string Size { get; set; } = default!;

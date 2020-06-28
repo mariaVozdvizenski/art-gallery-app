@@ -3,6 +3,7 @@ using BLL.App.DTO;
 using BLL.Base.Mappers;
 using DAL.App.DTO;
 using DAL.App.DTO.Identity;
+using Address = DAL.App.DTO.Address;
 using Artist = DAL.App.DTO.Artist;
 using Basket = DAL.App.DTO.Basket;
 using BasketItem = DAL.App.DTO.BasketItem;
@@ -30,6 +31,7 @@ namespace BLL.App.Mappers
         
         public AppServiceBaseMapper()
         {
+            MapperConfigurationExpression.CreateMap<Address, DTO.Address>();
             MapperConfigurationExpression.CreateMap<Artist, DTO.Artist>();
             MapperConfigurationExpression.CreateMap<BasketItem, DTO.BasketItem>();
             MapperConfigurationExpression.CreateMap<Basket, DTO.Basket>();
@@ -51,7 +53,7 @@ namespace BLL.App.Mappers
             MapperConfigurationExpression.CreateMap<DALPaintingView, BLLPaintingView>();
             MapperConfigurationExpression.CreateMap<DALCommentView, BLLCommentView>();
 
-            
+            MapperConfigurationExpression.CreateMap<DTO.Address, Address>();
             MapperConfigurationExpression.CreateMap<DTO.Artist, Artist>();
             MapperConfigurationExpression.CreateMap<DTO.BasketItem, BasketItem>();
             MapperConfigurationExpression.CreateMap<DTO.Basket, Basket>();
@@ -72,6 +74,7 @@ namespace BLL.App.Mappers
             MapperConfigurationExpression.CreateMap<DTO.Identity.AppUser, AppUser>();
             MapperConfigurationExpression.CreateMap<BLLPaintingView, DALPaintingView>();
             MapperConfigurationExpression.CreateMap<BLLCommentView, DALCommentView>();
+            
             
             Mapper = new Mapper(new MapperConfiguration(MapperConfigurationExpression));
         }

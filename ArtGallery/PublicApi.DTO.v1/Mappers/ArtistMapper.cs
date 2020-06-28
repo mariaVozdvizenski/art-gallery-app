@@ -16,6 +16,7 @@ namespace PublicApi.DTO.v1.Mappers
                 FirstName = inObject.FirstName,
                 Id = inObject.Id,
                 LastName = inObject.LastName,
+                PlaceOfBirth = inObject.PlaceOfBirth,
                 Paintings = inObject.Paintings.Select(e => new Painting()
                 {
                     Id = e.Id,
@@ -23,8 +24,9 @@ namespace PublicApi.DTO.v1.Mappers
                     ArtistId = e.ArtistId,
                     Description = e.Description,
                     Price = e.Price,
-                    Size = e.Size
-                    
+                    Size = e.Size,
+                    Quantity = e.Quantity,
+                    ImageName = e.ImageName
                 }).ToList()
             };
         }

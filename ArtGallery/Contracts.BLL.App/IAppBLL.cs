@@ -6,6 +6,7 @@ namespace Contracts.BLL.App
 {
     public interface IAppBLL : IBaseBLL
     {
+        IAddressService Addresses { get;  }
         IArtistService Artists { get; }
         IBasketItemService BasketItems { get; }
         IBasketService Baskets { get; }

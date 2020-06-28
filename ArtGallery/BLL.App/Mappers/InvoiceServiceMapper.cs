@@ -8,13 +8,13 @@ namespace BLL.App.Mappers
 {
     public class InvoiceServiceMapper :  IInvoiceServiceMapper
     {
-        private readonly InvoiceStatusCodeMapper _invoiceStatusCodeMapper;
+        private readonly InvoiceStatusCodeServiceMapper _invoiceStatusCodeMapper;
         private readonly OrderServiceMapper _orderServiceMapper;
         private readonly PaymentServiceMapper _paymentServiceMapper;
         private readonly ShipmentServiceMapper _shipmentServiceMapper;
         public InvoiceServiceMapper()
         {
-            _invoiceStatusCodeMapper = new InvoiceStatusCodeMapper();
+            _invoiceStatusCodeMapper = new InvoiceStatusCodeServiceMapper();
             _orderServiceMapper = new OrderServiceMapper();
             _paymentServiceMapper = new PaymentServiceMapper();
             _shipmentServiceMapper = new ShipmentServiceMapper();

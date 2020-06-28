@@ -7,6 +7,7 @@ namespace Contracts.DAL.App
 {
     public interface IAppUnitOfWork : IBaseUnitOfWork, IBaseEntityTracker
     {
+         IAddressRepository Addresses { get; }
          IArtistRepository Artists { get; }
          IBasketRepository Baskets { get; }
          IBasketItemRepository BasketItems { get; }

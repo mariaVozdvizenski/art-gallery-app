@@ -18,5 +18,6 @@ namespace PublicApi.DTO.v1.Identity
         public ICollection<string> UserRoles { get; set; } = default!;
 
         public Guid AppUserId { get; set; }
+
     }
 }

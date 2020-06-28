@@ -1,0 +1,33 @@
+<template>
+    <h1>Payment Methods</h1>
+
+<p>
+    <a route-href="paymentMethodsCreate">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Payment Method Description
+            </th>
+            <th>
+                Payment Method Code
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr repeat.for="paymentMethod of _paymentMethods">
+            <td>
+                ${paymentMethod.paymentMethodDescription}
+            </td>
+            <td>
+                ${paymentMethod.paymentMethodCode}
+            </td>
+            <td>
+                <a route-href="route: paymentMethodsEdit; params.bind: {id: paymentMethod.id}">Edit</a> |
+                <a route-href="route: paymentMethodsDelete; params.bind: {id: paymentMethod.id}">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</template>

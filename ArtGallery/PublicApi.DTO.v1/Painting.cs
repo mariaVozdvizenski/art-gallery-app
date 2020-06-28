@@ -10,6 +10,8 @@ namespace PublicApi.DTO.v1
         [MinLength(1)] [MaxLength(36)] 
         public string Title { get; set; } = default!;
         
+        public string ImageName { get; set; } = default!;
+
         [MaxLength(4096)] 
         [MinLength(1)] 
         public string Description { get; set; } = default!;
@@ -22,6 +24,6 @@ namespace PublicApi.DTO.v1
         [MinLength(1)]  
         public string Size { get; set; } = default!;
         
-        public Guid ArtistId { get; set; } 
+        public Guid ArtistId { get; set; }
     }
 }

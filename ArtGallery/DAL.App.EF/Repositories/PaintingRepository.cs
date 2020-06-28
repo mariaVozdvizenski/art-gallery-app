@@ -16,6 +16,7 @@ namespace DAL.App.EF.Repositories
 {
     public class PaintingRepository : EFBaseRepository<AppDbContext, AppUser ,Painting, DTO.Painting>, IPaintingRepository
     {
+        private readonly PaintingCategoryRepositoryMapper _paintingCategoryRepositoryMapper = new PaintingCategoryRepositoryMapper();
         public PaintingRepository(AppDbContext dbContext) : base(dbContext, new PaintingRepositoryMapper())
         {
         }
@@ -47,7 +48,9 @@ namespace DAL.App.EF.Repositories
         {
             var query = RepoDbSet
                 .Include(e => e.Artist)
-                .Include(e => e.Comments);
+                .Include(e => e.Comments)
+                .Include(e => e.PaintingCategories)
+                .ThenInclude(pc => pc.Category);
 
             var result =  await query.Select(e => new DALPaintingView()
             {
@@ -56,6 +59,7 @@ namespace DAL.App.EF.Repositories
                 ArtistName = e.Artist!.FirstName + " " + e.Artist.LastName,
                 Description = e.Description,
                 Price = e.Price,
+                ImageName = e.ImageName,
                 Size = e.Size,
                 Title = e.Title,
                 Quantity = e.Quantity,
@@ -65,10 +69,9 @@ namespace DAL.App.EF.Repositories
                     CreatedAt = e.CreatedAt,
                     CreatedBy = e.AppUser!.Email,
                     Id = e.Id
-                }).ToList()
-                
+                }).ToList(),
+                PaintingCategories = e.PaintingCategories.Select(e => _paintingCategoryRepositoryMapper.Map(e)).ToList()
             }).ToListAsync();
-
             return result;
         }
 
@@ -77,6 +80,8 @@ namespace DAL.App.EF.Repositories
             return await RepoDbSet
                 .Include(e => e.Artist)
                 .Include(e => e.Comments)
+                .Include(e => e.PaintingCategories)
+                .ThenInclude(pc => pc.Category)
                 .Where(e => e.Id == id)
                 .Select(e => new DALPaintingView()
                 {
@@ -85,6 +90,7 @@ namespace DAL.App.EF.Repositories
                     ArtistName = e.Artist!.FirstName + " " + e.Artist.LastName,
                     Description = e.Description,
                     Price = e.Price,
+                    ImageName = e.ImageName,
                     Size = e.Size,
                     Title = e.Title,
                     Quantity = e.Quantity,
@@ -94,8 +100,8 @@ namespace DAL.App.EF.Repositories
                         CreatedAt = e.CreatedAt,
                         CreatedBy = e.AppUser!.Email,
                         Id = e.Id
-                    }).ToList()
-                    
+                    }).ToList(),
+                    PaintingCategories = e.PaintingCategories.Select(e => _paintingCategoryRepositoryMapper.Map(e)).ToList()
                 }).FirstOrDefaultAsync();
         }
     }

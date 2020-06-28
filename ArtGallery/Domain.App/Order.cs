@@ -15,6 +15,9 @@ namespace Domain.App
 
         public Guid OrderStatusCodeId { get; set; } = default!;
         public OrderStatusCode? OrderStatusCode { get; set; }
+        
+        public Guid AddressId { get; set; }
+        public Address? Address { get; set; }
 
         public ICollection<Shipment>? Shipments { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }

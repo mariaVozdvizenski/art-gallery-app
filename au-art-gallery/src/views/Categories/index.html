@@ -10,10 +10,6 @@
                 <th>
                     CategoryName
                 </th>
-                <th>
-                    PaintingCount
-                </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -22,11 +18,7 @@
                     ${category.categoryName}
                 </td>
                 <td>
-                    ${category.paintingCount}
-                </td>
-                <td>
                     <a route-href="route: categoryEdit; params.bind: {id: category.id}">Edit</a> |
-                    <a route-href="route: categoryDetails; params.bind: {id: category.id}">Details</a> |
                     <a route-href="route: categoryDelete; params.bind: {id: category.id}">Delete</a>
                 </td>
             </tr>

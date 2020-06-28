@@ -9,7 +9,6 @@ namespace BLL.App.Mappers
     {
         public PaintingServiceMapper()
         {
-            
         }
 
         public BLLPaintingView MapPaintingView(DALPaintingView inObject)

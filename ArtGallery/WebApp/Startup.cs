@@ -189,7 +189,7 @@ namespace WebApp
             if (configuration.GetValue<bool>("DataInitialization:SeedIdentity"))
             {
                 logger.LogInformation("SeedIdentity");
-                DataInitializers.SeedIdentity(userManager, roleManager);
+                DataInitializers.SeedIdentity(userManager, roleManager, context);
             }
 
             if (configuration.GetValue<bool>("DataInitialization:SeedData"))

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace PublicApi.DTO.v1
 {
@@ -11,5 +13,7 @@ namespace PublicApi.DTO.v1
         public Guid Id { get; set; }
 
         public string UserName { get; set; } = default!;
+
+        public ICollection<BasketItemView>? BasketItems { get; set; }
     }
 }

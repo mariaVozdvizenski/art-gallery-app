@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using DAL.Base.Mappers;
 using Domain.App;
@@ -14,7 +15,7 @@ namespace DAL.App.EF.Repositories
     public class PaintingCategoryRepository : EFBaseRepository<AppDbContext, AppUser, PaintingCategory, DTO.PaintingCategory>,
         IPaintingCategoryRepository
     {
-        public PaintingCategoryRepository(AppDbContext dbContext) : base(dbContext, new BaseMapper<PaintingCategory, DTO.PaintingCategory>())
+        public PaintingCategoryRepository(AppDbContext dbContext) : base(dbContext, new PaintingCategoryRepositoryMapper())
         {
         }
 

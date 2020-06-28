@@ -1,5 +1,5 @@
 <template>
-    <h1> ${_painting.title}</h1>
+    <h1 class="details-title"> ${_painting.title}</h1>
 
     <div>
         <a route-href="route: paintings">Back to Gallery</a>
@@ -7,35 +7,57 @@
             route-href="route: paintingEdit; params.bind: {id: _painting.id}">| Edit</a>
     </div>
 
-    <div class="card mb-3">
-        <img class="card-img-top" src=${imageURL} alt="Card image cap">
+    <div class="card mb-2 text-center border-light" >
+        <img class="card-img-top" src="${_imgSource}" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">${_painting.price} €</h5>
-            <p class="card-text">Artist:
+            <p class="card-text">Made by
                 <a route-href="route: artistDetails; params.bind: {id: _painting.artistId}">${_painting.artistName}
                 </a></p>
-            <p class="card-text">${_painting.description}</p>
-            <p class="card-text">Size: ${_painting.size} cm</p>
-            <div if.bind="appState.jwt === null">
-                Please <a route-href="route: account-login">log in</a> to make a purchase.
+            <p class="card-text lead">${_painting.description}</p>
+            <p class="card-text">${_painting.size} cm</p>
+
+            <div if.bind="_painting.quantity == 0">
+                <b>Painting is out of stock.</b>
             </div>
-            <input class="btn btn-primary" value="Buy Now" disabled.bind="appState.jwt != null ? false : true"/>
-            <input class="btn btn-primary" value="Add to Cart" disabled.bind="appState.jwt != null ? false : true"/>
+            <div if.bind="_painting.quantity > 0">
+                <div if.bind="appState.jwt === null">
+                    <p class="card-text">Please <a route-href="route: account-login">log in</a> to make a purchase.</p>
+                </div>
+                <form>
+                    <div if.bind="_alert !== null">
+                        ${_alert.message}
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Buy Now"
+                            disabled.bind="appState.jwt != null ? false : true" />
+                        <input type="submit" class="btn btn-primary" value="Add to Cart"
+                            disabled.bind="appState.jwt != null ? false : true"
+                            click.trigger="addToCart(itemQuantity)" />
+                        Quantity
+                        <select value.bind="_quantity">
+                            <option model.bind="i" repeat.for="i of _painting.quantity + 1" if.bind="i != 0">${i}
+                            </option>
+                        </select>
+                        <p if.bind="_success !== null">${_success}</p>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <form>
-
-        <textarea placeholder="What do you think about this painting?" maxlength="4096" rows="4" cols="50" ,
-            value.bind="_comment.commentBody"></textarea>
+        <div class="form-group">
+            <textarea class="form-control" value.bind="_comment.commentBody" id="exampleFormControlTextarea1" rows="3"
+                placeholder="What do you think about this painting?"></textarea>
+        </div>
 
         <div class="form-group">
+            <input type="submit" value="Post" class="btn btn-primary" click.trigger="onSubmit($event)"
+                disabled.bind="appState.jwt != null ? false : true" />
             <div if.bind="appState.jwt === null">
                 Please <a route-href="route: account-login">log in</a> to leave a comment.
             </div>
-
-            <input type="submit" value="Post" class="btn btn-primary" click.trigger="onSubmit($event)"
-                disabled.bind="appState.jwt != null ? false : true" />
         </div>
 
     </form>
@@ -52,13 +74,23 @@
         <tbody>
             <tr repeat.for="comment of _painting.comments">
                 <td>
-                    <p>
-                    <div>${comment.createdBy} ${comment.createdAt}</div> <b>${comment.commentBody}</b></p>
+                    <div if.bind="comment.edit != true">
+                        ${comment.createdBy} ${comment.createdAtString}
+                        <p>${comment.commentBody}</p>
+                    </div>
+                    <div if.bind="comment.edit == true">
+                        <textarea class="form-control" value.bind="_tempCommentBody" id="exampleFormControlTextarea1"
+                            rows="3"></textarea>
+                    </div>
                     <div if.bind="appState.jwt != null && appState.UserIsAdmin()">
                         <a route-href="route: commentDelete; params.bind: {id: comment.id}">Delete</a>
                     </div>
-                    <div if.bind="appState.jwt != null && appState.userName == comment.createdBy">
-                        <a route-href="route: commentEdit; params.bind: {id: comment.id}">Edit</a>
+                    <div if.bind="appState.jwt != null && appState.userName == comment.createdBy && comment.edit != true">
+                        <button type="button" class="btn btn-secondary" click.delegate="editComment(comment, true)">Edit</button>
+                    </div>
+                    <div if.bind="appState.jwt != null && appState.userName == comment.createdBy && comment.edit == true">
+                        <button type="button" class="btn btn-secondary" click.delegate="editComment(comment, false)">Cancel</button>
+                        <button type="button" class="btn btn-primary" click.delegate="updateComment(comment)" disabled.bind="_tempCommentBody.length > 0 ? false : true">Post</button>
                     </div>
                 </td>
             </tr>

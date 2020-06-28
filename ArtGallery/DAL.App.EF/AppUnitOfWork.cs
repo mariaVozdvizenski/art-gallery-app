@@ -15,6 +15,8 @@ namespace DAL.App.EF
         {
         }
         
+        public IAddressRepository Addresses =>
+            GetRepository<IAddressRepository>(() => new AddressRepository(UOWDbContext));
         public IArtistRepository Artists => 
             GetRepository<IArtistRepository>(() => new ArtistRepository(UOWDbContext));
         public IBasketRepository Baskets => 

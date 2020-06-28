@@ -1,9 +1,11 @@
-﻿using BLL.App.DTO;
+﻿using System.Threading.Tasks;
+using BLL.App.DTO;
 using Contracts.BLL.Base.Services;
 
 namespace Contracts.BLL.App.Services
 {
     public interface IOrderItemService : IBaseEntityService<OrderItem>
     {
+        public Task ReducePaintingQuantityAsync(OrderItem orderItem);
     }
 }

@@ -1,4 +1,5 @@
-﻿using BLL.App.Mappers;
+﻿using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Mappers;
 using Contracts.BLL.App.Services;
@@ -15,5 +16,14 @@ namespace BLL.App.Services
         public OrderItemService(IAppUnitOfWork uow) : base(uow, uow.OrderItems, new OrderItemServiceMapper())
         {
         }
+
+        public async Task ReducePaintingQuantityAsync(OrderItem orderItem)
+        {
+            var painting = await UOW.Paintings.FirstOrDefaultAsync(orderItem.PaintingId);
+            painting.Quantity -= orderItem.Quantity;
+            
+            await UOW.Paintings.UpdateAsync(painting);
+        }
+        
     }
 }

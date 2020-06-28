@@ -19,6 +19,64 @@ namespace DAL.App.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Domain.App.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("Zip")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("Domain.App.Artist", b =>
                 {
                     b.Property<Guid>("Id")
@@ -402,6 +460,9 @@ namespace DAL.App.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -430,6 +491,8 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("AppUserId");
 
@@ -463,6 +526,9 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<Guid>("PaintingId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -536,8 +602,15 @@ namespace DAL.App.EF.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(4096);
 
+                    b.Property<string>("ImageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<string>("Size")
                         .IsRequired()
@@ -871,6 +944,15 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.App.Address", b =>
+                {
+                    b.HasOne("Domain.App.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.App.Basket", b =>
                 {
                     b.HasOne("Domain.App.Identity.AppUser", "AppUser")
@@ -891,7 +973,7 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("ItemBaskets")
                         .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -906,7 +988,7 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("Comments")
                         .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -927,6 +1009,12 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.App.Order", b =>
                 {
+                    b.HasOne("Domain.App.Address", "Address")
+                        .WithMany("AddressOrders")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.App.Identity.AppUser", "AppUser")
                         .WithMany()
                         .HasForeignKey("AppUserId")
@@ -975,7 +1063,7 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.App.Painting", "Painting")
                         .WithMany("PaintingCategories")
                         .HasForeignKey("PaintingId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

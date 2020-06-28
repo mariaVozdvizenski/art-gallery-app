@@ -19,6 +19,16 @@
                     <input class="form-control" type="text"  id="Size" maxlength="16" name="Size" value.bind="_painting.size" required/>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="file">Image</label>
+                    <input name="file" id="file" type="file" accept=".jpg,.png" files.bind="_selectedFile" placeholder="_selectedFile ? 'New image selected' : 'Previous image selected' "
+                        class="form-control"/>
+                    <button class="btn btn-primary" click.delegate="revertToPrevious()">Revert to previous</button>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Quantity">Quantity</label>
+                    <input class="form-control" type="number"  id="Size" maxlength="16" name="Size" value.bind="_painting.quantity" required/>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="Artist">Artist</label>
                     <select class="form-control" type="text"  id="Artist" maxlength="36" name="Artist" value.bind="_artistId">
                         <option repeat.for="artist of _artists" value.bind="artist.id">${artist.firstName} ${artist.lastName}</option>
@@ -27,6 +37,17 @@
                 <div class="form-group">
                     <label class="control-label" for="Size">Description</label>
                     <input class="form-control" type="text"  id="Description" maxlength="4096" name="Description" value.bind="_painting.description" required/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="PaintingCategories">Painting Categories</label>
+                    <div repeat.for="category of _categories">
+                        <input type="checkbox" value.bind="category.id" checked.bind="_categoryIds">
+                        <label>${category.categoryName}</label>
+                    </div>
+                    <p>Previously selected categories:</p>
+                    <ul if.bind="_painting.paintingCategories">
+                        <li repeat.for="category of _painting.paintingCategories">${category.categoryName}</li>
+                    </ul>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />

@@ -10,5 +10,9 @@ namespace Contracts.DAL.App.Repositories
 {
     public interface IBasketItemRepository : IBaseRepository<BasketItem>
     {
+        Task<IEnumerable<BasketItem>> GetAllForUserBasketAsync(Guid basketId, object? userId = null
+            , bool noTracking = true);
+
+        Task<BasketItem> GetFirstForUserBasketAsync(Guid id, Guid basketId, object? userId = null, bool noTracking = true);
     }
 }

@@ -11,6 +11,8 @@ namespace PublicApi.DTO.v1
 
         public decimal Price { get; set; }
         
+        public string ImageName { get; set; } = default!;
+
         [MaxLength(4096)] 
         [MinLength(1)] 
         public string Description { get; set; } = default!;
@@ -29,5 +31,6 @@ namespace PublicApi.DTO.v1
         public string ArtistName { get; set; } = default!;
 
         public ICollection<CommentView>? Comments { get; set; }
+        public ICollection<PaintingCategoryView>? PaintingCategories { get; set; }
     }
 }

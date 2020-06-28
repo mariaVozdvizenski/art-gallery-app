@@ -1,0 +1,132 @@
+<template>
+    <h1>Checkout</h1>
+    <div class="form-group">
+        Please choose a payment method
+        <select class="form-control" value.bind="_paymentMethod">
+            <option model.bind="paymentMethod.paymentMethodCode" repeat.for="paymentMethod of _paymentMethods">
+                ${paymentMethod.paymentMethodCode}
+            </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        Please choose an address
+        <select class="form-control" value.bind="_addressId">
+            <option repeat.for="address of _addresses" model.bind="address.id">
+                ${address.shippingAddress}
+            </option>
+        </select>
+        <div if.bind="_success != null">
+            ${_success}
+        </div>
+    </div>
+
+    <div class="form-group">
+        Or create a new one
+        <button click.delegate="changeCreateNew()" class="btn btn-primary" disabled.bind="_addresses.length <= 2 ? false : true">Add a new address</button>
+        <p if.bind="_addresses.length > 2">No more than three addresses allowed per account.</p>
+    </div>
+
+    <div if.bind="_createNew">
+        <form submit.trigger="addNewAddress()">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="control-label" for="FirstName">First Name</label>
+                    <input class="form-control" type="text" maxlength="128" id="FirstName"
+                        value.bind="_newAddress.firstName" required />
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label" for="LastName">Last Name</label>
+                    <input class="form-control" type="text" maxlength="128" id="LastName"
+                        value.bind="_newAddress.lastName" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress">Address</label>
+                <input type="text" class="form-control" id="inputAddress" value.bind="_newAddress.shippingAddress"
+                    required />
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputCity">City</label>
+                    <input type="text" class="form-control" id="inputCity" value.bind="_newAddress.city" required />
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputCountry">Country</label>
+                    <input type="text" class="form-control" id="inputCountry" value.bind="_newAddress.country"
+                        required />
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Zip</label>
+                    <input type="text" class="form-control" id="inputZip" value.bind="_newAddress.zip" required />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary" click.delegate="changeCreateNew()">Cancel</button>
+        </form>
+    </div>
+
+    <div class="creditCardForm" if.bind="_paymentMethod == 'Credit Card'">
+        </hr>
+        <div class="heading">
+            <h1>Confirm Purchase</h1>
+        </div>
+        <div class="payment">
+            <form submit.trigger="confirmPurchase()">
+                <div class="form-group owner">
+                    <label for="owner">Owner</label>
+                    <input type="text" class="form-control" id="owner" required />
+                </div>
+                <div class="form-group CVV">
+                    <label for="cvv">CVV</label>
+                    <input type="text" class="form-control" id="cvv" required />
+                </div>
+                <div class="form-group" id="card-number-field">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" class="form-control" id="cardNumber" required />
+                </div>
+                <div class="form-group" id="expiration-date">
+                    <label>Expiration Date</label>
+                    <select>
+                        <option value="01">January</option>
+                        <option value="02">February </option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select>
+                        <option value="16"> 2016</option>
+                        <option value="17"> 2017</option>
+                        <option value="18"> 2018</option>
+                        <option value="19"> 2019</option>
+                        <option value="20"> 2020</option>
+                        <option value="21"> 2021</option>
+                    </select>
+                </div>
+                <div class="form-group" id="credit_cards">
+                    <img src="${_imgVisa}" id="visa">
+                    <img src="${_imgMaster}" id="mastercard">
+                    <img src="${_imgAmex}" id="amex">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Any special wishes?" maxlength="4096" rows="3"
+                        value.bind="_orderDetails"></textarea>
+                </div>
+                <div class="form-group" id="pay-now" if.bind="_isInStock == true">
+                    <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+                </div>
+                <div class="form-group" id="pay-now" if.bind="_isInStock == false">
+                    <b>There are no products in cart</b>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</template>

@@ -14,7 +14,9 @@ namespace PublicApi.DTO.v1
 
         [MinLength(1)] [MaxLength(128)] public string Country { get; set; } = default!;
         
-        public  DateTime DateOfBirth { get; set; } 
+        public  DateTime DateOfBirth { get; set; }
+
+        public string PlaceOfBirth { get; set; } = default!;
         
         [MaxLength(4096)] 
         [MinLength(1)] 

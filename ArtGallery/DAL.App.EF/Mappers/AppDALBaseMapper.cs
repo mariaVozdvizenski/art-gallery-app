@@ -29,6 +29,8 @@ namespace DAL.App.EF.Mappers
             MapperConfigurationExpression.CreateMap<Shipment, DTO.Shipment>();
             MapperConfigurationExpression.CreateMap<UserPaymentMethod, DTO.UserPaymentMethod>();
             MapperConfigurationExpression.CreateMap<AppUser, DTO.Identity.AppUser>();
+            MapperConfigurationExpression.CreateMap<Address, DTO.Address>();
+
             
             MapperConfigurationExpression.CreateMap<DTO.Artist, Artist>();
             MapperConfigurationExpression.CreateMap<DTO.BasketItem, BasketItem>();
@@ -48,6 +50,7 @@ namespace DAL.App.EF.Mappers
             MapperConfigurationExpression.CreateMap<DTO.Shipment, Shipment>();
             MapperConfigurationExpression.CreateMap<DTO.UserPaymentMethod, UserPaymentMethod>();
             MapperConfigurationExpression.CreateMap<DTO.Identity.AppUser, AppUser>();
+            MapperConfigurationExpression.CreateMap<DTO.Address, Address>();
             
             Mapper = new Mapper(new MapperConfiguration(MapperConfigurationExpression));
         }

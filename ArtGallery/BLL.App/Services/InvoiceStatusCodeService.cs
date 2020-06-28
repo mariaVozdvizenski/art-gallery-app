@@ -11,7 +11,7 @@ namespace BLL.App.Services
     public class InvoiceStatusCodeService : BaseEntityService<IAppUnitOfWork, IInvoiceStatusCodeRepository, IInvoiceStatusCodeMapper, 
         InvoiceStatusCode, DTO.InvoiceStatusCode>, IInvoiceStatusCodeService
     {
-        public InvoiceStatusCodeService(IAppUnitOfWork uow) : base(uow, uow.InvoiceStatusCodes, new InvoiceStatusCodeMapper())
+        public InvoiceStatusCodeService(IAppUnitOfWork uow) : base(uow, uow.InvoiceStatusCodes, new InvoiceStatusCodeServiceMapper())
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PublicApi.DTO.v1
@@ -11,6 +12,12 @@ namespace PublicApi.DTO.v1
         
         [MaxLength(4096)]
         public string? OrderDetails { get; set; }
-        public string OrderStatusCode { get; set; } = default!;
+
+        public Guid OrderStatusCodeId { get; set; } = default!;
+        
+        public Guid AppUserId { get; set; }
+        
+        public Guid AddressId { get; set; }
+        
     }
 }
