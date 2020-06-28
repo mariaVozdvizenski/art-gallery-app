@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.Base.Repositories;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Repositories;
 using DAL.App.DTO;
 using PublicApi.DTO.v1;
 using Category = DAL.App.DTO.Category;

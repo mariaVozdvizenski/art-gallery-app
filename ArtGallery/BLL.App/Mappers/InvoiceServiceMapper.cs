@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using BLL.Base.Mappers;
 using Contracts.BLL.App.Mappers;
 using DAL.App.DTO;
 using Invoice = BLL.App.DTO.Invoice;
@@ -27,9 +26,9 @@ namespace BLL.App.Mappers
                 InvoiceDate = inObject.InvoiceDate,
                 InvoiceDetails = inObject.InvoiceDetails,
                 InvoiceNumber = inObject.InvoiceNumber,
-                InvoiceStatusCode = _invoiceStatusCodeMapper.Map(inObject.InvoiceStatusCode),
+                InvoiceStatusCode = _invoiceStatusCodeMapper.Map(inObject.InvoiceStatusCode!),
                 InvoiceStatusCodeId = inObject.InvoiceStatusCodeId,
-                Order = _orderServiceMapper.Map(inObject.Order),
+                Order = _orderServiceMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 Payments = inObject.Payments.Select(e => _paymentServiceMapper.Map(e)).ToList(),
                 Shipments = inObject.Shipments.Select(e => _shipmentServiceMapper.Map(e)).ToList()
@@ -44,9 +43,9 @@ namespace BLL.App.Mappers
                 InvoiceDate = inObject.InvoiceDate,
                 InvoiceDetails = inObject.InvoiceDetails,
                 InvoiceNumber = inObject.InvoiceNumber,
-                InvoiceStatusCode = _invoiceStatusCodeMapper.Map(inObject.InvoiceStatusCode),
+                InvoiceStatusCode = _invoiceStatusCodeMapper.Map(inObject.InvoiceStatusCode!),
                 InvoiceStatusCodeId = inObject.InvoiceStatusCodeId,
-                Order = _orderServiceMapper.Map(inObject.Order),
+                Order = _orderServiceMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 Payments = inObject.Payments.Select(e => _paymentServiceMapper.Map(e)).ToList(),
                 Shipments = inObject.Shipments.Select(e => _shipmentServiceMapper.Map(e)).ToList()

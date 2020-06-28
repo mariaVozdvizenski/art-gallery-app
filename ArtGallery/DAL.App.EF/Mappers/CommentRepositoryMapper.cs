@@ -1,5 +1,4 @@
-﻿using Contracts.DAL.Base.Mappers;
-using Domain.App;
+﻿using Domain.App;
 
 namespace DAL.App.EF.Mappers
 {
@@ -8,7 +7,6 @@ namespace DAL.App.EF.Mappers
         public CommentRepositoryMapper()
         {
         }
-        
-        
+              
     }
 }

@@ -1,4 +1,4 @@
-﻿using Contracts.DAL.Base.Mappers;
+﻿using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers
@@ -18,9 +18,9 @@ namespace DAL.App.EF.Mappers
             return new DTO.ShipmentItem()
             {
                 Id = inObject.Id,
-                OrderItem = _orderItemRepositoryMapper.Map(inObject.OrderItem),
+                OrderItem = _orderItemRepositoryMapper.Map(inObject.OrderItem!),
                 OrderItemId = inObject.OrderItemId,
-                Shipment = _shipmentRepositoryMapper.Map(inObject.Shipment),
+                Shipment = _shipmentRepositoryMapper.Map(inObject.Shipment!),
                 ShipmentId = inObject.ShipmentId
             };
         }
@@ -30,9 +30,9 @@ namespace DAL.App.EF.Mappers
             return new ShipmentItem()
             {
                 Id = inObject.Id,
-                OrderItem = _orderItemRepositoryMapper.Map(inObject.OrderItem),
+                OrderItem = _orderItemRepositoryMapper.Map(inObject.OrderItem!),
                 OrderItemId = inObject.OrderItemId,
-                Shipment = _shipmentRepositoryMapper.Map(inObject.Shipment),
+                Shipment = _shipmentRepositoryMapper.Map(inObject.Shipment!),
                 ShipmentId = inObject.ShipmentId
             };        
         }

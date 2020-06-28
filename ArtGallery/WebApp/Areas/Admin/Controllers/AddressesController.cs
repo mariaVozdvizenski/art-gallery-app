@@ -9,10 +9,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Addresses
+    /// </summary>
     public class AddressesController : Controller
     {
         private readonly AppDbContext _context;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public AddressesController(AppDbContext context)
         {
             _context = context;

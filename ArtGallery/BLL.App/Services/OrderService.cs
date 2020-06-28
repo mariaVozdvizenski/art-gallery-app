@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.Mappers;
-using BLL.Base.Services;
+using ee.itcollege.mavozd.BLL.Base.Services;
 using Contracts.BLL.App.Mappers;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
@@ -22,23 +22,23 @@ namespace BLL.App.Services
             
         }
         
-        public async Task<IEnumerable<DTO.Order>> ApplyAllFiltersAsync(IEnumerable<DTO.Order> query, string? condition,
+        public IEnumerable<DTO.Order> ApplyAllFilters(IEnumerable<DTO.Order> query, string? condition,
             string? statusCodes)
         {
             if (statusCodes != null)
             {
-                query = await FilterByStatusCodesAsync(query, statusCodes);
+                query =  FilterByStatusCodes(query, statusCodes);
             }
 
             if (condition != null)
             {
-                query = await FilterByDateAsync(query, condition);
+                query =  FilterByDate(query, condition);
             }
 
             return query;
         }
         
-        private static async Task<IEnumerable<DTO.Order>> FilterByDateAsync(IEnumerable<DTO.Order> query, string condition)
+        private static IEnumerable<DTO.Order> FilterByDate(IEnumerable<DTO.Order> query, string condition)
         {
             query = condition switch
             {
@@ -49,7 +49,7 @@ namespace BLL.App.Services
             return query;
         }
 
-        private static async Task<IEnumerable<DTO.Order>> FilterByStatusCodesAsync(IEnumerable<DTO.Order> query,
+        private static IEnumerable<DTO.Order> FilterByStatusCodes(IEnumerable<DTO.Order> query,
             string statusCodes)
         {
             var list = statusCodes.Split('_');

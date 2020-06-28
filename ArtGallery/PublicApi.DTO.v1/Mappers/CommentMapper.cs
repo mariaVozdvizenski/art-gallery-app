@@ -16,7 +16,7 @@ namespace PublicApi.DTO.v1.Mappers
                 AppUserId = inObject.AppUserId,
                 CommentBody = inObject.CommentBody,
                 CreatedAt = inObject.CreatedAt,
-                CreatedBy = inObject.AppUser.Email,
+                CreatedBy = inObject.AppUser!.Email,
                 Id = inObject.Id,
                 PaintingId = inObject.PaintingId
             };

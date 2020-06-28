@@ -26,13 +26,13 @@
             @Html.DisplayNameFor(model => model.OrderStatusCode)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderStatusCode.Code)
+            @Html.DisplayFor(model => model.OrderStatusCode!.Code)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AppUser)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AppUser.Id)
+            @Html.DisplayFor(model => model.AppUser!.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedBy)

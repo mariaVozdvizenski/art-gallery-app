@@ -1,5 +1,5 @@
 ﻿using System;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 
 namespace PublicApi.DTO.v1.Identity
 {

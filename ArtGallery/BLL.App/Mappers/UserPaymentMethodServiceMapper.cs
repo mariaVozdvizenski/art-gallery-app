@@ -1,5 +1,4 @@
-﻿using BLL.Base.Mappers;
-using Contracts.BLL.App.Mappers;
+﻿using Contracts.BLL.App.Mappers;
 using DAL.App.DTO;
 
 namespace BLL.App.Mappers
@@ -17,10 +16,10 @@ namespace BLL.App.Mappers
         {
             return new DTO.UserPaymentMethod()
             {
-                AppUser = _appUserServiceMapper.Map(inObject.AppUser),
+                AppUser = _appUserServiceMapper.Map(inObject.AppUser!),
                 AppUserId = inObject.AppUserId,
                 Id = inObject.Id,
-                PaymentMethod = _paymentMethodServiceMapper.Map(inObject.PaymentMethod),
+                PaymentMethod = _paymentMethodServiceMapper.Map(inObject.PaymentMethod!),
                 PaymentMethodId = inObject.PaymentMethodId
             };
         }
@@ -29,10 +28,10 @@ namespace BLL.App.Mappers
         {
             return new UserPaymentMethod()
             {
-                AppUser = _appUserServiceMapper.Map(inObject.AppUser),
+                AppUser = _appUserServiceMapper.Map(inObject.AppUser!),
                 AppUserId = inObject.AppUserId,
                 Id = inObject.Id,
-                PaymentMethod = _paymentMethodServiceMapper.Map(inObject.PaymentMethod),
+                PaymentMethod = _paymentMethodServiceMapper.Map(inObject.PaymentMethod!),
                 PaymentMethodId = inObject.PaymentMethodId
             };        
         }

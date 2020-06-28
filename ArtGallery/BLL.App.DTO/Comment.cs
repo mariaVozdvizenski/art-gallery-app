@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using BLL.App.DTO.Identity;
-using Contracts.DAL.Base;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 
 namespace BLL.App.DTO
 {

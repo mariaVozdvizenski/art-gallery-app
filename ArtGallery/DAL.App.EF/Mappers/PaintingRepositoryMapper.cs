@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Mappers;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
 using Painting = Domain.App.Painting;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using BLL.App.DTO.Identity;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 
 namespace BLL.App.DTO
 {

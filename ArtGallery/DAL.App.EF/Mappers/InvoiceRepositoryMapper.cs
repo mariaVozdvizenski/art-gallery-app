@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers
@@ -25,9 +25,9 @@ namespace DAL.App.EF.Mappers
                 InvoiceDate = inObject.InvoiceDate,
                 InvoiceDetails = inObject.InvoiceDetails,
                 InvoiceNumber = inObject.InvoiceNumber,
-                InvoiceStatusCode = _invoiceStatusCodeRepositoryMapper.Map(inObject.InvoiceStatusCode),
+                InvoiceStatusCode = _invoiceStatusCodeRepositoryMapper.Map(inObject.InvoiceStatusCode!),
                 InvoiceStatusCodeId = inObject.InvoiceStatusCodeId,
-                Order = _orderRepositoryMapper.Map(inObject.Order),
+                Order = _orderRepositoryMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 Payments = inObject.Payments.Select(e => _paymentRepositoryMapper.Map(e)).ToList(),
                 Shipments = inObject.Shipments.Select(e => _shipmentRepositoryMapper.Map(e)).ToList()
@@ -42,9 +42,9 @@ namespace DAL.App.EF.Mappers
                 InvoiceDate = inObject.InvoiceDate,
                 InvoiceDetails = inObject.InvoiceDetails,
                 InvoiceNumber = inObject.InvoiceNumber,
-                InvoiceStatusCode = _invoiceStatusCodeRepositoryMapper.Map(inObject.InvoiceStatusCode),
+                InvoiceStatusCode = _invoiceStatusCodeRepositoryMapper.Map(inObject.InvoiceStatusCode!),
                 InvoiceStatusCodeId = inObject.InvoiceStatusCodeId,
-                Order = _orderRepositoryMapper.Map(inObject.Order),
+                Order = _orderRepositoryMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 Payments = inObject.Payments.Select(e => _paymentRepositoryMapper.Map(e)).ToList(),
                 Shipments = inObject.Shipments.Select(e => _shipmentRepositoryMapper.Map(e)).ToList()

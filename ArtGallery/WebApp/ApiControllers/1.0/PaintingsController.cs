@@ -50,7 +50,7 @@ namespace WebApp.ApiControllers._1._0
             string? categories)
         {
             var query = await _bll.Paintings.GetAllForViewAsync();
-            query = await _bll.Paintings.ApplyFilters(query, condition, categories, inStock);
+            query =  _bll.Paintings.ApplyFilters(query, condition, categories, inStock);
             
             return Ok(query.Select(e => _paintingMapper.MapPaintingView(e)).ToList());
         }

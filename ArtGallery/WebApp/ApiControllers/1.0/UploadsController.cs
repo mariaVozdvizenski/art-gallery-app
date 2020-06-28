@@ -96,7 +96,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpDelete("{fileName}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteUpload(string fileName)
+        public IActionResult DeleteUpload(string fileName)
         {
             var path = "C:/Users/maria/OneDrive/Documents/images/" + fileName;
             

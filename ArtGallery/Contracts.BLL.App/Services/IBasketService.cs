@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BLL.App.DTO;
-using Contracts.BLL.Base.Services;
+using ee.itcollege.mavozd.Contracts.BLL.Base.Services;
 using Domain.App.Identity;
 
 namespace Contracts.BLL.App.Services

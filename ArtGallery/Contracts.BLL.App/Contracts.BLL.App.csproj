@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Domain.App\Domain.App.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="ee.itcollege.mavozd.Contracts.BLL.Base" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>

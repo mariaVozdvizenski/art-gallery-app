@@ -1,4 +1,4 @@
-﻿using Contracts.DAL.Base.Mappers;
+﻿using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers
@@ -18,10 +18,10 @@ namespace DAL.App.EF.Mappers
         {
             return new DTO.UserPaymentMethod()
             {
-                AppUser = _appUserRepositoryMapper.Map(inObject.AppUser),
+                AppUser = _appUserRepositoryMapper.Map(inObject.AppUser!),
                 AppUserId = inObject.AppUserId,
                 Id = inObject.Id,
-                PaymentMethod = _paymentMethodRepositoryMapper.Map(inObject.PaymentMethod),
+                PaymentMethod = _paymentMethodRepositoryMapper.Map(inObject.PaymentMethod!),
                 PaymentMethodId = inObject.PaymentMethodId
             };
         }
@@ -30,10 +30,10 @@ namespace DAL.App.EF.Mappers
         {
             return new UserPaymentMethod()
             {
-                AppUser = _appUserRepositoryMapper.Map(inObject.AppUser),
+                AppUser = _appUserRepositoryMapper.Map(inObject.AppUser!),
                 AppUserId = inObject.AppUserId,
                 Id = inObject.Id,
-                PaymentMethod = _paymentMethodRepositoryMapper.Map(inObject.PaymentMethod),
+                PaymentMethod = _paymentMethodRepositoryMapper.Map(inObject.PaymentMethod!),
                 PaymentMethodId = inObject.PaymentMethodId
             };        
         }

@@ -1,5 +1,4 @@
-﻿using BLL.Base.Mappers;
-using Contracts.BLL.App.Mappers;
+﻿using Contracts.BLL.App.Mappers;
 using DAL.App.DTO;
 using PaintingCategory = BLL.App.DTO.PaintingCategory;
 

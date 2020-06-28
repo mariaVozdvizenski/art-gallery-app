@@ -1,4 +1,4 @@
-﻿using Contracts.BLL.Base.Mappers;
+﻿using ee.itcollege.mavozd.Contracts.BLL.Base.Mappers;
 using DAL.App.DTO.Identity;
 
 namespace BLL.App.Mappers

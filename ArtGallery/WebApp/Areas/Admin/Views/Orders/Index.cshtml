@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.OrderDetails)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderStatusCode.Code)
+                @Html.DisplayFor(modelItem => item.OrderStatusCode!.Code)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AppUser.Id)
+                @Html.DisplayFor(modelItem => item.AppUser!.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)

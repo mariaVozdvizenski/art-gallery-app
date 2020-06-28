@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 using Domain.App;
 using Domain.App.Identity;
 using Microsoft.AspNetCore.Identity;

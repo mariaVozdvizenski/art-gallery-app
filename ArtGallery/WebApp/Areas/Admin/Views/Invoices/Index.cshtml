@@ -55,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.InvoiceDetails)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Order.Id)
+                @Html.DisplayFor(modelItem => item.Order!.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.InvoiceStatusCode.Code)
+                @Html.DisplayFor(modelItem => item.InvoiceStatusCode!.Code)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)

@@ -35,6 +35,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         /// <param name="userManager"></param>
         /// <param name="signInManager"></param>
         /// <param name="logger"></param>
+        /// <param name="bll"></param>
         public AccountController(IConfiguration configuration, UserManager<Domain.App.Identity.AppUser> userManager,
             SignInManager<Domain.App.Identity.AppUser> signInManager, ILogger<AccountController> logger, IAppBLL bll)
         {

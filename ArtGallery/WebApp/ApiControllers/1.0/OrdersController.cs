@@ -52,11 +52,11 @@ namespace WebApp.ApiControllers._1._0
             if (User.IsInRole("admin"))
             {
                 var adminQuery = await _bll.Orders.GetAllAsync();
-                adminQuery = await _bll.Orders.ApplyAllFiltersAsync(adminQuery, condition, statusCodes);
+                adminQuery =  _bll.Orders.ApplyAllFilters(adminQuery, condition, statusCodes);
                 return Ok(adminQuery.Select(e => _orderMapper.MapForAdminViewAsync(e)));
             } 
             var query = await _bll.Orders.GetAllAsync(User.UserGuidId());
-            query = await _bll.Orders.ApplyAllFiltersAsync(query, condition, statusCodes);
+            query = _bll.Orders.ApplyAllFilters(query, condition, statusCodes);
             return Ok(query.Select(e => _orderMapper.MapForAdminViewAsync(e)));
         }
 

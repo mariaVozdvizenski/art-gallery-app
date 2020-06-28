@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
 using DAL.App.EF.Mappers;
-using DAL.Base.EF.Repositories;
+using ee.itcollege.mavozd.DAL.Base.EF.Repositories;
 using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 using Comment = Domain.App.Comment;
@@ -55,7 +55,7 @@ namespace DAL.App.EF.Repositories
             {
                 CommentBody = e.CommentBody,
                 CreatedAt = DateTime.Now,
-                CreatedBy = e.AppUser.Email,
+                CreatedBy = e.AppUser!.Email,
                 Id = e.Id,
                 AppUserId = e.AppUserId
                 

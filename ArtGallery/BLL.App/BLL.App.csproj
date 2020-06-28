@@ -11,4 +11,8 @@
       <ProjectReference Include="..\DAL.App.EF\DAL.App.EF.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="ee.itcollege.mavozd.BLL.Base" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>

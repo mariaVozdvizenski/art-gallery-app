@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts.DAL.Base;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 
 namespace DAL.App.DTO
 {

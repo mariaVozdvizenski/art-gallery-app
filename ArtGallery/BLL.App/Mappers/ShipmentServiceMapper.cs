@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using BLL.Base.Mappers;
 using Contracts.BLL.App.Mappers;
 using DAL.App.DTO;
 using Shipment = BLL.App.DTO.Shipment;
@@ -23,9 +22,9 @@ namespace BLL.App.Mappers
             return new Shipment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceServiceMapper.Map(inObject.Invoice),
+                Invoice = _invoiceServiceMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
-                Order = _orderServiceMapper.Map(inObject.Order),
+                Order = _orderServiceMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 ShipmentDate = inObject.ShipmentDate,
                 ShipmentItems = inObject.ShipmentItems
@@ -38,9 +37,9 @@ namespace BLL.App.Mappers
             return new DAL.App.DTO.Shipment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceServiceMapper.Map(inObject.Invoice),
+                Invoice = _invoiceServiceMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
-                Order = _orderServiceMapper.Map(inObject.Order),
+                Order = _orderServiceMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 ShipmentDate = inObject.ShipmentDate,
                 ShipmentItems = inObject.ShipmentItems

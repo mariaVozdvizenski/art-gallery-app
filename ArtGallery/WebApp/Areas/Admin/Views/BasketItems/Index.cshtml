@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Basket.Id)
+                @Html.DisplayFor(modelItem => item.Basket!.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Painting.Description)
+                @Html.DisplayFor(modelItem => item.Painting!.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)

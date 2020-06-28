@@ -1,6 +1,5 @@
 ﻿using System;
-using Contracts.DAL.Base;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 
 namespace BLL.App.DTO
 {

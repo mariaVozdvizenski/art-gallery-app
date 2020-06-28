@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using BLL.App.DTO;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 
 namespace PublicApi.DTO.v1.Mappers
 {

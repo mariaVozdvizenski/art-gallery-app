@@ -129,6 +129,10 @@ namespace WebApp.ApiControllers._1._0
         }
 
         // DELETE: api/OrderStatusCodes/5
+        /// <summary>
+        /// Delete OrderStatusCode
+        /// </summary>
+        /// <param name="id">OrderStatusCode Id</param>
         [HttpDelete("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderStatusCode))]

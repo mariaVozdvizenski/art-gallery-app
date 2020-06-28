@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers

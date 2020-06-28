@@ -4,12 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using DAL.App.EF.Mappers;
-using DAL.Base;
-using DAL.Base.EF.Repositories;
-using DAL.Base.Mappers;
+using ee.itcollege.mavozd.DAL.Base.EF.Repositories;
 using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
-using PublicApi.DTO.v1;
 using Basket = Domain.App.Basket;
 
 namespace DAL.App.EF.Repositories

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain.Base;
+using ee.itcollege.mavozd.Domain.Base;
+
 
 namespace Domain.App
 {

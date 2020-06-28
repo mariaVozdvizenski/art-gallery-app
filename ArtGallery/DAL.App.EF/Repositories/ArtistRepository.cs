@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using DAL.Base.EF.Repositories;
+using ee.itcollege.mavozd.DAL.Base.EF.Repositories;
 using Domain.App.Identity;
 using Microsoft.EntityFrameworkCore;
 using PublicApi.DTO.v1;
 using DAL.App.DTO;
 using DAL.App.EF.Mappers;
-using DAL.Base.Mappers;
+using ee.itcollege.mavozd.DAL.Base.Mappers;
 using Artist = Domain.App.Artist;
 
 namespace DAL.App.EF.Repositories

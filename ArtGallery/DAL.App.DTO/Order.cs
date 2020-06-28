@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts.DAL.Base;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 using DAL.App.DTO.Identity;
 
 namespace DAL.App.DTO
@@ -15,7 +14,7 @@ namespace DAL.App.DTO
         public string? OrderDetails { get; set; }
         
         public Guid AppUserId { get; set; } = default!;
-        public AppUser AppUser { get; set; }
+        public AppUser? AppUser { get; set; }
         
         public Guid OrderStatusCodeId { get; set; } = default!;
         public OrderStatusCode? OrderStatusCode { get; set; }

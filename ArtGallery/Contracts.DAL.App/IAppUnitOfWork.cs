@@ -1,7 +1,6 @@
 ﻿using System;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
-using Domain.App.Identity;
+using ee.itcollege.mavozd.Contracts.DAL.Base;using Domain.App.Identity;
 
 namespace Contracts.DAL.App
 {

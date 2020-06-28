@@ -1,5 +1,4 @@
-﻿using BLL.Base.Mappers;
-using Contracts.BLL.App.Mappers;
+﻿using Contracts.BLL.App.Mappers;
 using DAL.App.DTO;
 using ShipmentItem = BLL.App.DTO.ShipmentItem;
 
@@ -19,9 +18,9 @@ namespace BLL.App.Mappers
             return new ShipmentItem()
             {
                 Id = inObject.Id,
-                OrderItem = _orderItemServiceMapper.Map(inObject.OrderItem),
+                OrderItem = _orderItemServiceMapper.Map(inObject.OrderItem!),
                 OrderItemId = inObject.OrderItemId,
-                Shipment = _shipmentServiceMapper.Map(inObject.Shipment),
+                Shipment = _shipmentServiceMapper.Map(inObject.Shipment!),
                 ShipmentId = inObject.ShipmentId
             };
         }
@@ -31,9 +30,9 @@ namespace BLL.App.Mappers
             return new DAL.App.DTO.ShipmentItem()
             {
                 Id = inObject.Id,
-                OrderItem = _orderItemServiceMapper.Map(inObject.OrderItem),
+                OrderItem = _orderItemServiceMapper.Map(inObject.OrderItem!),
                 OrderItemId = inObject.OrderItemId,
-                Shipment = _shipmentServiceMapper.Map(inObject.Shipment),
+                Shipment = _shipmentServiceMapper.Map(inObject.Shipment!),
                 ShipmentId = inObject.ShipmentId
             };
         }

@@ -5,6 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="ee.itcollege.mavozd.Contracts.DAL.Base" Version="1.0.0" />
+      <PackageReference Include="ee.itcollege.mavozd.DAL.Base" Version="1.0.0" />
       <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     </ItemGroup>
 

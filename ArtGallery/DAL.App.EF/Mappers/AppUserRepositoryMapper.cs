@@ -1,4 +1,4 @@
-﻿using Contracts.DAL.Base.Mappers;
+﻿using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App.Identity;
 
 namespace DAL.App.EF.Mappers

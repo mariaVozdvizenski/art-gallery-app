@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DAL.Base.Mappers;
+using ee.itcollege.mavozd.DAL.Base.Mappers;
 using Domain.App;
 using Domain.App.Identity;
 

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers
@@ -22,9 +22,9 @@ namespace DAL.App.EF.Mappers
             return new DTO.Shipment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice),
+                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
-                Order = _orderRepositoryMapper.Map(inObject.Order),
+                Order = _orderRepositoryMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 ShipmentDate = inObject.ShipmentDate,
                 ShipmentItems = inObject.ShipmentItems
@@ -37,9 +37,9 @@ namespace DAL.App.EF.Mappers
             return new Shipment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice),
+                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
-                Order = _orderRepositoryMapper.Map(inObject.Order),
+                Order = _orderRepositoryMapper.Map(inObject.Order!),
                 OrderId = inObject.OrderId,
                 ShipmentDate = inObject.ShipmentDate,
                 ShipmentItems = inObject.ShipmentItems

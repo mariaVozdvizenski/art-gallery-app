@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.DAL.Base;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 using Domain.App;
 using Domain.App.Identity;
+using ee.itcollege.mavozd.Contracts.DAL.Base;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

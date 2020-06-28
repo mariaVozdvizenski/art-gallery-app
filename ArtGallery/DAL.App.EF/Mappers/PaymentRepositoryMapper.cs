@@ -1,4 +1,4 @@
-﻿using Contracts.DAL.Base.Mappers;
+﻿using ee.itcollege.mavozd.Contracts.DAL.Base.Mappers;
 using Domain.App;
 
 namespace DAL.App.EF.Mappers
@@ -16,7 +16,7 @@ namespace DAL.App.EF.Mappers
             return new DTO.Payment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice),
+                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
                 PaymentAmount = inObject.PaymentAmount,
                 PaymentDate = inObject.PaymentDate
@@ -28,7 +28,7 @@ namespace DAL.App.EF.Mappers
             return new Payment()
             {
                 Id = inObject.Id,
-                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice),
+                Invoice = _invoiceRepositoryMapper.Map(inObject.Invoice!),
                 InvoiceId = inObject.InvoiceId,
                 PaymentAmount = inObject.PaymentAmount,
                 PaymentDate = inObject.PaymentDate

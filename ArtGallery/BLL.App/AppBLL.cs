@@ -1,10 +1,9 @@
 ﻿using System;
 using BLL.App.Services;
-using BLL.Base;
 using Contracts.BLL.App;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using DAL.App.EF;
+using ee.itcollege.mavozd.BLL.Base;
 
 namespace BLL.App
 {

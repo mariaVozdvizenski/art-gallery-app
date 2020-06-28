@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Contracts.DAL.Base.Repositories;
+using ee.itcollege.mavozd.Contracts.DAL.Base.Repositories;
 using DAL.App.DTO;
 using Microsoft.EntityFrameworkCore;
 

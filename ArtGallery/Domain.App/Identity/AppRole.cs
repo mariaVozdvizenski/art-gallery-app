@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.App.Identity

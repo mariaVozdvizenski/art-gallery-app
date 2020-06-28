@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BLL.App.DTO;
-using BLL.Base.Mappers;
 using DAL.App.DTO;
 using DAL.App.DTO.Identity;
+using ee.itcollege.mavozd.BLL.Base.Mappers;
 using Address = DAL.App.DTO.Address;
 using Artist = DAL.App.DTO.Artist;
 using Basket = DAL.App.DTO.Basket;

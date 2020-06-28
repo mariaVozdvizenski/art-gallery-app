@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
 using DAL.App.EF.Repositories;
-using DAL.Base.EF;
+using ee.itcollege.mavozd.DAL.Base.EF;
 
 namespace DAL.App.EF
 {

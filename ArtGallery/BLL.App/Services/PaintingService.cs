@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.Mappers;
-using BLL.Base.Mappers;
-using BLL.Base.Services;
+using ee.itcollege.mavozd.BLL.Base.Services;
 using Contracts.BLL.App.Mappers;
 using Contracts.BLL.App.Services;
-using Contracts.BLL.Base.Mappers;
+using ee.itcollege.mavozd.Contracts.BLL.Base.Mappers;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using Domain.App.Identity;
@@ -39,7 +38,7 @@ namespace BLL.App.Services
             return Mapper.MapPaintingView(dalPaintingView);
         }
 
-        public async Task<IEnumerable<BLLPaintingView>> FilterByConditionViewAsync(string condition, IEnumerable<BLLPaintingView> query)
+        public IEnumerable<BLLPaintingView> FilterByConditionView(string condition, IEnumerable<BLLPaintingView> query)
         {
             if (condition.Equals("descending"))
             {
@@ -48,12 +47,12 @@ namespace BLL.App.Services
             return query.OrderBy(e => e.Price);
         }
 
-        public async Task<IEnumerable<BLLPaintingView>> FilterByInStockViewAsync(IEnumerable<BLLPaintingView> query)
+        public IEnumerable<BLLPaintingView> FilterByInStockView(IEnumerable<BLLPaintingView> query)
         {
             return query.Where(e => e.Quantity > 0);
         }
 
-        public async Task<DTO.Painting> DeletePaintingCategories(DTO.Painting painting)
+        public DTO.Painting DeletePaintingCategories(DTO.Painting painting)
         {
             if (painting.PaintingCategories != null && painting.PaintingCategories.Count > 0)
             {
@@ -62,26 +61,26 @@ namespace BLL.App.Services
             return  painting;
         }
 
-        public async Task<IEnumerable<BLLPaintingView>> FilterByCategory(IEnumerable<BLLPaintingView> query, string categoryNames)
+        public IEnumerable<BLLPaintingView> FilterByCategory(IEnumerable<BLLPaintingView> query, string categoryNames)
         {
             var list = categoryNames.Split('_');
             return query.Where(p => p.PaintingCategories.Any(pc => list.Contains(pc.Category!.CategoryName)));
         }
 
-        public async Task<IEnumerable<BLLPaintingView>> ApplyFilters(IEnumerable<BLLPaintingView> query, string? condition, string? categoryNames, 
+        public IEnumerable<BLLPaintingView> ApplyFilters(IEnumerable<BLLPaintingView> query, string? condition, string? categoryNames, 
             bool? inStock)
         {
             if (categoryNames != null)
             {
-                query = await FilterByCategory(query, categoryNames);
+                query =  FilterByCategory(query, categoryNames);
             }
             if (condition != null)
             {
-                query = await FilterByConditionViewAsync(condition, query);
+                query = FilterByConditionView(condition, query);
             }
             if (inStock == true)
             {
-                query = await FilterByInStockViewAsync(query);
+                query =  FilterByInStockView(query);
             }
             return query;
         }

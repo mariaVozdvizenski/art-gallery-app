@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Contracts.Domain;
+using ee.itcollege.mavozd.Contracts.Domain;
 using DAL.App.DTO.Identity;
 
 namespace DAL.App.DTO
