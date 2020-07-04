@@ -20,9 +20,6 @@ namespace Contracts.BLL.App
         IOrderStatusCodeService OrderStatusCodes { get; }
         IPaintingCategoryService PaintingCategories { get; }
         IPaymentMethodService PaymentMethods { get; }
-        IPaymentService Payments { get; }
-        IShipmentService Shipments { get; }
-        IShipmentItemService ShipmentItems { get; }
         IUserPaymentMethodService UserPaymentMethods { get; }
     }
 }

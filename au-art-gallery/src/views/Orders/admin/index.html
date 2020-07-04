@@ -40,6 +40,9 @@
                         Address
                     </th>
                     <th if.bind="_showDetails == true">
+                        Address
+                    </th>
+                    <th if.bind="_showDetails == true">
                         Name
                     </th>
                     <th if.bind="_showDetails == true">
@@ -73,6 +76,9 @@
                     <td>
                         ${order.total}€
                     </td>
+                    <td if.bind="order.invoice != null">
+                        <b>${order.invoice.invoiceStatusCode.code}</b> - ${order.invoice.invoiceStatusCode.invoiceStatusDescription}
+                    </td>
                     <td if.bind="_showDetails == true">
                         ${order.address.shippingAddress}
                     </td>
@@ -89,6 +95,9 @@
                     </td>
                     <td if.bind="_showDetails == true || _showItemDetails == true">
                         <button click.delegate="hide()" class="btn btn-primary">Hide details</button>
+                    </td>
+                    <td if.bind="order.invoice != null">
+                        <button click.delegate="downloadInvoice(order.invoice)" class="btn btn-primary">Download Invoice</button>
                     </td>
                     <td if.bind="_showDetails == false">
                         <button click.delegate="changeShowDetails()" class="btn btn-primary">Show shipping

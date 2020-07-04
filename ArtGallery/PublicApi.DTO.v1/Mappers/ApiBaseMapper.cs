@@ -23,7 +23,8 @@ namespace PublicApi.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<BLL.App.DTO.Address, Address>();
             MapperConfigurationExpression.CreateMap<BLL.App.DTO.Order, Order>();
             MapperConfigurationExpression.CreateMap<BLL.App.DTO.OrderItem, OrderItem>();
-
+            MapperConfigurationExpression.CreateMap<BLL.App.DTO.Invoice, Invoice>();
+            
             MapperConfigurationExpression.CreateMap<PaintingView, BLLPaintingView>();
             MapperConfigurationExpression.CreateMap<CommentView, BLLCommentView>();
             MapperConfigurationExpression.CreateMap<ArtistView, BLL.App.DTO.Artist>();
@@ -38,6 +39,8 @@ namespace PublicApi.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<Address, BLL.App.DTO.Address>();
             MapperConfigurationExpression.CreateMap<Order, BLL.App.DTO.Order>();
             MapperConfigurationExpression.CreateMap<OrderItem, BLL.App.DTO.OrderItem>();
+            MapperConfigurationExpression.CreateMap<Invoice, BLL.App.DTO.Invoice>();
+
             
             Mapper = new Mapper(new MapperConfiguration(MapperConfigurationExpression));
         }

@@ -1,5 +1,6 @@
 import { IAddress } from "./IAddress";
 import { IOrderItem } from "./IOrderItem";
+import { IInvoice } from "./IInvoice";
 
 export interface IOrder{
     id?: string;
@@ -15,4 +16,5 @@ export interface IOrder{
     orderItems: IOrderItem[];
     total?: number;
     orderDateString?: string;
+    invoice?: IInvoice;
 }

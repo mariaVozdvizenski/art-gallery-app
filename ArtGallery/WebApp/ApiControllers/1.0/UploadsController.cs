@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO.Enumeration;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -61,7 +58,7 @@ namespace WebApp.ApiControllers._1._0
                         fileName += "jpg";
                         frmt = ImageFormat.Jpeg;
                     }
-                    string path = "C:/Users/maria/OneDrive/Documents/images/" + fileName;
+                    string path = "../WebApp/ApiControllers/1.0/uploads/" + fileName;
                     img.Save(path, frmt);
                 }
             }
@@ -78,7 +75,7 @@ namespace WebApp.ApiControllers._1._0
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUpload(string fileName)
         {
-            var path = "C:/Users/maria/OneDrive/Documents/images/" + fileName;
+            var path = "../WebApp/ApiControllers/1.0/uploads/" + fileName;
             
             if (!System.IO.File.Exists(path))
             {
@@ -98,7 +95,7 @@ namespace WebApp.ApiControllers._1._0
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult DeleteUpload(string fileName)
         {
-            var path = "C:/Users/maria/OneDrive/Documents/images/" + fileName;
+            var path = "../WebApp/ApiControllers/1.0/uploads/" + fileName;
             
             if (!System.IO.File.Exists(path))
             {

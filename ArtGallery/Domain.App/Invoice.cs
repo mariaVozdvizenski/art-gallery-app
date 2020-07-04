@@ -21,9 +21,5 @@ namespace Domain.App
         
         public Guid InvoiceStatusCodeId { get; set; } = default!;
         public InvoiceStatusCode? InvoiceStatusCode { get; set; }
-
-        public ICollection<Payment>? Payments { get; set; }
-        public ICollection<Shipment>? Shipments { get; set; }
-        
     }
 }

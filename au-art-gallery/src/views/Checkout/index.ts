@@ -18,6 +18,8 @@ import { AppState } from 'state/app-state';
 import { IOrderItem } from 'domain/IOrderItem';
 import { IOrderItemCreate } from 'domain/IOrderItemCreate';
 import { OrderItemService } from 'service/order-item-service';
+import { IInvoiceCreate } from 'domain/IInvoiceCreate';
+import { InvoiceService } from 'service/invoice-service';
 
 @autoinject
 export class CheckoutIndex {
@@ -37,10 +39,12 @@ export class CheckoutIndex {
     private _newAddress: IAddressCreate | null = null;
     private _orderDetails: string | undefined = undefined;
     private _isInStock: boolean = false;
+    private _invoiceDetails: IInvoiceCreate | null = null;
+    private _invoiceExtraDetails: string | null = null;
 
     constructor(private basketService: BasketService, private basketItemService: BasketItemService, private router: Router,
         private paymentMethodService: PaymentMethodService, private addressService: AddressService, private orderService: OrderService,
-        private appState: AppState, private orderItemService: OrderItemService) {
+        private appState: AppState, private orderItemService: OrderItemService, private invoiceService: InvoiceService) {
 
     }
 
@@ -159,11 +163,17 @@ export class CheckoutIndex {
                     this._alert = null;
                     var orderId = response.data!
                     console.log(orderId);
+
                     this._baskets[0].basketItems.forEach(basketItem => {
                         if (basketItem.paintingQuantity > 0) {
                             this.createOrderItems(basketItem, orderId)
                         }
                     });
+
+                    if (this._paymentMethod == "Invoice") {
+                        this.createInvoice(orderId);
+                    }
+
                     this.emptyBasket();
                     this.router.navigateToRoute('checkoutSuccess');
                 } else {
@@ -185,8 +195,38 @@ export class CheckoutIndex {
         });
     }
 
+    async createInvoice(orderId: string) {
+
+        if (this._invoiceExtraDetails == null) {
+            this._invoiceExtraDetails = "None"
+        }
+
+        var invoice: IInvoiceCreate = <IInvoiceCreate>{
+            orderId: orderId,
+            telephoneNumber: this._invoiceDetails?.telephoneNumber,
+            firstName: this._invoiceDetails?.firstName,
+            lastName: this._invoiceDetails?.lastName,
+            country: this._invoiceDetails?.country,
+            city: this._invoiceDetails?.city,
+            address: this._invoiceDetails?.address,
+            invoiceDetails: this._invoiceExtraDetails
+        }
+
+        this.invoiceService.createInvoice(invoice).then((response) => {
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+                this._alert = null;
+            } else {
+                this._alert = {
+                    message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                    type: AlertType.Danger,
+                    dismissable: true,
+                }
+            }
+        });
+    }
+
     isInStock(): boolean {
-        if (this._baskets[0].basketItems){
+        if (this._baskets[0].basketItems) {
             return this._baskets[0].basketItems.some(element => element.paintingQuantity > 0)
         }
         return false;

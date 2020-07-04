@@ -2,14 +2,12 @@
 
     <div class="container">
         <h1>Addresses</h1>
-
         <button class="btn btn-primary" click.delegate="toCreateAddress()"
             disabled.bind="_addresses.length < 3 ? false : true">Add a new Address</button>
-            <p if.bind="_addresses.length > 2">No more than three addresses allowed per account.</p>
-    </div>
-
-    <div if.bind="_addresses.length == 0">
-        No addresses added yet.
+        <p if.bind="_addresses.length > 2">No more than three addresses allowed per account.</p>
+        <div if.bind="_addresses.length == 0">
+            No addresses added yet.
+        </div>
     </div>
 
     <div class="card-deck">

@@ -96,6 +96,13 @@
                         ${order.address.city},
                         ${order.address.zip}
                     </td>
+                    <td if.bind="order.invoice != null">
+                        <b>${order.invoice.invoiceStatusCode.code}</b> - ${order.invoice.invoiceStatusCode.invoiceStatusDescription}
+                        <button click.delegate="downloadInvoice(order.invoice)" class="btn btn-primary">Download Invoice</button>
+                        <button click.delegate="payForInvoice(order.invoice)" class="btn btn-primary" disabled.bind="order.invoice.invoiceStatusCode.code == 'Paid' ? true : false">
+                            Pay Now
+                        </button>
+                    </td>
                     <td if.bind="_showDetails == true || _showItemDetails == true">
                         <button click.delegate="hide()" class="btn btn-primary">Hide details</button>
                     </td>

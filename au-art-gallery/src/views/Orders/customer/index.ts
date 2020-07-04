@@ -9,6 +9,8 @@ import { OrderStatusCodeService } from 'service/order-status-code-service';
 import { IOrderStatusCode } from 'domain/IOrderStatusCode';
 import { UploadsService } from 'service/uploads-service';
 import { IOrderItem } from 'domain/IOrderItem';
+import { InvoiceService } from 'service/invoice-service';
+import { IInvoice } from 'domain/IInvoice';
 
 
 @autoinject
@@ -25,7 +27,7 @@ export class OrdersIndex {
 
 
     constructor(private orderService: OrderService, private addressService: AddressService, 
-        private orderStatusCodeService: OrderStatusCodeService, private uploadsService: UploadsService) {
+        private orderStatusCodeService: OrderStatusCodeService, private uploadsService: UploadsService, private invoiceService: InvoiceService) {
 
     }
 
@@ -33,6 +35,32 @@ export class OrdersIndex {
         if (!this._showItemDetails){
             this._showItemDetails = true
         }
+    }
+
+    downloadInvoice(orderInvoice: IInvoice) {
+        this.invoiceService.downloadInvoice(orderInvoice.id, String(orderInvoice.invoiceNumber))
+        .then(response => URL.createObjectURL(response.data))
+        .then(url => {
+            window.open(url, '_blank');
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    payForInvoice(orderInvoice: IInvoice) {
+        var newInvoice: IInvoice = <IInvoice>{
+            id: orderInvoice.id,
+            invoiceDate: orderInvoice.invoiceDate,
+            invoiceDetails: orderInvoice.invoiceDetails,
+            invoiceNumber: orderInvoice.invoiceNumber,
+            invoiceStatusCodeId: "00000000-0000-0000-0000-000000000002",
+            orderId: orderInvoice.orderId
+        }
+        this.invoiceService.updateInvoice(newInvoice).then((response) => {
+            if (response.statusCode >= 200 && response.statusCode < 300){
+                this._alert = null;
+                this.attached();
+            }
+        })    
     }
 
     getImages() {
@@ -45,6 +73,24 @@ export class OrdersIndex {
                     }
                 })    
             });      
+        });
+    }
+
+    getInvoices() {
+        this._orders.forEach(order => {
+            this.invoiceService.getInvoices(order.id!).then((response) => {
+                if (response.statusCode >= 200 && response.statusCode < 300) {
+                    this._alert = null;
+                    order.invoice = response.data![0];                     
+                } else {
+                    // show error message
+                    this._alert = {
+                        message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                        type: AlertType.Danger,
+                        dismissable: true,
+                    }
+                }
+            });         
         });
     }
 
@@ -70,11 +116,7 @@ export class OrdersIndex {
             response => {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
-                    this._orders = response.data!;
-                    this.calculateTotal();
-                    this.getOrderStatusCodes();
-                    this.getImages(); 
-                    this.getDateStrings();            
+                    this._orders = response.data!;          
                 } else {
                     // show error message
                     this._alert = {
@@ -84,7 +126,12 @@ export class OrdersIndex {
                     }
                 }
             }
-        );
+        )
+        .then(response => this.calculateTotal())
+        .then(response => this.getOrderStatusCodes())
+        .then(response => this.getImages())
+        .then(response => this.getDateStrings())
+        .then(response => this.getInvoices())
     }
 
 

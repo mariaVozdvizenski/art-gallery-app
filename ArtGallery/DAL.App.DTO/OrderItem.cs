@@ -13,9 +13,6 @@ namespace DAL.App.DTO
         
         public Guid OrderId { get; set; } = default!;
         public Order? Order { get; set; }
-
-        public ICollection<ShipmentItem>? ItemShipments { get; set; }
-
         public int Quantity { get; set; }
     }
 }

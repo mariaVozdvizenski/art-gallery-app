@@ -24,9 +24,6 @@ namespace DAL.App.EF.Mappers
             MapperConfigurationExpression.CreateMap<PaintingCategory, DTO.PaintingCategory>();
             MapperConfigurationExpression.CreateMap<Painting, DTO.Painting>();
             MapperConfigurationExpression.CreateMap<PaymentMethod, DTO.PaymentMethod>();
-            MapperConfigurationExpression.CreateMap<Payment, DTO.Payment>();
-            MapperConfigurationExpression.CreateMap<ShipmentItem, DTO.ShipmentItem>();
-            MapperConfigurationExpression.CreateMap<Shipment, DTO.Shipment>();
             MapperConfigurationExpression.CreateMap<UserPaymentMethod, DTO.UserPaymentMethod>();
             MapperConfigurationExpression.CreateMap<AppUser, DTO.Identity.AppUser>();
             MapperConfigurationExpression.CreateMap<Address, DTO.Address>();
@@ -45,9 +42,6 @@ namespace DAL.App.EF.Mappers
             MapperConfigurationExpression.CreateMap<DTO.PaintingCategory, PaintingCategory>();
             MapperConfigurationExpression.CreateMap<DTO.Painting, Painting>();
             MapperConfigurationExpression.CreateMap<DTO.PaymentMethod, PaymentMethod>();
-            MapperConfigurationExpression.CreateMap<DTO.Payment, Payment>();
-            MapperConfigurationExpression.CreateMap<DTO.ShipmentItem, ShipmentItem>();
-            MapperConfigurationExpression.CreateMap<DTO.Shipment, Shipment>();
             MapperConfigurationExpression.CreateMap<DTO.UserPaymentMethod, UserPaymentMethod>();
             MapperConfigurationExpression.CreateMap<DTO.Identity.AppUser, AppUser>();
             MapperConfigurationExpression.CreateMap<DTO.Address, Address>();

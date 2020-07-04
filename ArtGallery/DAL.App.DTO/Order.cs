@@ -19,7 +19,6 @@ namespace DAL.App.DTO
         public Guid OrderStatusCodeId { get; set; } = default!;
         public OrderStatusCode? OrderStatusCode { get; set; }
 
-        public ICollection<Shipment>? Shipments { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }
         public ICollection<Invoice>? Invoices { get; set; }
         

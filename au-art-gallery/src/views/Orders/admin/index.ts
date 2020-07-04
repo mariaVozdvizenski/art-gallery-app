@@ -7,6 +7,8 @@ import { AddressService } from 'service/address-service';
 import { IAddress } from 'domain/IAddress';
 import { OrderStatusCodeService } from 'service/order-status-code-service';
 import { IOrderStatusCode } from 'domain/IOrderStatusCode';
+import { InvoiceService } from 'service/invoice-service';
+import { IInvoice } from 'domain/IInvoice';
 
 
 @autoinject
@@ -23,7 +25,7 @@ export class OrdersIndex {
 
 
     constructor(private orderService: OrderService, private addressService: AddressService, 
-        private orderStatusCodeService: OrderStatusCodeService) {
+        private orderStatusCodeService: OrderStatusCodeService, private invoiceService: InvoiceService) {
 
     }
 
@@ -50,8 +52,6 @@ export class OrdersIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._orders = response.data!;
-                    this.calculateTotal();
-                    this.getOrderStatusCodes();              
                 } else {
                     // show error message
                     this._alert = {
@@ -61,7 +61,38 @@ export class OrdersIndex {
                     }
                 }
             }
-        );
+        )
+        .then(response => this.getOrderStatusCodes())
+        .then(response => this.getInvoices())
+        .then(response => this.calculateTotal());
+    }
+
+    downloadInvoice(orderInvoice: IInvoice) {
+        this.invoiceService.downloadInvoice(orderInvoice.id, String(orderInvoice.invoiceNumber))
+        .then(response => URL.createObjectURL(response.data))
+        .then(url => {
+            window.open(url, '_blank');
+            URL.revokeObjectURL(url);
+        });
+    }
+
+
+    getInvoices() {
+        this._orders.forEach(order => {
+            this.invoiceService.getInvoices(order.id!).then((response) => {
+                if (response.statusCode >= 200 && response.statusCode < 300) {
+                    this._alert = null;
+                    order.invoice = response.data![0];                     
+                } else {
+                    // show error message
+                    this._alert = {
+                        message: response.statusCode.toString() + ' - ' + response.errorMessage,
+                        type: AlertType.Danger,
+                        dismissable: true,
+                    }
+                }
+            });         
+        });
     }
 
     getOrderStatusCodes() {

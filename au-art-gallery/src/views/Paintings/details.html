@@ -29,8 +29,6 @@
                         ${_alert.message}
                     </div>
                     <div>
-                        <input type="submit" class="btn btn-primary" value="Buy Now"
-                            disabled.bind="appState.jwt != null ? false : true" />
                         <input type="submit" class="btn btn-primary" value="Add to Cart"
                             disabled.bind="appState.jwt != null ? false : true"
                             click.trigger="addToCart(itemQuantity)" />

@@ -41,12 +41,6 @@ namespace BLL.App
             GetService<IPaintingCategoryService>(() => new PaintingCategoryService(UOW));
         public IPaymentMethodService PaymentMethods => 
             GetService<IPaymentMethodService>(() => new PaymentMethodService(UOW));
-        public IPaymentService Payments => 
-            GetService<IPaymentService>(() => new PaymentService(UOW));
-        public IShipmentService Shipments => 
-            GetService<IShipmentService>(() => new ShipmentService(UOW));
-        public IShipmentItemService ShipmentItems => 
-            GetService<IShipmentItemService>(() => new ShipmentItemService(UOW));
         public IUserPaymentMethodService UserPaymentMethods => 
             GetService<IUserPaymentMethodService>(() => new UserPaymentMethodService(UOW));
     }

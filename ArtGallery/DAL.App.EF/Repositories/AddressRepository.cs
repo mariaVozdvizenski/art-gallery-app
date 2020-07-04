@@ -6,7 +6,6 @@ using Contracts.DAL.App.Repositories;
 using DAL.App.EF.Mappers;
 using ee.itcollege.mavozd.DAL.Base.EF.Repositories;
 using Domain.App;
-using ee.itcollege.mavozd.DAL.Base.EF.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AppUser = Domain.App.Identity.AppUser;
 

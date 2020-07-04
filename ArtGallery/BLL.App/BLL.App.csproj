@@ -6,13 +6,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BLL.App.DTO\BLL.App.DTO.csproj" />
-      <ProjectReference Include="..\BLL.Base\BLL.Base.csproj" />
       <ProjectReference Include="..\Contracts.BLL.App\Contracts.BLL.App.csproj" />
       <ProjectReference Include="..\DAL.App.EF\DAL.App.EF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="ee.itcollege.mavozd.BLL.Base" Version="1.0.0" />
+      <PackageReference Include="itext7" Version="7.1.11" />
     </ItemGroup>
 
 </Project>

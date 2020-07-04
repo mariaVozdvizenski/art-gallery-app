@@ -39,14 +39,8 @@ namespace DAL.App.EF
             GetRepository<IPaintingRepository>(() => new PaintingRepository(UOWDbContext));
         public IPaintingCategoryRepository PaintingCategories => 
             GetRepository<IPaintingCategoryRepository>(() => new PaintingCategoryRepository(UOWDbContext));
-        public IPaymentRepository Payments => 
-            GetRepository<IPaymentRepository>(() => new PaymentRepository(UOWDbContext));
         public IPaymentMethodRepository PaymentMethods => 
             GetRepository<IPaymentMethodRepository>(() => new PaymentMethodRepository(UOWDbContext));
-        public IShipmentRepository Shipments => 
-            GetRepository<IShipmentRepository>(() => new ShipmentRepository(UOWDbContext));
-        public IShipmentItemRepository ShipmentItems => 
-            GetRepository<IShipmentItemRepository>(() => new ShipmentItemRepository(UOWDbContext));
         public IUserPaymentMethodRepository UserPaymentMethods => 
             GetRepository<IUserPaymentMethodRepository>(() => new UserPaymentMethodRepository(UOWDbContext));
     }

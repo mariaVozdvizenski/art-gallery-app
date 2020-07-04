@@ -19,10 +19,7 @@ namespace Contracts.DAL.App
          IOrderStatusCodeRepository OrderStatusCodes { get; }
          IPaintingRepository Paintings { get; }
          IPaintingCategoryRepository PaintingCategories { get; }
-         IPaymentRepository Payments { get; }
          IPaymentMethodRepository PaymentMethods { get; }
-         IShipmentRepository Shipments { get; }
-         IShipmentItemRepository ShipmentItems { get; }
          IUserPaymentMethodRepository UserPaymentMethods { get; }
     }
 }

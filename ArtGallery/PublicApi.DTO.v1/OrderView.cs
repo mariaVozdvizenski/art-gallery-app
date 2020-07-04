@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Domain.App.Identity;
-using ee.itcollege.mavozd.Domain.Base;
 
-
-namespace Domain.App
+namespace PublicApi.DTO.v1
 {
-    public class Order : DomainEntityIdMetadataUser<AppUser>
+    public class OrderView
     {
+        public Guid Id { get; set; }
+        
         public DateTime OrderDate { get; set; }
         
         [MaxLength(4096)]
         public string? OrderDetails { get; set; }
 
         public Guid OrderStatusCodeId { get; set; } = default!;
-        public OrderStatusCode? OrderStatusCode { get; set; }
+        
+        public Guid AppUserId { get; set; }
         
         public Guid AddressId { get; set; }
-        public Address? Address { get; set; }
-        public ICollection<OrderItem>? OrderItems { get; set; }
+
         public ICollection<Invoice>? Invoices { get; set; }
     }
 }

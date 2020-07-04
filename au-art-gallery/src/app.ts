@@ -32,21 +32,18 @@ export class App {
       {route: ['artists/create'], name: 'artistCreate', moduleId: PLATFORM.moduleName('views/artists/create'), nav: false, title:'Artist Create', settings: { roles: ['admin'] }},
       {route: ['artists/delete/:id'], name: 'artistDelete', moduleId: PLATFORM.moduleName('views/artists/delete'), nav: false, title:'Artist Delete', settings: { roles: ['admin'] }},
 
-      {route: ['comments/edit/:id'], name: 'commentEdit', moduleId: PLATFORM.moduleName('views/comments/edit'), nav: false, title:'Comment Edit', settings: { roles: ['user', 'admin'] }},
       {route: ['comments/delete/:id'], name: 'commentDelete', moduleId: PLATFORM.moduleName('views/comments/delete'), nav: false, title:'Comment Delete', settings: { roles: ['admin'] }},
 
-      {route: ['checkout', 'checkout/index'], name: 'checkout', moduleId: PLATFORM.moduleName('views/checkout/index'), nav: true, title:'Checkout', activationStrategy: activationStrategy.replace, settings: { roles: ['user','admin'] }},
+      {route: ['checkout', 'checkout/index'], name: 'checkout', moduleId: PLATFORM.moduleName('views/checkout/index'), nav: false, title:'Checkout', activationStrategy: activationStrategy.replace, settings: { roles: ['user','admin'] }},
       {route: ['checkout/success'], name: 'checkoutSuccess', moduleId: PLATFORM.moduleName('views/checkout/success'), nav: false, title:'Checkout Success', settings: { roles: ['user','admin'] }},
 
-      {route: ['PaymentMethods', 'PaymentMethods/index'], name: 'paymentMethods', moduleId: PLATFORM.moduleName('views/PaymentMethods/index'), nav: true, title:'Payment Methods', settings: { roles: ['admin'] }},
+      {route: ['PaymentMethods', 'PaymentMethods/index'], name: 'paymentMethods', moduleId: PLATFORM.moduleName('views/PaymentMethods/index'), nav: false, title:'Payment Methods', settings: { roles: ['admin'] }},
       {route: ['PaymentMethods/create'], name: 'paymentMethodsCreate', moduleId: PLATFORM.moduleName('views/PaymentMethods/create'), nav: false, title:'Payment Methods Create', settings: { roles: ['admin'] }},
       {route: ['PaymentMethods/edit/:id'], name: 'paymentMethodsEdit', moduleId: PLATFORM.moduleName('views/PaymentMethods/edit'), nav: false, title:'Payment Methods Edit', settings: { roles: ['admin'] }},
       {route: ['PaymentMethods/delete/:id'], name: 'paymentMethodsDelete', moduleId: PLATFORM.moduleName('views/PaymentMethods/delete'), nav: false, title:'Payment Methods Delete', settings: { roles: ['admin'] }},
 
       {route: ['ordersAdmin', 'orders/admin'], name: 'ordersAdmin', moduleId: PLATFORM.moduleName('views/orders/admin/index'), nav: true, title:'Orders Admin', settings: { roles: ['admin'] }},
       {route: ['orders', 'orders/customer'], name: 'ordersCustomer', moduleId: PLATFORM.moduleName('views/orders/customer/index'), nav: true, title:'Orders', settings: { roles: ['user'] }},
-
-      {route: ['userPaymentMethods', 'userPaymentMethods/index'], name: 'userPaymentMethods', moduleId: PLATFORM.moduleName('views/UPMethods/index'), nav: false, title:'User Payment Methods', settings: { roles: ['user', 'admin'] }},
 
       {route: ['paintings', 'paintings/index'], name: 'paintings', moduleId: PLATFORM.moduleName('views/paintings/index'), nav: true, title:'Paintings', settings: { roles: [] }},
       {route: ['paintings/details/:id'], name: 'paintingDetails', moduleId: PLATFORM.moduleName('views/paintings/details'), nav: false, title:'Painting Details', activationStrategy: activationStrategy.invokeLifecycle
