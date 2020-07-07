@@ -6,7 +6,8 @@ export class AppState {
 
     }
 
-    public readonly baseUrl = 'https://localhost:5001/api/v1.0/';
+    public readonly baseUrl = 'https://artgallery2020.azurewebsites.net/api/v1.0/';
+    public readonly baseUrlForUploads = 'https://localhost:5001/api/v1.0/';
     // JSON Web Token to keep track of logged in status
     public jwt: string | null = null;
     public userName: string | null = null;

@@ -4,7 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{9F39AA59-8F9D-4A70-A82D-DC432E76E51A}"
 ProjectSection(SolutionItems) = preProject
-	..\..\..\..\Directory.Build.props = ..\..\..\..\Directory.Build.props
+	Dockerfile = Dockerfile
+	.dockerignore = .dockerignore
+	Directory.Build.props = Directory.Build.props
+	..\README.md = ..\README.md
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.App", "Domain.App\Domain.App.csproj", "{C3566FB6-FCA0-4BB6-9ADB-8ADA73550F72}"

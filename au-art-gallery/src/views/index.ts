@@ -22,7 +22,6 @@ export class HomeIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._paintings = response.data!;
-                    console.log("attached");
                     this.getImages();
                 } else {
                     // show error message

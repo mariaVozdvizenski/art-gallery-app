@@ -9,13 +9,13 @@ import { IBasketItemCreate } from 'domain/IBasketItemCreate';
 @autoinject
 export class BasketItemService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'BasketItems';
   
     async getBasketItems(): Promise<IFetchResponse<IBasketItem[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -26,7 +26,6 @@ export class BasketItemService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IBasketItem[];
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +49,7 @@ export class BasketItemService {
 
     async getBasketItem(id: string): Promise<IFetchResponse<IBasketItem>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -60,7 +60,6 @@ export class BasketItemService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IBasketItem;
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -83,6 +82,7 @@ export class BasketItemService {
 
     async updateBasketItem(basketItem: IBasketItem): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + basketItem.id, JSON.stringify(basketItem), {
                     cache: "no-store",
@@ -113,6 +113,7 @@ export class BasketItemService {
 
     async createBasketItem(basketItem: IBasketItemCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(basketItem), {
                 cache: 'no-store',
@@ -144,6 +145,7 @@ export class BasketItemService {
 
     async deleteBasketItem(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

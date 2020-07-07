@@ -11,13 +11,13 @@ import { IOrderItemCreate } from 'domain/IOrderItemCreate';
 @autoinject
 export class OrderItemService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'OrderItems';
   
     async getOrderItems(): Promise<IFetchResponse<IOrderItem[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -28,7 +28,7 @@ export class OrderItemService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IOrderItem[];
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -52,6 +52,7 @@ export class OrderItemService {
 
     async getOrderItem(id: string): Promise<IFetchResponse<IOrderItem>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -62,7 +63,7 @@ export class OrderItemService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IOrderItem;
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -85,6 +86,7 @@ export class OrderItemService {
 
     async updateOrderItem(orderItem: IOrderItem): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + orderItem.id, JSON.stringify(orderItem), {
                     cache: "no-store",
@@ -115,6 +117,7 @@ export class OrderItemService {
 
     async createOrderItem(orderItem: IOrderItemCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(orderItem), {
                 cache: 'no-store',
@@ -146,6 +149,7 @@ export class OrderItemService {
 
     async deleteOrderItem(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

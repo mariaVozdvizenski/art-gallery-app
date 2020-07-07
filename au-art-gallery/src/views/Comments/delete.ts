@@ -50,7 +50,6 @@ export class CommentDelete{
                     dismissable: true,
 
                 }
-                console.log(this._alert);
             }
         });
         event.preventDefault();

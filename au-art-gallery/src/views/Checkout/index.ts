@@ -63,7 +63,6 @@ export class CheckoutIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._baskets = response.data!;
-                    console.log(this._baskets[0].basketItems)
                     this._isInStock = this.isInStock();
                     this.calculateTotal();
                 } else {
@@ -155,14 +154,11 @@ export class CheckoutIndex {
             orderStatusCodeId: "00000000-0000-0000-0000-000000000002"
         }
 
-        console.log(order);
-
         if (this.isInStock()) {
             this.orderService.createOrder(order).then((response) => {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     var orderId = response.data!
-                    console.log(orderId);
 
                     this._baskets[0].basketItems.forEach(basketItem => {
                         if (basketItem.paintingQuantity > 0) {

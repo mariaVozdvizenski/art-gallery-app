@@ -10,13 +10,13 @@ import { data } from 'jquery';
 @autoinject
 export class InvoiceService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'Invoices';
   
     async getInvoices(orderId: string): Promise<IFetchResponse<IInvoice[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + "?orderId=" + orderId, {
                     cache: "no-store",
@@ -27,7 +27,7 @@ export class InvoiceService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IInvoice[];
-                console.log(data);
+                (data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +50,7 @@ export class InvoiceService {
 
     async downloadInvoice(id: string, fileName: string): Promise<IFetchResponse<Blob>>  {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrlForUploads;
             const response = await this.httpClient
             .get(this._baseUrl + "/" + id + "/" + fileName, {
                 cache: 'no-store',
@@ -81,6 +82,7 @@ export class InvoiceService {
 
     async getInvoice(id: string): Promise<IFetchResponse<IInvoice>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -91,7 +93,6 @@ export class InvoiceService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IInvoice;
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -114,6 +115,7 @@ export class InvoiceService {
 
     async updateInvoice(invoice: IInvoice): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + invoice.id, JSON.stringify(invoice), {
                     cache: "no-store",
@@ -144,6 +146,7 @@ export class InvoiceService {
 
     async createInvoice(invoice: IInvoiceCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrlForUploads;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(invoice), {
                 cache: 'no-store',
@@ -175,6 +178,7 @@ export class InvoiceService {
 
     async deleteInvoice(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

@@ -37,7 +37,6 @@ export class ArtistCreate{
                     dismissable: true,
 
                 }
-                console.log(this._alert);
             }
         });
 

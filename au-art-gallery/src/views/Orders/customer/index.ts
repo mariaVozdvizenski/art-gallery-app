@@ -98,9 +98,7 @@ export class OrdersIndex {
         this._orders.forEach(order => {
             order.total = 0;
             order.orderItems.forEach(orderItem => {
-                console.log(orderItem.paintingPrice);
                 order.total! += parseInt(orderItem.paintingPrice)
-                console.log(order.total);
             });
         });
     }
@@ -153,11 +151,8 @@ export class OrdersIndex {
     }
 
     getDetails(addressId: string) {
-        console.log(addressId);
 
         this.changeShowDetails();
-
-        console.log(this._showDetails);
 
         this.addressService.getAddress(addressId).then(
             response => {
@@ -177,15 +172,10 @@ export class OrdersIndex {
     }
 
     filter() {
-        console.log(this._orderStatusCodesString);
-        console.log(this._condition);
         this.attached();
     }
 
     changeStatus(order: IOrder) {
-
-        console.log(order);
-
 
         var updateOrder: IOrder = <IOrder> {
             id: order.id,

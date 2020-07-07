@@ -100,8 +100,6 @@ export class PaintingDetails {
 
     onSubmit(event: Event){
 
-        console.log(event);
-
         this._comment!.paintingId = this._painting!.id
 
         this.commentService.createComment(this._comment!)

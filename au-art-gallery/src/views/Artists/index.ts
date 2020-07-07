@@ -21,7 +21,6 @@ export class ArtistsIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._artists = response.data!;
-                    console.log(this.appState.jwt)
                 } else {
                     // show error message
                     this._alert = {

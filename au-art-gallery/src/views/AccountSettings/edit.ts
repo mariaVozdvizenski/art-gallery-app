@@ -27,7 +27,6 @@ export class AccountSettingsEdit {
                     if (response.statusCode >= 200 && response.statusCode < 300) {
                         this._alert = null;
                         this._address = response.data!;
-                        console.log(this._address);
                     } else {
                         // show error message
                         this._alert = {
@@ -42,8 +41,6 @@ export class AccountSettingsEdit {
     }
 
     onSubmit(event: Event) {
-        console.log(this._id);
-
         this._address!.zip = Number(this._address!.zip)
 
         this.addressService.updateAddress(this._address!)

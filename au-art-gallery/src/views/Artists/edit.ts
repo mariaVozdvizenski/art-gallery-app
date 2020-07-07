@@ -41,8 +41,6 @@ export class ArtistEdit{
     }
 
     onSubmit(event: Event){
-        console.log(this._id);
-
         let artist: IArtist = <IArtist> {
             firstName: this._artist!.firstName,
             lastName: this._artist!.lastName,
@@ -52,8 +50,6 @@ export class ArtistEdit{
             bio: this._artist!.bio,
             placeOfBirth: this._artist!.placeOfBirth
         };
-
-        console.log(artist.dateOfBirth)
 
         this.artistService.updateArtist(artist)
         .then((response) => {

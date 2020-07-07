@@ -16,6 +16,7 @@ export class PaintingCategoryService {
   
     async getPaintingCategories(): Promise<IFetchResponse<IPaintingCategory[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -26,7 +27,7 @@ export class PaintingCategoryService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IPaintingCategory[];
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +51,7 @@ export class PaintingCategoryService {
 
     async getPaintingCategory(id: string): Promise<IFetchResponse<IPaintingCategory>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -60,7 +62,7 @@ export class PaintingCategoryService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IPaintingCategory;
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -83,6 +85,7 @@ export class PaintingCategoryService {
 
     async updatePaintingCategory(paintingCategory: IPaintingCategory): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + paintingCategory.id, JSON.stringify(paintingCategory), {
                     cache: "no-store",
@@ -114,6 +117,7 @@ export class PaintingCategoryService {
     async createPaintingCategory(paintingCategory: IPaintingCategoryCreate): Promise<IFetchResponse<string>> {
         
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(paintingCategory), {
                 cache: 'no-store',
@@ -145,6 +149,7 @@ export class PaintingCategoryService {
 
     async deletePaintingCategory(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

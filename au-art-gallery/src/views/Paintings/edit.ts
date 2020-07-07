@@ -65,7 +65,6 @@ export class PaintingEdit {
     }
 
     activate(params: any, routeConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
-        console.log(params);
         if (params.id && typeof (params.id) == "string") {
             this.paintingService.getPainting(params.id)
                 .then(
@@ -87,11 +86,8 @@ export class PaintingEdit {
     }
 
     revertToPrevious(){ 
-        console.log(this._selectedFile);
-
         if (this._selectedFile) {
             this._selectedFile = null;
-            console.log(this._selectedFile);
         }
     }
 
@@ -140,8 +136,6 @@ export class PaintingEdit {
     async onSubmit(event: Event) {
 
         await this.uploadDeleteCreate();
-
-        console.log(this._painting);
 
         let painting: IPaintingEdit = <IPaintingEdit>{
             id: this._painting!.id,
@@ -209,7 +203,6 @@ export class PaintingEdit {
 
     async submitPaintingCategory(paintingCategory: IPaintingCategoryCreate) {
 
-        console.log(paintingCategory);
         await this.paintingCategoryService.createPaintingCategory(paintingCategory).then((response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 this._alert = null;

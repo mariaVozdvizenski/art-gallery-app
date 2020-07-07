@@ -44,7 +44,6 @@ export class BasketsIndex {
     }
 
     onDelete(id: string){
-        console.log(id);
         this.basketItemService.deleteBasketItem(id).then(
             (response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -62,16 +61,13 @@ export class BasketsIndex {
     }
 
     onUpdate(id: string, quantity: string) {
-        console.log(id)
-        console.log(quantity)
         let basketItem: IBasketItem | null;    
         this.basketItemService.getBasketItem(id).then(
             response => {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     basketItem = response.data!;
-                    basketItem.quantity = Number(quantity)
-                    
+                    basketItem.quantity = Number(quantity)   
                     this.basketItemService.updateBasketItem(basketItem).then(
                         (response) => {
                         if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -95,14 +91,6 @@ export class BasketsIndex {
                 }
             }
         );
-    }
-
-    async emptyBasket() {
-        this._baskets[0].basketItems.forEach(basketItem => {
-            if (basketItem.paintingQuantity > 0) {
-                this.basketItemService.deleteBasketItem(basketItem.id)
-            }
-        });
     }
 
     isInStock(): boolean {

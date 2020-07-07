@@ -9,13 +9,13 @@ import { IFetchResponse } from 'types/IFetchResponse';
 @autoinject
 export class ArtistService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'Artists';
   
     async getArtists(): Promise<IFetchResponse<IArtist[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -26,7 +26,6 @@ export class ArtistService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IArtist[];
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +49,7 @@ export class ArtistService {
 
     async getArtist(id: string): Promise<IFetchResponse<IArtist>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -60,7 +60,6 @@ export class ArtistService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IArtist;
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -83,6 +82,7 @@ export class ArtistService {
 
     async updateArtist(artist: IArtist): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + artist.id, JSON.stringify(artist), {
                     cache: "no-store",
@@ -113,6 +113,7 @@ export class ArtistService {
 
     async createArtist(artist: IArtistCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(artist), {
                 cache: 'no-store',
@@ -144,6 +145,7 @@ export class ArtistService {
 
     async deleteArtist(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

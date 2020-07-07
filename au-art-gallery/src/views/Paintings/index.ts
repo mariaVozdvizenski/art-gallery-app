@@ -30,8 +30,6 @@ export class PaintingsIndex {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     this._alert = null;
                     this._paintings = response.data!;
-                    console.log("attached");
-                    console.log(this._inStock);
                 } else {
                     // show error message
                     this._alert = {
@@ -61,12 +59,6 @@ export class PaintingsIndex {
     }
 
     async filter(event: Event){
-        console.log("in options");
-
-        console.log(this._filterOption);
-        console.log(this._inStock);
-        console.log(this._categoryNames);
-
         this.attached();
     }
 

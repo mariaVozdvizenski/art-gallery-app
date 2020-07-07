@@ -13,11 +13,11 @@ export class CategoryService {
     private readonly _baseUrl = 'Categories';
 
     constructor(private appState: AppState, private httpClient: HttpClient) {
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     async getCategories(): Promise<IFetchResponse<ICategory[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient.fetch(this._baseUrl, {
                 cache: "no-store",
                 headers: {
@@ -26,7 +26,6 @@ export class CategoryService {
             });
             if (response.status >= 200 && response.status < 300){
                 const data = (await response.json()) as ICategory[];
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -47,6 +46,7 @@ export class CategoryService {
 
     async getCategory(id: string): Promise<IFetchResponse<ICategory>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient.fetch(this._baseUrl + '/' + id, {
                 cache: "no-store",
                 headers: {
@@ -56,7 +56,6 @@ export class CategoryService {
 
             if (response.status >= 200 && response.status < 300){
                 const data = (await response.json()) as ICategory;
-                console.log(data);
                 return {
                     statusCode: response.status,
                     data: data
@@ -79,6 +78,7 @@ export class CategoryService {
 
     async createCategory(category: ICategoryCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(category), {
                 cache: 'no-store',
@@ -111,6 +111,7 @@ export class CategoryService {
     async updateCategory(category: ICategory): Promise<IFetchResponse<ICategory>> {
 
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient.put(this._baseUrl + '/' + category.id, JSON.stringify(category), {
                 cache: "no-store",
                 headers: {
@@ -138,6 +139,7 @@ export class CategoryService {
 
     async deleteCategory(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

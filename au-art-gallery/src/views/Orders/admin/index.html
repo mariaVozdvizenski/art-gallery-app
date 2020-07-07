@@ -37,16 +37,7 @@
                         Total
                     </th>
                     <th if.bind="_showDetails == true">
-                        Address
-                    </th>
-                    <th if.bind="_showDetails == true">
-                        Address
-                    </th>
-                    <th if.bind="_showDetails == true">
-                        Name
-                    </th>
-                    <th if.bind="_showDetails == true">
-                        Country, City, Zip
+                        Shipping
                     </th>
                     <th if.bind="_showItemDetails == true">
                          Items
@@ -76,28 +67,23 @@
                     <td>
                         ${order.total}€
                     </td>
-                    <td if.bind="order.invoice != null">
-                        <b>${order.invoice.invoiceStatusCode.code}</b> - ${order.invoice.invoiceStatusCode.invoiceStatusDescription}
-                    </td>
                     <td if.bind="_showDetails == true">
-                        ${order.address.shippingAddress}
+                        <p>Address: ${order.address.shippingAddress}</p>
+                        <p>Country: ${order.address.country}</p>
+                        <p>City: ${order.address.city}</p>
+                        <p>Zip: ${order.address.zip}</p>
+                        <p>Name: ${order.address.firstName} ${order.address.lastName}</p>
                     </td>
-                    <td if.bind="_showDetails == true">
-                        ${order.address.firstName} ${order.address.lastName}
-                    </td>
-                    <td if.bind="_showDetails == true">
-                        ${order.address.country},
-                        ${order.address.city},
-                        ${order.address.zip}
-                    </td>
+            
                     <td if.bind="_showItemDetails == true">
                         <p repeat.for="orderItem of order.orderItems">Title: <a route-href="route: paintingDetails; params.bind: {id: orderItem.paintingId}">${orderItem.paintingTitle}</a> Price: ${orderItem.paintingPrice}€ Quantity: ${orderItem.quantity}</p>
                     </td>
+                    <td if.bind="order.invoice != null">
+                        <b>${order.invoice.invoiceStatusCode.code}</b> - ${order.invoice.invoiceStatusCode.invoiceStatusDescription}
+                        <button click.delegate="downloadInvoice(order.invoice)" class="btn btn-primary">Download Invoice</button>
+                    </td>
                     <td if.bind="_showDetails == true || _showItemDetails == true">
                         <button click.delegate="hide()" class="btn btn-primary">Hide details</button>
-                    </td>
-                    <td if.bind="order.invoice != null">
-                        <button click.delegate="downloadInvoice(order.invoice)" class="btn btn-primary">Download Invoice</button>
                     </td>
                     <td if.bind="_showDetails == false">
                         <button click.delegate="changeShowDetails()" class="btn btn-primary">Show shipping

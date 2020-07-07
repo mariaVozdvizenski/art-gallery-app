@@ -9,13 +9,13 @@ import { IFetchResponse } from 'types/IFetchResponse';
 @autoinject
 export class PaymentMethodService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'PaymentMethods';
   
     async getPaymentMethods(): Promise<IFetchResponse<IPaymentMethod[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -26,7 +26,7 @@ export class PaymentMethodService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IPaymentMethod[];
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +50,7 @@ export class PaymentMethodService {
 
     async getPaymentMethod(id: string): Promise<IFetchResponse<IPaymentMethod>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -60,7 +61,7 @@ export class PaymentMethodService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IPaymentMethod;
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -83,6 +84,7 @@ export class PaymentMethodService {
 
     async updatePaymentMethod(paymentMethod: IPaymentMethod): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + paymentMethod.id, JSON.stringify(paymentMethod), {
                     cache: "no-store",
@@ -113,6 +115,7 @@ export class PaymentMethodService {
 
     async createPaymentMethod(paymentMethod: IPaymentMethodCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(paymentMethod), {
                 cache: 'no-store',
@@ -144,6 +147,7 @@ export class PaymentMethodService {
 
     async deletePaymentMethod(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

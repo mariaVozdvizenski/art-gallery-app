@@ -41,8 +41,6 @@ export class CategoryEdit{
     }
 
     onSubmit(event: Event){
-        console.log(this._id);
-
         let category: ICategory = <ICategory> {
             categoryName: this._category!.categoryName,
             id: this._category!.id

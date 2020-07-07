@@ -12,7 +12,6 @@ import { ICommentCreate } from 'domain/ICommentCreate';
 export class CommentService {
     
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
 
     }
 
@@ -20,8 +19,8 @@ export class CommentService {
   
 
     async getComments(): Promise<IFetchResponse<IComment[]>> {
-
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -54,6 +53,7 @@ export class CommentService {
 
     async getComment(id: string): Promise<IFetchResponse<IComment>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -85,6 +85,7 @@ export class CommentService {
 
     async updateComment(comment: IComment): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + comment.id, JSON.stringify(comment), {
                     cache: "no-store",
@@ -115,6 +116,7 @@ export class CommentService {
 
     async deleteComment(id: string): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .delete(this._baseUrl + '/' + id, null, {
                 cache: 'no-store',
@@ -142,6 +144,7 @@ export class CommentService {
 
     async createComment(comment: ICommentCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(comment), {
                 cache: 'no-store',

@@ -11,8 +11,6 @@ import { IOrderCreate } from 'domain/IOrderCreate';
 export class OrderService {
     
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
-
     }
 
     private readonly _baseUrl = 'Orders';
@@ -47,7 +45,7 @@ export class OrderService {
 
         try {
             var url = this.constructUrl(condition, statusCodes);
-            console.log(url);
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(url, {
                     cache: "no-store",
@@ -80,6 +78,7 @@ export class OrderService {
 
     async getOrder(id: string): Promise<IFetchResponse<IOrder>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -111,6 +110,7 @@ export class OrderService {
 
     async updateOrder(order: IOrder): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + order.id, JSON.stringify(order), {
                     cache: "no-store",
@@ -141,6 +141,7 @@ export class OrderService {
 
     async createOrder(order: IOrderCreate): Promise<IFetchResponse<string>> {
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(order), {
                 cache: 'no-store',
@@ -173,6 +174,7 @@ export class OrderService {
 
     async deleteOrder(id: string): Promise<IFetchResponse<string>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .delete(this._baseUrl + '/' + id, null, {
                     cache: "no-store",

@@ -11,11 +11,11 @@ import { IRegisterResponse } from 'domain/IRegisterResponse';
 export class AccountService {
 
     constructor(private appState: AppState, private httpClient: HttpClient) {
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     async login(email: string, password: string): Promise<IResponse<ILoginResponse>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient.post('account/login', JSON.stringify({
                 email: email,
                 password: password,
@@ -46,8 +46,8 @@ export class AccountService {
         }
     }
     async register (email: string, password: string): Promise<IResponse<ILoginResponse>> {
-        
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient.post('account/register', JSON.stringify({
                 email: email,
                 password: password}), 

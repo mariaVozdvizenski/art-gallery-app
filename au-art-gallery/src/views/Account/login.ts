@@ -20,14 +20,12 @@ export class AccountLogin{
 
         this.accountService.login(this._email, this._password).then(
             response => {
-                console.log(response);
                 if (response.statusCode == 200){
                     this.appState.jwt = response.data!.token;
                     this.appState.userName = response.data!.userName;
                     this.appState.userRoles = response.data!.userRoles;
                     this.appState.appUserId = response.data!.appUserId;
                     this.router!.navigateToRoute('home');
-                    console.log(this.appState);
                 } else {
                     this._errorMessage = response.statusCode.toString() + ' ' + response.errorMessage!
                     if (response.statusCode == 404 || response.statusCode == 400){

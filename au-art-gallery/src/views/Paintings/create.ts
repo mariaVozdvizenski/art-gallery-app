@@ -77,15 +77,12 @@ export class PaintingCreate {
         this._painting!.price =  Number(this._price)
         this._painting!.quantity = Number(this._quantity)
 
-        console.log(this._painting);
-
         await this.paintingService.createPainting(this._painting!).then((response) => {
 
             if (response.statusCode >= 200 && response.statusCode < 300) {
 
                 this._alert = null;
                 createdPaintingId = response.data!;
-                console.log(createdPaintingId);
 
                 this._categoryIds.forEach(categoryId => {
 
@@ -111,7 +108,6 @@ export class PaintingCreate {
     }
 
     onClick() {
-        console.log(this._categoryIds);
         return true;
     }
 
@@ -136,7 +132,6 @@ export class PaintingCreate {
     }
 
     SubmitPaintingCategory(paintingCategory: IPaintingCategoryCreate) {
-        console.log(paintingCategory);
         this.paintingCategoryService.createPaintingCategory(paintingCategory).then((response) => {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 this._alert = null;

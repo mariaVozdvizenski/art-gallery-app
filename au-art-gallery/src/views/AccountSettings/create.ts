@@ -28,7 +28,6 @@ export class AccountSettingsCreate{
                     type: AlertType.Danger,
                     dismissable: true,
                 }
-                console.log(this._alert);
             }
         });
     }
@@ -47,7 +46,6 @@ export class AccountSettingsCreate{
                     type: AlertType.Danger,
                     dismissable: true,
                 }
-                console.log(this._alert);
             }
         });
 

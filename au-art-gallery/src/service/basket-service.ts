@@ -10,15 +10,13 @@ import { IFetchResponse } from 'types/IFetchResponse';
 export class BasketService {
     
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
-
     }
 
     private readonly _baseUrl = 'Baskets';
 
     async getBaskets(): Promise<IFetchResponse<IBasket[]>> {
-
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -51,6 +49,7 @@ export class BasketService {
 
     async getBasket(id: string): Promise<IFetchResponse<IBasket>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",

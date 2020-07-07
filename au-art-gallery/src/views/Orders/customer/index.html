@@ -40,13 +40,7 @@
                         Items
                     </th>
                     <th if.bind="_showDetails == true">
-                        Address
-                    </th>
-                    <th if.bind="_showDetails == true">
-                        Name
-                    </th>
-                    <th if.bind="_showDetails == true">
-                        Country, City, Zip
+                        Shipping Details
                     </th>
                 </tr>
             </thead>
@@ -86,15 +80,11 @@
                         </div>
                     </td>
                     <td if.bind="_showDetails == true">
-                        ${order.address.shippingAddress}
-                    </td>
-                    <td if.bind="_showDetails == true">
-                        ${order.address.firstName} ${order.address.lastName}
-                    </td>
-                    <td if.bind="_showDetails == true">
-                        ${order.address.country},
-                        ${order.address.city},
-                        ${order.address.zip}
+                        <p>Address: ${order.address.shippingAddress}</p>
+                        <p>Country: ${order.address.country}</p>
+                        <p>City: ${order.address.city}</p>
+                        <p>Zip: ${order.address.zip}</p>
+                        <p>Name: ${order.address.firstName} ${order.address.lastName}</p>
                     </td>
                     <td if.bind="order.invoice != null">
                         <b>${order.invoice.invoiceStatusCode.code}</b> - ${order.invoice.invoiceStatusCode.invoiceStatusDescription}

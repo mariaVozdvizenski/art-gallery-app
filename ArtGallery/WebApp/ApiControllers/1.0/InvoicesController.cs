@@ -80,7 +80,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}/{fileName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetInvoicePdf(Guid id, string fileName)
+        public async Task<IActionResult> GetInvoicePdf(Guid id, string fileName)
         {
             var filePath = $"../WebApp/ApiControllers/1.0/generated/{fileName}.pdf";
 
@@ -90,7 +90,7 @@ namespace WebApp.ApiControllers._1._0
                 return NotFound();
             }
             var stream = new FileStream(filePath, FileMode.Open);
-            return new FileStreamResult(stream, "application/pdf")
+            return new  FileStreamResult(stream, "application/pdf")
             {
                 FileDownloadName = $"{fileName}.pdf" 
             }; 

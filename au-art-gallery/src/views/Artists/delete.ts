@@ -50,7 +50,6 @@ export class ArtistDelete{
                     dismissable: true,
 
                 }
-                console.log(this._alert);
             }
         });
         event.preventDefault();

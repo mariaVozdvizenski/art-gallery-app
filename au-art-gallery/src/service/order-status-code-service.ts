@@ -9,13 +9,13 @@ import { IFetchResponse } from 'types/IFetchResponse';
 @autoinject
 export class OrderStatusCodeService {
     constructor(private appState: AppState, private httpClient: HttpClient){
-        this.httpClient.baseUrl = this.appState.baseUrl;
     }
 
     private readonly _baseUrl = 'OrderStatusCodes';
   
     async getOrderStatusCodes(): Promise<IFetchResponse<IOrderStatusCode[]>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl, {
                     cache: "no-store",
@@ -26,7 +26,7 @@ export class OrderStatusCodeService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IOrderStatusCode[];
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -50,6 +50,7 @@ export class OrderStatusCodeService {
 
     async getOrderStatusCode(id: string): Promise<IFetchResponse<IOrderStatusCode>> {
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .fetch(this._baseUrl + '/' + id, {
                     cache: "no-store",
@@ -60,7 +61,7 @@ export class OrderStatusCodeService {
             // happy case
             if (response.status >= 200 && response.status < 300) {
                 const data = (await response.json()) as IOrderStatusCode;
-                console.log(data);
+                
                 return {
                     statusCode: response.status,
                     data: data
@@ -83,6 +84,7 @@ export class OrderStatusCodeService {
 
     async updateOrderStatusCode(orderStatusCode: IOrderStatusCode): Promise<IFetchResponse<string>>{
         try {
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
                 .put(this._baseUrl + '/' + orderStatusCode.id, JSON.stringify(orderStatusCode), {
                     cache: "no-store",
@@ -112,8 +114,8 @@ export class OrderStatusCodeService {
     }
 
     async createOrderStatusCode(orderStatusCode: IOrderStatusCodeCreate): Promise<IFetchResponse<string>> {
-        
         try{
+            this.httpClient.baseUrl = this.appState.baseUrl;
             const response = await this.httpClient
             .post(this._baseUrl, JSON.stringify(orderStatusCode), {
                 cache: 'no-store',
