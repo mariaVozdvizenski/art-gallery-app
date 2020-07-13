@@ -11,6 +11,5 @@ namespace Domain.App.Identity
         [MaxLength(256)]
         [Required]
         public string DisplayName { get; set; } = default!;
-        
     }
 }
