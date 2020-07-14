@@ -16,5 +16,6 @@ namespace Domain
         public QuizType? QuizType { get; set; }
 
         public ICollection<Question>? QuizQuestions { get; set; }
+        public ICollection<QuizResult>? QuizResults { get; set; }
     }
 }

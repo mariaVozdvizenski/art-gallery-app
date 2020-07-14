@@ -1,0 +1,37 @@
+<template>
+    <form>
+        <div class="container">
+            <h1 class="text-center">${_quiz.title}</h1>
+            <p class="text-center"><a route-href="route: quizzes">Go back</a></p>
+            <br>
+            <div class="card-group">
+                <div repeat.for="question of _quiz.quizQuestionViews">
+                    <div class="card text-center" style="width: 22rem;">
+                        <img class="card-img-top" src="${_imgUrl}" alt="Card image cap" if.bind="_quiz.quizType == 'Quiz'">
+                        <img class="card-img-top" src="${_imgPollUrl}" alt="Card image cap" if.bind="_quiz.quizType == 'Poll'">
+
+                        <div class="card-body">
+                            <h5 class="card-title">${question.content}</h5>
+                            <p class="card-text">Please choose an answer.</p>
+                            <br>
+                            <div repeat.for="answer of question.questionAnswers" class="form-check"
+                                click.delegate="addAnswerToQuestion(answer, question)">
+                                <input class="form-check-input" name="${question.content}" type="radio"
+                                    value="${answer.content}" id="${answer.content}">
+                                <label class="form-check-label" for="${answer.content}">${answer.content}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </br>
+            <div class="form-group">
+                <div class="col text-center">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block"
+                        click.trigger="onSubmit($event)" disabled.bind="_allQuestionsAnswered ? false : true">
+                </div>
+            </div>
+        </div>
+    </form>
+
+</template>

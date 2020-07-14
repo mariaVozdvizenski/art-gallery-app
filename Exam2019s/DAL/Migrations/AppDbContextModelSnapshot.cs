@@ -184,6 +184,25 @@ namespace DAL.Migrations
                     b.ToTable("Quizzes");
                 });
 
+            modelBuilder.Entity("Domain.QuizResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CorrectAnswers")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("QuizResults");
+                });
+
             modelBuilder.Entity("Domain.QuizType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -324,6 +343,15 @@ namespace DAL.Migrations
                     b.HasOne("Domain.QuizType", "QuizType")
                         .WithMany("QuizTypeQuizzes")
                         .HasForeignKey("QuizTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.QuizResult", b =>
+                {
+                    b.HasOne("Domain.Quiz", "Quiz")
+                        .WithMany("QuizResults")
+                        .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

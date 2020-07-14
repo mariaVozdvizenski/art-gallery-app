@@ -1,0 +1,8 @@
+<template>
+    <div class=container>
+        <h1>Thank you for answering!</h1>
+
+        <h2>You got ${_quizResult.correctAnswers} correct answer(s) out of ${_quizResult.totalAnswers}.</h2>
+        <p>Click <a route-href="route: quizDetails; params.bind: {id: _quizResult.quizId}">here</a> to try again.</p>
+    </div>
+</template>

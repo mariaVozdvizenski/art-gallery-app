@@ -11,7 +11,9 @@ ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicApiDTO", "PublicApiDTO\PublicApiDTO.csproj", "{F470DC00-1A3D-49BA-8384-8FBD35C6D1C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicApi.DTO", "PublicApi.DTO\PublicApi.DTO.csproj", "{470FF89B-1C18-4837-95B7-80B3A2A330F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{D6C68B50-4772-46CC-9A69-12F10C7A8DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,9 +33,13 @@ Global
 		{0659AC36-4C71-4ECA-A240-D28C55CF0C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0659AC36-4C71-4ECA-A240-D28C55CF0C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0659AC36-4C71-4ECA-A240-D28C55CF0C02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F470DC00-1A3D-49BA-8384-8FBD35C6D1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F470DC00-1A3D-49BA-8384-8FBD35C6D1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F470DC00-1A3D-49BA-8384-8FBD35C6D1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F470DC00-1A3D-49BA-8384-8FBD35C6D1C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{470FF89B-1C18-4837-95B7-80B3A2A330F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{470FF89B-1C18-4837-95B7-80B3A2A330F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{470FF89B-1C18-4837-95B7-80B3A2A330F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{470FF89B-1C18-4837-95B7-80B3A2A330F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6C68B50-4772-46CC-9A69-12F10C7A8DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C68B50-4772-46CC-9A69-12F10C7A8DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6C68B50-4772-46CC-9A69-12F10C7A8DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C68B50-4772-46CC-9A69-12F10C7A8DDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

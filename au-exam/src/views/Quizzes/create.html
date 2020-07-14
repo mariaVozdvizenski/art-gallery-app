@@ -1,0 +1,76 @@
+<template>
+    <h1>Create</h1>
+
+    <h4>Quiz</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+
+                <div class="form-group">
+                    <label class="control-label" for="type">Type</label>
+                    <select class="form-control" type="text" id="type" name="type" value.bind="_quizType">
+                        <option repeat.for="quizType of _quizTypes" model.bind="quizType">${quizType.type}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="title">Title</label>
+                    <input class="form-control" type="text" id="title" maxlength="128" name="title"
+                        value.bind="_quizTitle" required />
+                </div>
+            </form>
+
+
+            <div class="form-group">
+                <label class="control-label" for="question">Add a question</label>
+
+                <input class="form-control" type="text" id="question" maxlength="4096" name="question"
+                    value.bind="_questionString" required />
+                <button class="btn btn-primary" click.delegate="addQuestionToList()">Add</button>
+            </div>
+
+            <div if.bind="_createdQuestions.length > 0">
+                <label class="control-label" for="createdQuest">Questions</label>
+                <div repeat.for="question of _createdQuestions" class="form-group">
+                    <p><b>${question.content}</b> <button class="btn btn-danger"
+                            click.delegate="deleteQuestionFromList($index)">Delete Question</button>
+                    </p>
+                    <input class="form-control" type="text" id="answer" maxlength="4096" name="answer"
+                        value.bind="answerString" required /><button class="btn btn-primary"
+                        click.delegate="addAnswerToQuestion($index, answerString)">Add an Answer (atleast 2)</button>
+                    <br>
+                </div>
+            </div>
+
+            <div if.bind="_createdQuestions.length > 0">
+                <label class="control-label" for="createdAnsw">Answers</label>
+                <div repeat.for="question of _createdQuestions">
+                    <b>${question.content}</b>
+                    <div repeat.for="answer of question.answers">
+
+                        ${answer.content}
+
+                        <div if.bind="_quizType.type == 'Quiz'" class="form-group">
+                            <label for="${answer.content}">Correct Answer</label>
+                            <input name="${question.content}" type="radio" model.bind="true" id="${answer.content}"
+                                checked.bind="answer.correct" click.delegate="makeOtherAnswersFalse($index, question)">
+                        </div>
+                        <button class="btn btn-danger"
+                            click.delegate="deleteAnswerFromQuestion(question, $index)">Delete Answer</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"
+                    disabled.bind="_atleastTwoAnswersPerQuestion ? false : true"
+                    click.delegate="onSubmit()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a route-href="route: quizzes">Back to List</a>
+    </div>
+
+</template>
